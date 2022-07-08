@@ -1,13 +1,7 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
-import { Divider } from '@mui/material';
+import { Divider,Button,CssBaseline,TextField,Box,Typography,Container } from '@mui/material';
 
 
 
@@ -37,15 +31,15 @@ import { Divider } from '@mui/material';
   });
 
 
-function App() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
-      };
+function Login() {
+  const handleSubmit = (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log({
+        email: data.get('email'),
+        password: data.get('password'),
+      });
+    };
   return (
     <Container  style={{backgroundColor : '#E7F5EF',  border: "solid", borderColor :"#E7F5EF", minWidth: "100%", height: "100vh"}}>
     <ThemeProvider theme={theme} bgcolor="black">
@@ -168,4 +162,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;

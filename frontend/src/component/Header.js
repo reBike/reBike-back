@@ -1,9 +1,5 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+import {Button, Container, Box, Link} from '@mui/material';
 
 function Header() {
   return (
@@ -13,13 +9,12 @@ function Header() {
                 display="flex"
                 justifyContent="flex-end"
                 alignItems="flex-end"
+                marginLeft= "auto"
             >
-            <Button sx={{fontSize : 30, color : "black", fontWeight: 'bold', mr : 95}}>
-                HOWTRASH
-            </Button>
+                <Link href="#" sx={{textDecoration: 'none',fontSize : 30, color : "black", fontWeight: 'bold',mb:1,position: 'absolute',left: 55 ,}}>HOWTRASH</Link>
                 <Button
                     variant="contained"
-                    sx={{fontWeight: 'bold',color : "black",mb : 2,mr:2, backgroundColor : "#759F98"}}
+                    sx={{fontWeight: 'bold',color : "black",mt:2,mb : 2,mr:2, backgroundColor : "#759F98"}}
                 >
                     MyPage
                 </Button>

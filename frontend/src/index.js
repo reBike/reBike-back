@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './component/App';
+import Login from './Page/Login';
 import Header from './component/Header';
 
 import reportWebVitals from './reportWebVitals';
@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Header />
-    <App />
+    <Login />
   </React.StrictMode>
 );
 
