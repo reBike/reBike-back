@@ -21,18 +21,21 @@ function Header() {
                 alignItems="flex-end"
                 marginLeft= "auto"
             >
-                <Link href="#" sx={{textDecoration: 'none',fontSize : 30, color : "black", fontWeight: 'bold',mb:1,position: 'absolute',left: 55 ,}}>HOWTRASH</Link>
+                <Link href="/mainpage" sx={{textDecoration: 'none',fontSize : 30, color : "black", fontWeight: 'bold',mb:1,position: 'absolute',left: 55 ,}}>
+                    HOWTRASH
+                </Link>
                 <Button
                     variant="contained"
                     sx={{fontWeight: 'bold',mt:2,mb : 2,mr:2, color:'white',backgroundColor : "#759F98"}}
                 >
-                    MyPage
+                 <Link href= '/mypage' sx={{color : "white"}}>MyPage</Link>
                 </Button>
                 <Button
                     variant="contained"
                     sx={{fontWeight: 'bold' ,mb : 2,color:'white',backgroundColor : "#759F98"}}
                 >
-                    Login
+                  <Link href= '/login' sx={{color : "white"}}>Login</Link>
+                    
                 </Button>
             </Box>
         </Container> 
