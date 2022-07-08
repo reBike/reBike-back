@@ -70,11 +70,10 @@ function Login() {
             }}
         >
             <ThemeProvider theme={theme}>
-                <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
+                <Container component="main" maxWidth="xs" sx={{ mb: 2, mt: 20 }}>
                     <CssBaseline />
                     <Box
                         sx={{
-                            marginTop: 8,
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
