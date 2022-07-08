@@ -1,33 +1,64 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
-import { Divider,Button,CssBaseline,TextField,Box,Typography,Container } from '@mui/material';
+import { Divider,Button,CssBaseline,TextField,Box,Typography,Container,Link, styled } from '@mui/material';
 
   const theme = createTheme({
     palette: {
       primary: {
         main: "#759F98",
-
-      },
-      secondary: {
-        main: green[500],
       },
     },
   });
 
+  const UserInfoTf = styled(TextField)(({ }) => ({
+    backgroundColor: "",
+    "&:hover": {
+        color : "#759F98",
+        
+    },
 
-function Login() {
-  const handleSubmit = (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
+    '& .MuiOutlinedInput-root': {
+      '&:hover fieldset': {
+        borderColor: '#759F98',
+      },
+    },
+    
+  }));
+
+  const KakaoLoginBtn = styled(Button)(({ }) => ({
+    backgroundColor : 'white',
+    "&:hover": {
+      color : "yellow",
+      backgroundColor : "#F1DC2C",
+      borderColor :"#F1DC2C"
+    },
+    
+  }));
+
+  const NaverLoginBtn = styled(Button)(({ }) => ({
+    backgroundColor : 'white',
+    "&:hover": {
+      color : "#6AED64",
+      backgroundColor : "#54B94E",
+      borderColor :"#54B94E"
+    },
+    
+  }));
+
+
+  function Login() {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({
+          email: data.get('email'),
+          password: data.get('password'),
       });
     };
   return (
     <Container  style={{backgroundColor : '#E7F5EF',  border: "solid", borderColor :"#E7F5EF", minWidth: "100%", height: "100vh"}}>
-    <ThemeProvider theme={theme} bgcolor="black">
+    <ThemeProvider theme={theme} >
         <Container component="main" maxWidth="xs" sx={{  mb: 2 }} >
             <CssBaseline />
               <Box
@@ -43,7 +74,7 @@ function Login() {
                     로그인
                 </Typography>
                 <Box component="form" color="info.contrastText" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                    <TextField
+                    <UserInfoTf
                       margin="normal"
                       required
                       fullWidth
@@ -53,7 +84,7 @@ function Login() {
                       autoComplete="email"
                       autoFocus
                     />
-                    <TextField
+                    <UserInfoTf
                       margin="normal"
                       required
                       fullWidth
@@ -72,24 +103,24 @@ function Login() {
                       Login
                     </Button>
                     <Typography align='right'>
-                      <Button variant="text" style={{ fontWeight: 'bold'}} >
+                      <Link href="#" style={{ textDecoration: 'none',fontWeight: 'bold'}}>
                          가입하기
-                      </Button>
+                      </Link>
                     </Typography>
                     <Divider sx={{color : 'lightgrey'}}>또는</Divider>
 
-                    <Button
+                    <KakaoLoginBtn
                       variant="outlined"
-                      sx={{borderColor : '#F1DC2C', color: '#F1DC2C', fontWeight: 'bold', ml : 5,mr:2,mt:3}}
+                      sx={{borderColor : '#F1DC2C',color: '#F1DC2C', fontWeight: 'bold',width:'46%',mt:3}}
                     >
                       카카오로 로그인하기
-                    </Button>
-                    <Button
+                    </KakaoLoginBtn>
+                    <NaverLoginBtn
                       variant="outlined"
-                      sx={{borderColor : '#54B94E', color: '#54B94E', fontWeight: 'bold',mt:3}}
+                      sx={{borderColor : '#54B94E',  color: '#54B94E', fontWeight: 'bold',width:'46%',mt:3,ml:3.6 }}
                     >
                       네이버로 로그인하기
-                    </Button>
+                    </NaverLoginBtn>
                 </Box>
               </Box>
         </Container>
