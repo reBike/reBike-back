@@ -9,7 +9,7 @@ const SearchBar= () =>{
     <Box  sx={{
         backgroundColor : "white",
         borderColor:"#759F98",  
-        border : 2,
+        border : 1,
         borderRadius : 10, margin:"auto", mt : 15,width: "58ch" }}>
       <Box
         component="form"
