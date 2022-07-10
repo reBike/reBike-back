@@ -1,7 +1,7 @@
 import * as React from "react";
 import MyPageNavigationButton from "./MyPageNavigationButton";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { alpha, createTheme, ThemeProvider } from "@mui/material/styles";
 import {
     Button,
     Box,
@@ -11,6 +11,8 @@ import {
     styled,
     Grid
 } from "@mui/material";
+import Switch from '@mui/material/Switch';
+
 
 
 const theme = createTheme({
@@ -23,10 +25,13 @@ const theme = createTheme({
 
 const MyPageNavigationBtn = styled(Button)(({}) => ({
     backgroundColor: "white",
-    borderColor: "#E7F5EF",
+    borderColor: "white",
     "&:hover": {
-        backgroundColor: "#E7F5EF",
+        color:"white",
+        backgroundColor: "#759F98",
+        borderColor: "#759F98",
     },}));
+
 
 function MyPageNavigation() {
 
@@ -38,36 +43,37 @@ function MyPageNavigation() {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-
+                        backgroundColor: "white",
+                        borderRadius: 5
                     }}>
                     <MyPageNavigationBtn
+                        variant="outlined"
                         sx={{
                             color: "black",
-                            fontWeight: "bold",
                             width: 150,
-                            borderColor: "#E7F5EF",
+                            fontSize: "small",
                             pt:1,
                             pb: 1,
                         }}>
                         내 분리수거함
                     </MyPageNavigationBtn>
                     <MyPageNavigationBtn
+                        variant="outlined"
                         sx={{
                             color: "black",
-                            fontWeight: "bold",
                             width: 150,
-                            mt: 2,
-                            mb: 2,
+                            fontSize: "small",
                             pt:1,
                             pb: 1,
                         }}>
                         내 쓰레기 통계
                     </MyPageNavigationBtn>
                     <MyPageNavigationBtn
+                        variant="outlined"
                         sx={{
                             color: "black",
-                            fontWeight: "bold",
                             width: 150,
+                            fontSize: "small",
                             pt:1,
                             pb: 1,
                         }}>
@@ -75,12 +81,11 @@ function MyPageNavigation() {
                     </MyPageNavigationBtn>
 
                     <MyPageNavigationBtn
+                        variant="outlined"
                         sx={{
                             color: "black",
-                            fontWeight: "bold",
                             width: 150,
-                            mt: 40,
-                            mb: 2,
+                            fontSize: "small",                    
                             pt:1,
                             pb: 1,
                         }}>
