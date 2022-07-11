@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Button,Box,Typography,Container,styled } from "@mui/material";
-import { Link, Route, useLocation } from 'react-router-dom';
+import { Button,Box,Container,styled } from "@mui/material";
+import { Link, useLocation } from 'react-router-dom';
 
 const sidebarNavItems = [
     {

@@ -1,6 +1,5 @@
 import * as React from "react";
 import MyPageNavigation from "../component/Mypage/MyPageNavigation";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box, Container} from "@mui/material";
 import { Outlet } from "react-router-dom";
 

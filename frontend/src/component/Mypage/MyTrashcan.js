@@ -1,22 +1,14 @@
 import * as React from "react";
-import { alpha, createTheme, ThemeProvider } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 import {
     Box,
     Typography,
     Container,
     styled,
     Switch,
-    Grow
 } from "@mui/material";
 import MultiActionAreaCard from "./MultiActionAreaCard";
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: "#759F98",
-        },
-    },
-});
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
     '& .MuiSwitch-switchBase.Mui-checked': {
