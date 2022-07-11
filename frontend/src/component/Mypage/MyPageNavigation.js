@@ -54,10 +54,18 @@ const MyPageNavigationBtn = styled(Button)(({}) => ({
     }
 }));
 
+const StyledLink = styled(Link)(({}) =>({
+    textDecoration: 'none',
+
+    "&:focus, &:hover, &:visited, &:link, &:active":{
+        textDecoration: 'none'
+    }
+})
+
+)
+
 
 function MyPageNavigation() {
-    const sidebarRef = React.useRef();
-
     const location = useLocation();
 
     React.useEffect(() => {
@@ -76,33 +84,31 @@ function MyPageNavigation() {
                         borderRadius: 5,
                         textDecoration: "none"
                     }}>
-                        <div ref={sidebarRef}>
-                            {
-                            sidebarNavItems.map((item, index) => (
+                        {
+                        sidebarNavItems.map((item, index) => (
+                            <StyledLink to={item.to} key={index}
+                                sx={{textDecoration: 'none', fontSize : 30, color : "black"}}>
                                 <MyPageNavigationBtn
                                     variant="outlined"
                                     sx={
                                         location.pathname===item.to
                                         ? { 
+                                            textDecoration: 'none',
                                             color:"white",
                                             backgroundColor: "#759F98",
                                             borderColor: "#759F98",
                                             
                                             }
                                         :{
-                                            textDecoration: "none",
+                                            textDecoration: 'none',
                                             color:"black",
                                             backgroundColor: "white",
-                                            borderColor: "white",
-                                            
+                                            borderColor: "white",                                            
                                         }}>
-                                    <Link to={item.to} key={index}
-                                        sx={{textDecoration: "none",fontSize : 30, color : "black"}}>
                                             {item.display}
-                                    </Link>
                                 </MyPageNavigationBtn>
+                            </StyledLink>
                             ))}
-                        </div>
                 </Box>
             </ThemeProvider>
         </Container>
