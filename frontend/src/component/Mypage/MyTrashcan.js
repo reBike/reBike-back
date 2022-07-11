@@ -71,7 +71,7 @@ function MyTrashcan() {
                         backgroundColor: "white",
                         border: "solid",
                         borderRadius: 5,
-                        borderColor: "black",
+                        borderColor: "white",
                         height: "100vh",
                         pt:2, pb:2}}>
                         <Box
