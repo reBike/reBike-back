@@ -10,7 +10,7 @@ function MyPage(){
         <Container
             style={{
                 border: "solid",
-                borderColor: "#E7F5EF",
+                borderColor: "white",
                 minWidth: "100%",
                 height: "100vh",
         }}>
@@ -18,7 +18,7 @@ function MyPage(){
                 sx={{
                     display: "flex",
                     flexDirection: "row",
-                    mb: 2, mt: 20
+                    mb: 20, mt: 20
             }}>
                 <MyPageNavigation />
                 <Container>
