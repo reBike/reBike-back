@@ -3,29 +3,26 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Button,Box,Container,styled } from "@mui/material";
 import { Link, useLocation } from 'react-router-dom';
 
-const sidebarNavItems = [
-    {
+const sidebarNavItems = [{
         display: '내 분리수거함',
         to: '/mypage',
         section: ''
-    },
-    {
+    },{
         display: '내 쓰레기 통계',
         to: '/mypage/myTrashChart',
         section: 'started'
-    },
-    {
+    },{
         display: '내 정보 변경',
         to: '/mypage/userInfo',
         section: 'calendar'
-    },
-    {
+    },{
         display: '로그아웃',
         to: '/mypage/logout',
         section: 'user'
-    },
-]
+    },]
 
+
+    // 전체 테마 적용
 const theme = createTheme({
     palette: {
         primary: {
@@ -34,6 +31,7 @@ const theme = createTheme({
     },
 });
 
+//네비게이션 버튼 커스텀
 const MyPageNavigationBtn = styled(Button)(({}) => ({
     backgroundColor: "white",
     borderColor: "white",
@@ -54,6 +52,7 @@ const MyPageNavigationBtn = styled(Button)(({}) => ({
     }
 }));
 
+//링크 밑줄 none 처리
 const StyledLink = styled(Link)(({}) =>({
     textDecoration: 'none',
 
@@ -67,10 +66,6 @@ const StyledLink = styled(Link)(({}) =>({
 
 function MyPageNavigation() {
     const location = useLocation();
-
-    React.useEffect(() => {
-        console.log(location);
-      }, [ location ])
 
     return(
         <Container style={{ borderRadius: 5, width: 200}}>
