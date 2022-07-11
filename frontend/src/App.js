@@ -7,6 +7,9 @@ import MainPage from "./Page/MainPage";
 import Header from "./component/Header";
 
 import {ReactComponent as GreenBack } from './images/greenBack.svg'
+import MyTrashcan from "./component/Mypage/MyTrashcan";
+import MyTrashChart from "./component/Mypage/MyTrashChart";
+
 
 function App() {
     return (
@@ -18,8 +21,14 @@ function App() {
             <Header />
                 <Routes>
                     <Route path="/login" element={<Login />} />
-                    <Route path="/mypage" element={<MyPage />} />
                     <Route path="/mainpage" element={<MainPage />} />
+                    <Route path="/mypage" element={<MyPage />}>
+                        <Route index element={<MyTrashcan />} />
+                        <Route path='/mypage/myTrashChart' element={<MyTrashChart />} />
+                        <Route path='/mypage/userInfo' element={<MyTrashcan />} />
+                        <Route path='/mypage/logout' element={<MyTrashcan />} />
+                    </Route>
+
                 </Routes>
             </Router>
         </div>
