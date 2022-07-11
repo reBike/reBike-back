@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Box,Button, CardMedia, Typography} from "@mui/material";
-import SearchBar from "../component/mainpage/SearchBar";
+
 import InputIcon from '@mui/icons-material/Input';
 
 
@@ -8,13 +8,12 @@ import InputIcon from '@mui/icons-material/Input';
 
 
 
-const ResultPage = () => {
+const SearchResult = () => {
   return (
  
     <Box textAlign={"center"} >
       <div>
-        <SearchBar />
-        <Box sx={{ borderRadius : 3, border : 1 ,borderColor :"black" ,backgroundColor: "white",width: 600,height: 300, margin:'auto',mt:10,}} >
+        <Box sx={{ borderRadius : 3, border : 1 ,borderColor :"black" ,backgroundColor: "white",width: 600,height: 300, margin:'auto',mt:23,}} >
             <CardMedia
                 component="img"
                 width ="600"
@@ -42,7 +41,6 @@ const ResultPage = () => {
                 쓰레기 올바르게 버리는 방법
             </Typography>
             <InputIcon fontSize="medium" sx = {{ color : "black"}} />
-   
         </Button>
       
       </div>
@@ -50,6 +48,6 @@ const ResultPage = () => {
   );
 };
 
-export default ResultPage;
+export default SearchResult;
 
 
