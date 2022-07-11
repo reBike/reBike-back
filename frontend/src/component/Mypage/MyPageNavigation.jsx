@@ -76,7 +76,7 @@ function MyPageNavigation() {
                         flexDirection: "column",
                         alignItems: "center",
                         backgroundColor: "white",
-                        borderRadius: 5,
+                        borderRadius: 2,
                         textDecoration: "none"
                     }}>
                         {
