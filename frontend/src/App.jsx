@@ -5,6 +5,7 @@ import Login from "./Page/Login";
 import MyPage from "./Page/MyPage";
 import MainPage from "./Page/MainPage";
 import Header from "./component/Header";
+import Register from "./Page/Register";
 
 import {ReactComponent as GreenBack } from './images/greenBack.svg'
 import MyTrashcan from "./component/Mypage/MyTrashcan";
@@ -24,6 +25,7 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/mainpage" element={<MainPage />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/mainpage/resultpage" element={<SearchResult/>}/>
                     <Route path="/mypage" element={<MyPage />}>
                         <Route index element={<MyTrashcan />} />

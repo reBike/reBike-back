@@ -130,7 +130,7 @@ function Login() {
                             </Button>
                             <Typography align="right">
                                 <Link
-                                    href="#"
+                                    href="/register"
                                     style={{
                                         textDecoration: "none",
                                         fontWeight: "bold",
