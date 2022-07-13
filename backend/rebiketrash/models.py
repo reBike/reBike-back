@@ -15,8 +15,8 @@ class Uploadedtrash(models.Model):
     upload_id = models.AutoField(primary_key=True)
     upload_img = models.CharField(max_length=200)
     upload_date = models.DateTimeField()
-    upload_user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='upload_user')
-    upload_trash_kind = models.ForeignKey(Trashkinds, on_delete=models.CASCADE, db_column='upload_trash_kind')
+    upload_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    upload_trash_kind = models.ForeignKey(Trashkinds, on_delete=models.CASCADE)
 
     class Meta:
         managed = False
