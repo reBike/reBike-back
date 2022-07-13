@@ -22,7 +22,7 @@ function Header() {
                   alignItems="flex-end"
                   marginLeft= "auto"
               >
-                  <Link href="/mainpage" sx={{textDecoration: 'none',fontSize : 30, color : "black", fontWeight: 'bold',mb:1,position: 'absolute',left: 55 ,}}>
+                  <Link href="/mainpage" sx={{textDecoration: 'none',fontSize : 30, color : "black", fontWeight: 'bold',mb:1,position: 'absolute',left: 55 ,fontFamily :'./font/NanumGothic-Bold.ttf'}}>
                       HOWTRASH
                   </Link>
                   <Button
