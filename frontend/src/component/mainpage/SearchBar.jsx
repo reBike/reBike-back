@@ -1,7 +1,5 @@
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import {Box, TextField, IconButton, Link} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 
 const SearchBar= () =>{
@@ -41,9 +39,9 @@ const SearchBar= () =>{
               },
             }}
           />
-        <IconButton type="submit" sx={{}} aria-label="search">
-          <SearchIcon fontSize="large" />
-        </IconButton>
+        <Link href="/Howto" type="submit" sx={{}} aria-label="search" color="#000000">
+          <SearchIcon sx={{mt:1.4}} fontSize="large" />
+        </Link>
       </Box>
     </Box>
   );

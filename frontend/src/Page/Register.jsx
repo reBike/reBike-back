@@ -59,9 +59,10 @@ const theme = createTheme({
 
   const FormHelperTexts = styled(FormHelperText)`
   width: 100%;
-  padding-left: 16px;
+  padding-left: 12px;
   font-weight: 700;
   color: #d32f2f;
+  font-size: 16px;
 `;
 
 function Register() {
@@ -136,7 +137,7 @@ function Register() {
                 <Typography component= "h1" color = "primary" fontWeight = 'bold' variant="h4">
                     회원가입
                 </Typography>
-                <Box component="form" color="info.contrastText" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                <Box component="form" color="info.contrastText" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width:396}}>
                     <UserInfoTf
                       margin="normal"
                       required
