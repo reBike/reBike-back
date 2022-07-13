@@ -6,4 +6,4 @@ COPY ./ ./
 
 EXPOSE 8080
 
-RUN pip install django
+RUN pip install -r requirements.txt

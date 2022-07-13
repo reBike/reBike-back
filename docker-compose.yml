@@ -8,18 +8,10 @@ services:
       - 8080:8080
     volumes:
       - ./backend:/app
-<<<<<<< HEAD
-
-=======
->>>>>>> 02-BE-RDS
 #  frontend:
 #    build: ./frontend
 #    command: ["npm", "start"]
 #    ports:
 #      - 3000:3000
 #    volumes:
-<<<<<<< HEAD
 #      - ./frontend:/app
-=======
-#      - ./frontend:/app
->>>>>>> 02-BE-RDS
