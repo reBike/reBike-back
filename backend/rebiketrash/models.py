@@ -1,4 +1,5 @@
 from django.db import models
+from rebikeuser.models import User
 
 
 class Trashkinds(models.Model):
