@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, CardMedia, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 import InputIcon from "@mui/icons-material/Input";
 import { useLocation } from "react-router";
@@ -18,21 +18,17 @@ const SearchResult = () => {
             width: 600,
             height: 300,
             margin: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             mt: 23,
           }}
         >
-          <CardMedia
-            component="img"
-            width="600"
-            height="300"
-            image={state}
-            sx={{ borderRadius: 3 }}
-          />
+          <img src={state} />
         </Box>
 
         <Typography marginTop={5} fontWeight="bold" variant="h5">
           결과 : 물병
-          {/* 나중에 값 넘겨 받아서 하면됨 아니면 결과값 따로 받아서 하면 될 듯 */}
         </Typography>
 
         <Button

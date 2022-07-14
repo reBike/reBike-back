@@ -13,11 +13,11 @@ function UploadImage() {
     new Promise((resolve) => {
       Resizer.imageFileResizer(
         file,
-        600, // max width
-        300, // max height
+        500, // max width
+        250, // max height
         "JPEG",
-        513, // min width
-        0, // min height
+        2, // min width
+        1, // min height
         (uri) => {
           resolve(uri);
         },
@@ -32,10 +32,10 @@ function UploadImage() {
       setImage(img); // update image
       setPreview(URL.createObjectURL(img));
       const formData = new FormData();
-      formData.append("file", img);
-      // console.log("success upload image!");
-      // console.log(formData);
-      // console.log(event.target.files[0]);
+      formData.append("file", file);
+      console.log("success upload image!");
+      console.log(formData);
+      console.log(event.target.files[0]);
     } catch (err) {
       console.log(err);
     }
@@ -57,7 +57,6 @@ function UploadImage() {
             border: 1,
             borderColor: "black",
             backgroundColor: "white",
-            backgroundImage: "url(" + preview + ")",
             width: 600,
             height: 300,
             mt: 10,
@@ -68,6 +67,7 @@ function UploadImage() {
           }}
           component="label"
         >
+          <img src={preview}></img>
           <input type="file" hidden required onChange={(e) => onChange2(e)} />
           {image ? null : (
             <Box>
