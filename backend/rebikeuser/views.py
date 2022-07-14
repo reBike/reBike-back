@@ -26,14 +26,13 @@ def user_login(request):
     return JsonResponse(data)
 
 
-@csrf_exempt
 def user_signup(request):
-    if request.method == 'POST':
-        user_id = request.POST.get['id']
-        alias = request.POST['alias']
-        email = request.POST['email']
-        pw = request.POST['user_pw']
+    user_id = request.GET.get('id')
+    email = request.GET.get('alias')
+    pw = request.GET.get('email')
+    alias = request.GET.get('pw')
 
-        user_createModel(user_id, email, pw, alias)
-        return HttpResponse(True)
-    return HttpResponse('it is not post')
+    user_createModel(user_id, email, pw, alias)
+
+    return HttpResponse(user_id)
+
