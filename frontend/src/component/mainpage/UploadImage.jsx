@@ -3,11 +3,10 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
-import previewImg from "../../../src/images/previewimg.png";
 
 function UploadImage() {
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(previewImg);
+  const [preview, setPreview] = useState("");
   const navigate = useNavigate();
 
   const resizeFile = (file) =>
@@ -31,15 +30,12 @@ function UploadImage() {
       const file = event.target.files[0];
       const img = await resizeFile(file);
       setImage(img); // update image
-      console.log(preview);
       setPreview(URL.createObjectURL(img));
-
       const formData = new FormData();
-
       formData.append("file", img);
-      console.log("success upload image!");
-      console.log(formData);
-      console.log(event.target.files[0]);
+      // console.log("success upload image!");
+      // console.log(formData);
+      // console.log(event.target.files[0]);
     } catch (err) {
       console.log(err);
     }
