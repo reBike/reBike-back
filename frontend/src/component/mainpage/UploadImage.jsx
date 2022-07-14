@@ -16,8 +16,8 @@ function UploadImage() {
         500, // max width
         250, // max height
         "JPEG",
-        2, // min width
-        1, // min height
+        513, // min width
+        0, // min height
         (uri) => {
           resolve(uri);
         },
