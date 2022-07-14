@@ -54,6 +54,7 @@ function Login() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            event,
             email: data.get("email"),
             password: data.get("password"),
         });
