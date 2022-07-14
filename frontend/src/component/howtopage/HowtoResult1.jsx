@@ -1,5 +1,4 @@
-import {Grid,Box,Typography,styled} from "@mui/material";
-import { margin } from "@mui/system";
+import {Grid,Box,Typography} from "@mui/material";
 import * as React from "react";
 
 const HowtoResult= () =>{
