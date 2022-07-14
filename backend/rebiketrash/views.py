@@ -1,5 +1,6 @@
 from audioop import reverse
 from django.shortcuts import render, HttpResponse
+from django.db.models import Count
 
 from .models import trash_kind, uploaded_trash_image
 from rebikeuser.models import user
@@ -38,3 +39,12 @@ class UploadedtrashimageListAPI(APIView):
         objs = uploadedTrashs.filter(upload_id = int(uploaded_image_id))
         objs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT) 
+
+@api_view(['GET'])
+def statistics(request,user_id):
+    uploadedTrashs = uploaded_trash_image.objects.filter(user_id=int(user_id))
+    categories = uploadedTrashs.objects.values('trash_kind', number_of_trash_kind=Count('trash_kind'))
+    #serializer = UploadedtrashimageSerializer(categories, many=True)
+    #return Response(serializer.data)
+
+    return HttpResponse(categories)
