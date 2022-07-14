@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import User
+from .models import user
 
 
-@admin.register(User)
+@admin.register(user)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_name', 'user_alias', 'user_pw', 'user_email']
+    list_display = ['id', 'name', 'alias', 'pw', 'salt', 'email']
     search_fields = ['id']

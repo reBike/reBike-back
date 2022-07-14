@@ -1,14 +1,14 @@
 from django.contrib import admin
 
-from .models import Trashkinds, Uploadedtrash
+from .models import trash_kind, uploaded_trash_image
 
-@admin.register(Trashkinds)
-class TrashkindsAdmin(admin.ModelAdmin):
-    list_display = ['trash_kind', 'trash_throw_way']
-    search_fields = ['trash_kind']
+@admin.register(trash_kind)
+class TrashkindAdmin(admin.ModelAdmin):
+    list_display = ['kind', 'way']
+    search_fields = ['kind']
 
-@admin.register(Uploadedtrash)
-class UploadedtrashAdmin(admin.ModelAdmin):
-    list_display = ['upload_id', 'upload_img', 'upload_date', 'upload_user', 'upload_trash_kind']
-    search_fields = ['upload_id']
+@admin.register(uploaded_trash_image)
+class UploadedtrashimageAdmin(admin.ModelAdmin):
+    list_display = ['uploaded_trash_image_id', 'img', 'created_at', 'updated_at','user_id', 'trash_kind']
+    search_fields = ['uploaded_trash_image_id']
 

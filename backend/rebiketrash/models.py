@@ -1,23 +1,24 @@
 from django.db import models
-from rebikeuser.models import User
+from rebikeuser.models import user
 
 
-class Trashkinds(models.Model):
-    trash_kind = models.CharField(primary_key=True, max_length=30)
-    trash_throw_way = models.CharField(max_length=200)
-
-    class Meta:
-        managed = False
-        db_table = 'TrashKinds'
-
-
-class Uploadedtrash(models.Model):
-    upload_id = models.AutoField(primary_key=True)
-    upload_img = models.CharField(max_length=200)
-    upload_date = models.DateTimeField()
-    upload_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    upload_trash_kind = models.ForeignKey(Trashkinds, on_delete=models.CASCADE)
+class trash_kind(models.Model):
+    kind = models.CharField(primary_key=True, max_length=30)
+    way = models.CharField(max_length=200)
 
     class Meta:
         managed = False
-        db_table = 'UploadedTrash'
+        db_table = 'trash_kind'
+
+
+class uploaded_trash_image(models.Model):
+    uploaded_trash_image_id = models.AutoField(primary_key=True)
+    img = models.CharField(max_length=200)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
+    trash_kind = models.ForeignKey(trash_kind, on_delete=models.CASCADE, db_column='trash_kind')
+
+    class Meta:
+        managed = False
+        db_table = 'uploaded_trash_image'

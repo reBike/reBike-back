@@ -1,9 +1,9 @@
 from django.http import HttpResponse
-from .models import User
+from .models import user
 
 
 def on_login(request):
-    qs = User.objects.all()
+    qs = user.objects.all()
     username = request.GET.get('username', '')
     if username:
         qs = qs.filter(user_name=username)
