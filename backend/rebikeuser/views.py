@@ -36,3 +36,4 @@ def user_signup(request):
 
     return HttpResponse(user_id)
 
+def user_change_pw(request):

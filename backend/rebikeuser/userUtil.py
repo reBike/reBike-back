@@ -1,4 +1,6 @@
+import uuid
 import bcrypt
+
 from .models import User
 
 
@@ -36,7 +38,7 @@ def user_createModel(user_id, email, pw, alias):
         return 'this alias is overlapped'
 
     hash_pw, salt = user_hash_pw(pw)
-    user = User.objects.create_user(user_id, email, hash_pw)
+    user = User.objects.create_user(uuid.uuid4(), email, hash_pw)
     user.user_alias = alias
     user.user_salt = salt
     user.save()
