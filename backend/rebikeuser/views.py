@@ -1,14 +1,14 @@
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
-from .serializers import user_to_dict, UserSerializer
+from .serializers import UserSerializer
 from .userUtil import user_findByName, user_compPW
 
 
 def user_login(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
-    is_login = None
+    is_login = False
     a = None
 
     if input_pw != '' and input_id != '':
@@ -23,7 +23,7 @@ def user_login(request):
         'is_login': is_login,
     }
 
-    return JsonResponse(data, safe=False)
+    return JsonResponse(data)
 
 
 def temp(request):
