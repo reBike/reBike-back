@@ -1,8 +1,8 @@
 from django.http import HttpResponse, JsonResponse
-from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import UserSerializer
-from .userUtil import user_findByName, user_compPW
+from .userUtil import user_findByName, user_compPW, user_createModel
 
 
 def user_login(request):
@@ -26,6 +26,14 @@ def user_login(request):
     return JsonResponse(data)
 
 
-def temp(request):
-    test = {'hello': 'hello'}
-    return JsonResponse(test, safe=False)
+@csrf_exempt
+def user_signup(request):
+    if request.method == 'POST':
+        user_id = request.POST.get['id']
+        alias = request.POST['alias']
+        email = request.POST['email']
+        pw = request.POST['user_pw']
+
+        user_createModel(user_id, email, pw, alias)
+        return HttpResponse(True)
+    return HttpResponse('it is not post')
