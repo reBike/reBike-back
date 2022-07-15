@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 
 class user(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().bytes, editable=False)
     name = models.CharField(unique=True, max_length=20)
     alias = models.CharField(unique=True, max_length=20)
     pw = models.BinaryField(max_length=60)
