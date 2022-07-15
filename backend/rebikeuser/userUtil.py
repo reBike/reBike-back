@@ -10,6 +10,8 @@ def user_hash_pw(pw):
 
 
 def user_createModel(user_id, email, pw, alias):
+    if User.get.all().filter('user.user_name' == user_id) and User.get.all().filter('user.user_alias' == alias):
+        return
     hash_pw, salt = user_hash_pw(pw)
     user = User.objects.create_user(user_id, email, hash_pw)
     user.user_alias = alias
@@ -46,3 +48,22 @@ def user_compPW(pw, user):
     salt = bcrypt.gensalt()
     hash_pw = bcrypt.hashpw(pw, salt)
     return hash_pw == user.user_pw
+
+def user_change_pw(user, pw):
+    result = False
+    if user and pw:
+        hash_pw, salt = user_hash_pw(pw)
+        user.user_pw = hash_pw
+        user.user_salt = salt
+        user.save()
+        result = True
+    return result
+
+def user_change_alias(user, alias):
+    result = False
+    if user and alias:
+        if user_findByAlias(alias) == '':
+            user.user_alias = alias
+            user.save()
+            result = True
+    return result
