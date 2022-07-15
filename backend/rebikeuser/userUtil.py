@@ -25,7 +25,7 @@ def user_change_pw(user, pw):
 
 #비밀번호 해시
 def user_hash_pw(pw):
-    pw = pw.encode('utf-8')
+    pw = str(pw).encode('utf-8')
     salt = bcrypt.gensalt()
     hash_pw = bcrypt.hashpw(pw, salt)
     return hash_pw, salt
@@ -36,10 +36,9 @@ def user_create_client(name, email, pw, alias):
         return 'this id is overlapped'
     if user_find_by_alias(alias):
         return 'this alias is overlapped'
-
     hash_pw, salt = user_hash_pw(pw)
     user.objects.create(id=uuid.uuid4(), name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
-
+    return user.objects.all()
 
 #
 def user_find_by_name(name):
