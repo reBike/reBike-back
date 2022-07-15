@@ -21,13 +21,13 @@ class TrashkindListAPI(APIView):
 
 @api_view(['GET'])
 def histories(request,user_id):
-    uploadedTrashs = uploaded_trash_image.objects.filter(user_id=int(user_id))
+    uploadedTrashs = uploaded_trash_image.objects.filter(user_id=user_id)
     serializer = UploadedtrashimageSerializer(uploadedTrashs, many=True)
     return Response(serializer.data)
 
 class UploadedtrashimageListAPI(APIView):
     def get(self, request, user_id, uploaded_image_id):
-        uploadedTrashs = uploaded_trash_image.objects.filter(user_id=int(user_id))
+        uploadedTrashs = uploaded_trash_image.objects.filter(user_id=user_id)
         objs = uploadedTrashs.filter(upload_id = int(uploaded_image_id))
         serializer = UploadedtrashimageSerializer(objs, many=True)
         return Response(serializer.data)
@@ -35,16 +35,15 @@ class UploadedtrashimageListAPI(APIView):
     def delete(self, request, user_id, uploaded_image_id):
         if user_id == 'anonymous':
             return HttpResponse('anonymous')
-        uploadedTrashs = uploaded_trash_image.objects.filter(user_id=int(user_id))
+        uploadedTrashs = uploaded_trash_image.objects.filter(user_id=user_id)
         objs = uploadedTrashs.filter(upload_id = int(uploaded_image_id))
         objs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 @api_view(['GET'])
 def statistics(request,user_id):
-    uploadedTrashs = uploaded_trash_image.objects.filter(user_id=int(user_id))
+    uploadedTrashs = uploaded_trash_image.objects.filter(user_id=user_id)
     categories = uploadedTrashs.objects.values('trash_kind', number_of_trash_kind=Count('trash_kind'))
     #serializer = UploadedtrashimageSerializer(categories, many=True)
     #return Response(serializer.data)
-
-    return HttpResponse(categories)
+    return HttpResponse({{categories}})
