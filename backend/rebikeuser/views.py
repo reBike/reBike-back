@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 
@@ -83,3 +84,15 @@ def user_alias_change(request):
             result = user_change_alias(user, input_alias)
 
     return HttpResponse(result) #변경완료 시 True
+=======
+from django.http import HttpResponse
+from .models import user
+
+
+def on_login(request):
+    qs = user.objects.all()
+    username = request.GET.get('username', '')
+    if username:
+        qs = qs.filter(user_name=username)
+    return HttpResponse(qs)
+>>>>>>> aa663442fa862c0b9ef0d4d7792340ef1f6f8012

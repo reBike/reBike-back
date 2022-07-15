@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     # local apps
+    'rest_framework',
     'rebikeuser',
     'rebiketrash',
 ]
