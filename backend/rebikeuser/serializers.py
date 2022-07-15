@@ -1,9 +1,9 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import User
+from .models import user
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['user_name', 'user_alias', 'user_email']
+        model = user
+        fields = ['name', 'alias', 'email'] #Front에 3필드만

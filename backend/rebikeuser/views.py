@@ -1,8 +1,7 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import UserSerializer
-from .userUtil import user_findByName, user_compPW, user_createModel
+from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 
 
 def user_login(request):
@@ -12,7 +11,7 @@ def user_login(request):
     user_data = None
 
     if input_pw != '' and input_id != '':
-        user = user_findByName(input_id).first()
+        user = user_find_by_name(input_id).first()
         if user:
             is_login = user_compPW(input_pw, user)
             if is_login:
@@ -26,15 +25,38 @@ def user_login(request):
     return JsonResponse(data)
 
 
-@csrf_exempt
 def user_signup(request):
-    if request.method == 'POST':
-        user_id = request.POST.get('id')
-        alias = request.POST.get('alias')
-        email = request.POST.get('email')
-        pw = request.POST.get('user_pw')
+    user_id = request.GET.get('id')
+    alias = request.GET.get('alias')
+    email = request.GET.get('email')
+    pw = request.GET.get('pw')
 
-        user_createModel(user_id, email, pw, alias)
-        return HttpResponse(alias)
-    return HttpResponse('get')
+    user_create_client(user_id, email, pw, alias)
 
+    return HttpResponse(user_id)
+
+
+def user_pw_change(request):
+    input_id = request.GET.get('id', '')
+    input_pw = request.GET.get('pw', '')
+    result = False
+
+    if input_pw and input_id:
+        user = user_find_by_name(input_id).first()
+        if user:
+            result = user_change_pw(user, input_pw)
+
+    return HttpResponse(result) #변경완료 시 True
+
+
+def user_alias_change(request):
+    input_id = request.GET.get('id', '')
+    input_alias = request.GET.get('alias', '')
+    result = False
+
+    if input_alias and input_id:
+        user = user_find_by_name(input_id).first()
+        if user:
+            result = user_change_alias(user, input_alias)
+
+    return HttpResponse(result) #변경완료 시 True
