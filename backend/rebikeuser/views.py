@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .serializers import UserSerializer
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
-
+from rest_framework.views import APIView
 
 def user_login(request):
     input_id = request.GET.get('id', '')
@@ -23,17 +23,17 @@ def user_login(request):
     }
 
     return JsonResponse(data)
-
+class
 
 def user_signup(request):
-    user_id = request.GET.get('id')
+    name = request.GET.get('id')
+    pw = request.GET.get('pw')
     alias = request.GET.get('alias')
     email = request.GET.get('email')
-    pw = request.GET.get('pw')
 
-    user_create_client(user_id, email, pw, alias)
+    user_create_client(name, email, pw, alias)
 
-    return HttpResponse(user_id)
+    return HttpResponse(name)
 
 
 def user_pw_change(request):

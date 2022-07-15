@@ -31,15 +31,15 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 #
-def user_create_client(user_id, email, pw, alias):
-    if user_find_by_name(user_id):
+def user_create_client(name, email, pw, alias):
+    if user_find_by_name(name):
         return 'this id is overlapped'
     if user_find_by_alias(alias):
         return 'this alias is overlapped'
 
     hash_pw, salt = user_hash_pw(pw)
-    user.objects.create(id=uuid.uuid4(), name=user_id, alias=alias, pw=hash_pw, salt=salt, email=email)
-    return True
+    user.objects.create(id=uuid.uuid4(), name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
+
 
 #
 def user_find_by_name(name):
