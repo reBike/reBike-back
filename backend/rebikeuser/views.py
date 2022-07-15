@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .serializers import UserSerializer
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 
-
+# 로그인
 def user_login(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
@@ -24,7 +24,7 @@ def user_login(request):
 
     return JsonResponse(data)
 
-
+# 회원가입
 def user_signup(request):
     user_id = request.GET.get('id')
     alias = request.GET.get('alias')
@@ -35,7 +35,7 @@ def user_signup(request):
 
     return HttpResponse(user_id)
 
-
+# 비밀번호변경
 def user_pw_change(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
@@ -48,7 +48,7 @@ def user_pw_change(request):
 
     return HttpResponse(result) #변경완료 시 True
 
-
+#
 def user_alias_change(request):
     input_id = request.GET.get('id', '')
     input_alias = request.GET.get('alias', '')
