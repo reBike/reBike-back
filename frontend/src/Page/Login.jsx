@@ -54,6 +54,7 @@ function Login() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            event,
             email: data.get("email"),
             password: data.get("password"),
         });
@@ -130,7 +131,7 @@ function Login() {
                             </Button>
                             <Typography align="right">
                                 <Link
-                                    href="#"
+                                    href="/register"
                                     style={{
                                         textDecoration: "none",
                                         fontWeight: "bold",
