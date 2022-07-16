@@ -25,7 +25,7 @@ def user_change_pw(user, pw):
 
 #비밀번호 해시
 def user_hash_pw(pw):
-    pw = pw.encode('utf-8')
+    pw = str(pw).encode('utf-8')
     salt = bcrypt.gensalt()
     hash_pw = bcrypt.hashpw(pw, salt)
     return hash_pw, salt
