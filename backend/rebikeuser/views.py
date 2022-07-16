@@ -8,17 +8,22 @@ from .userUtil import user_find_by_name, user_compPW, user_create_client, user_c
 def user_login(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
+    user_data = None
+    is_login = False
 
     if input_pw != '' and input_id != '':
         user = user_find_by_name(input_id).first()
         if user:
             is_login = user_compPW(input_pw, user)
             if is_login:
-                return HttpResponse(True)
+                user_data = UserSerializer(user)
 
-    return HttpResponse(False)
+    result = {
+        'user': user_data.data,
+        'is_login': is_login,
+    }
 
-
+    return JsonResponse(result)
 
 
 def user_signup(request):
