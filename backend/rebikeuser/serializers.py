@@ -6,4 +6,4 @@ from .models import user
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ['name', 'alias', 'email']
+        fields = ['name', 'alias', 'email'] #Front에 3필드만

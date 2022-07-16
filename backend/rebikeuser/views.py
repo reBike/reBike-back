@@ -4,7 +4,7 @@ from django.core import serializers
 from .serializers import UserSerializer
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 
-
+# 로그인
 def user_login(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
@@ -25,7 +25,7 @@ def user_login(request):
 
     return JsonResponse(result)
 
-
+# 회원가입
 def user_signup(request):
     user_id = request.GET.get('id')
     alias = request.GET.get('alias')
@@ -36,7 +36,7 @@ def user_signup(request):
 
     return HttpResponse(result)
 
-
+# 비밀번호변경
 def user_pw_change(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
@@ -47,9 +47,9 @@ def user_pw_change(request):
         if user:
             result = user_change_pw(user, input_pw)
 
-    return HttpResponse(result)
+    return HttpResponse(result) #변경완료 시 True
 
-
+#
 def user_alias_change(request):
     input_id = request.GET.get('id', '')
     input_alias = request.GET.get('alias', '')
@@ -60,4 +60,4 @@ def user_alias_change(request):
         if user:
             result = user_change_alias(user, input_alias)
 
-    return HttpResponse(result)
+    return HttpResponse(result) #변경완료 시 True
