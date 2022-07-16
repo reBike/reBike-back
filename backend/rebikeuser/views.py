@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 from .serializers import UserSerializer
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
@@ -8,22 +8,17 @@ from .userUtil import user_find_by_name, user_compPW, user_create_client, user_c
 def user_login(request):
     input_id = request.GET.get('id', '')
     input_pw = request.GET.get('pw', '')
-    is_login = False
-    user_data = None
 
     if input_pw != '' and input_id != '':
         user = user_find_by_name(input_id).first()
         if user:
             is_login = user_compPW(input_pw, user)
             if is_login:
-                user_data = UserSerializer(user)
+                return HttpResponse(True)
 
-    data = {
-        'user': user_data,
-        'is_login': is_login,
-    }
+    return HttpResponse(False)
 
-    return JsonResponse(data)
+
 
 
 def user_signup(request):
@@ -32,9 +27,9 @@ def user_signup(request):
     email = request.GET.get('email')
     pw = request.GET.get('pw')
 
-    user_create_client(user_id, email, pw, alias)
+    result = user_create_client(user_id, email, pw, alias)
 
-    return HttpResponse(user_id)
+    return HttpResponse(result)
 
 
 def user_pw_change(request):
