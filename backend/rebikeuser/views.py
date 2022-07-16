@@ -1,7 +1,8 @@
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from rest_framework.decorators import api_view
 
-from .serializers import UserSerializer, UserSignupResponse
+from .serializers import UserSerializer, UserSignupResponse, SignupInput
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -31,26 +32,18 @@ def user_login(request):
 #rebikeuser/views.py
 class UserSignupAPI(APIView):
     def post(self, request):
-        name = request.data['name']
+        name = request.data['name'] #dict로 되있음
         pw = request.data['pw']
         alias = request.data['alias']
         email = request.data['email']
+        serializer = SignupInput(data={'email': email, 'pw': pw, 'alias': alias, 'name': name})
         #print(name, pw, alias, email)
-
-        str = user_create_client(name, email, pw, alias)
-        serializer = UserSignupResponse(str, many=False)
-        return Response(serializer.data)    #Only name
+        if serializer.is_valid():
+            str = user_create_client(name, email, pw, alias)
+            serializer2 = UserSignupResponse(str, many=False)
+            return Response(serializer2.data)    #Only name
         #return JSONRenderer().render(serializer.data)
-
-
-
-# {
-#     "name": "1",
-#     "pw": "2",
-#     "alias": "3",
-#     "email": "4",
-# }
-
+        return redirect('/user/login/')
 
 
 
@@ -62,15 +55,6 @@ def user_signup(request):
 
     user_create_client(name, email, pw, alias)
     return HttpResponse(name)
-
-@api_view(['PATCH'])
-def user_pw_change_DRF(request):
-    input_id=request.POST.get('id','')
-    input_pw=request.POST.get('id','')
-
-
-
-
 
 
 def user_pw_change(request):

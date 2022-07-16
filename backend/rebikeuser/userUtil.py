@@ -7,7 +7,7 @@ from .models import user
 def user_change_alias(user, alias):
     if user and alias:
         if user_find_by_alias(alias):   # 해당 alias를 가진 user가 있으면
-            return 'this alias is overlapped'
+            return 'this id is duplicated'
         user.alias = alias
         user.save()
         return True
@@ -33,9 +33,9 @@ def user_hash_pw(pw):
 #
 def user_create_client(name, email, pw, alias):
     if user_find_by_name(name):
-        return 'this id is overlapped'
+        return 'this id is duplicated'
     if user_find_by_alias(alias):
-        return 'this alias is overlapped'
+        return 'this alias is duplicated'
     hash_pw, salt = user_hash_pw(pw)
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
     #return user.objects.all()
