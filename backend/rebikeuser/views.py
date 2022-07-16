@@ -26,15 +26,18 @@ def user_login(request):
     return JsonResponse(result)
 
 # 회원가입
-def user_signup(request):
-    user_id = request.GET.get('id')
-    alias = request.GET.get('alias')
-    email = request.GET.get('email')
-    pw = request.GET.get('pw')
-
-    result = user_create_client(user_id, email, pw, alias)
-
-    return HttpResponse(result)
+class UserSignupAPI(APIView):
+    def post(self, request):
+        name = request.data['name'] #dict로 되있음
+        pw = request.data['pw']
+        alias = request.data['alias']
+        email = request.data['email']
+        serializer = SignupInput(data={'email': email, 'pw': pw, 'alias': alias, 'name': name})
+        if serializer.is_valid():
+            str = user_create_client(name, email, pw, alias)
+            serializer2 = UserSignupResponse(str, many=False)
+            return Response(serializer2.data)    #Only name
+        return redirect('/user/login/')
 
 # 비밀번호변경
 def user_pw_change(request):
