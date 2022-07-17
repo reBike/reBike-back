@@ -17,4 +17,3 @@ class user(models.Model):
         db_table = 'user'
 #, default=str(uuid.uuid4())
 
-

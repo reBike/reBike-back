@@ -5,6 +5,8 @@ from rebikeuser.models import user
 class trash_kind(models.Model):
     kind = models.CharField(primary_key=True, max_length=30)
     way = models.CharField(max_length=200)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -13,6 +15,7 @@ class trash_kind(models.Model):
 
 class uploaded_trash_image(models.Model):
     uploaded_trash_image_id = models.AutoField(primary_key=True)
+    active = models.IntegerField(default=1)
     img = models.CharField(max_length=200)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
