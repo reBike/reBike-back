@@ -8,5 +8,5 @@ urlpatterns = [
     path('signup/', views.UserSignupAPI.as_view()),
     path('changepw/', views.user_pw_change),
     path('changealias/', views.user_alias_change),
-    path('deleteuser/', views.delete)
+    path('deactivateuser/', views.deactivateUser)
 ]

@@ -10,3 +10,5 @@ djangorestframework==3.13.1
 #django-rest-swagger==2.2.0
 bcrypt==3.2.2
 pygments
+drf-yasg==1.21.0
+

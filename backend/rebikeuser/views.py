@@ -1,16 +1,10 @@
 from django.http import HttpResponse, JsonResponse
-
 from django.shortcuts import redirect
 from rest_framework.decorators import api_view
-
-from django.core import serializers
-
-
 from .serializers import UserSerializer, UserSignupResponse, SignupInput
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 
 
 from django.http import HttpResponse
@@ -21,9 +15,7 @@ def user_login(request):
     input_name = request.data['name']
     input_pw = request.data['pw']
     is_login = False
-
     user_data = None
-    is_login = False
 
     if input_pw and input_name:
         user = user_find_by_name(input_name).first()
@@ -37,8 +29,9 @@ def user_login(request):
                         "is_login": is_login
                     }
                     return JsonResponse(data)
-
-
+        else:
+            data={"user": None, "is_login": is_login}
+            return JsonResponse(data)
 
 #rebikeuser/views.py
 class UserSignupAPI(APIView):
@@ -52,7 +45,7 @@ class UserSignupAPI(APIView):
             str = user_create_client(name, email, pw, alias)
             serializer2 = UserSignupResponse(str, many=False)
             return Response(serializer2.data)    #Only name
-        return redirect('/user/login/')
+        return redirect('/user/signup/')
 # get으로 회원가입 폼 화면 가져오기
 #     def get(self, request):
 #         return HttpResponse('회원가입 폼 페이지 연결')
@@ -66,10 +59,9 @@ def user_pw_change(request):
 
     if input_name and input_pw and input_past_pw:
         finduser=user_find_by_name(input_name).first()
-        if finduser.pw == input_past_pw:#예전 pw와 name으로 찾은 user의 pw 일치여부
+        if user_compPW(input_past_pw, finduser):#예전 pw와 name으로 찾은 user의 pw 일치여부
             user_change_pw(finduser, input_pw)
             return HttpResponse("성공")
-                #user_change_pw(finduser, input_pw)
         else:
             return HttpResponse('이전 비밀번호가 일치 하지 않습니다.')
     else:
@@ -86,20 +78,19 @@ def user_alias_change(request):
         if finduser:
             user_change_alias(finduser, input_alias) # True : 변경됨, False : 변경실패
             return HttpResponse('성공')
-    return False
+    return HttpResponse("실패")
 
-@api_view(['DELETE'])
-def delete(request):
+@api_view(['POST'])
+def deactivateUser(request):
     name=request.data['name']
     pw=request.data['pw']
     d_user = user_find_by_name(name).first()
-    d_user.active=0
-    if d_user.active == 0 and user_compPW(pw, d_user):
-        d_user.delete()
-        return HttpResponse('회원 삭제 완료')
+    if d_user and user_compPW(pw, d_user):
+        d_user.active=0
+        d_user.save()
+        return HttpResponse("계정이 비활성화 되었습니다.")
     else:
-        return HttpResponse('회원 삭제 실패')
-
+        return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
 
 @api_view(['GET'])
 def on_login(request):

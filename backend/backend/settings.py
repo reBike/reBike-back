@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # local apps
     'rebikeuser',
     'rebiketrash',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
