@@ -50,11 +50,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
-    'UPDATE_LAST_LOGIN': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # 엑세스 토큰 생명주기
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # 리프레쉬 토큰 생명주기
+    'ROTATE_REFRESH_TOKENS': False,                 # 리프레쉬 토큰 갱신
+    'BLACKLIST_AFTER_ROTATION': False,              # 토큰 블랙리스트 생성
+    'UPDATE_LAST_LOGIN': False,                     #
 
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
