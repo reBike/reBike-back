@@ -64,7 +64,7 @@ def user_pw_change(request):
 
     if input_name and input_pw:
         finduser=user_find_by_name(input_name).first()
-        if finduser:
+        if finduser.pw == input_past_pw:#예전 pw와 name으로 찾은 user의 pw 일치여부
             user_change_pw(finduser, input_pw)
             return HttpResponse("성공")
                 #user_change_pw(finduser, input_pw)
