@@ -16,3 +16,4 @@ class user(models.Model):
         managed = False
         db_table = 'user'
 #, default=str(uuid.uuid4())
+

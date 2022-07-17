@@ -1,12 +1,17 @@
 from django.http import HttpResponse, JsonResponse
+
 from django.shortcuts import redirect
 from rest_framework.decorators import api_view
+
+from django.core import serializers
+
 
 from .serializers import UserSerializer, UserSignupResponse, SignupInput
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+
 
 from django.http import HttpResponse
 from .models import user
@@ -16,7 +21,9 @@ def user_login(request):
     input_name = request.data['name']
     input_pw = request.data['pw']
     is_login = False
+
     user_data = None
+    is_login = False
 
     if input_pw and input_name:
         user = user_find_by_name(input_name).first()
