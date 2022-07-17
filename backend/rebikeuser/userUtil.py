@@ -48,14 +48,12 @@ def user_find_by_name(name):
 #
 def user_find_by_alias(alias):
     qs = user.objects.all()
-    result = qs.filter(alias=alias)
-    return result
+    return qs.filter(alias=alias)
 
 #
 def user_user_search_by_name(name):
     qs = user.objects.all()
-    result = qs.filter(name__icontains=name)
-    return result
+    return qs.filter(name__icontains=name)
 
 #
 def user_user_search_by_alias(alias):

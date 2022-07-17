@@ -54,8 +54,8 @@ class UserSignupAPI(APIView):
 @api_view(['POST'])
 def user_pw_change(request):
     input_name = request.data['name']
-    input_pw = request.data['pw']
-    input_past_pw=request.data['pastpw']
+    input_pw = request.data['pw']   #새 비밀번호
+    input_past_pw=request.data['pastpw'] # 이전 비밀번호
 
     if input_name and input_pw and input_past_pw:
         finduser=user_find_by_name(input_name).first()
@@ -63,6 +63,8 @@ def user_pw_change(request):
             user_change_pw(finduser, input_pw)
             return HttpResponse("성공")
                 #user_change_pw(finduser, input_pw)
+        else:
+            return HttpResponse('이전 비밀번호가 일치 하지 않습니다.')
     else:
         return HttpResponse('실패')
 
@@ -78,6 +80,18 @@ def user_alias_change(request):
             user_change_alias(finduser, input_alias) # True : 변경됨, False : 변경실패
             return HttpResponse('성공')
     return False
+
+@api_view(['DELETE'])
+def delete(request):
+    name=request.data['name']
+    pw=request.data['pw']
+    d_user = user_find_by_name(name).first()
+    d_user.active=0
+    if d_user.active == 0 and user_compPW(pw, d_user):
+        d_user.delete()
+        return HttpResponse('회원 삭제 완료')
+    else:
+        return HttpResponse('회원 삭제 실패')
 
 
 @api_view(['GET'])
