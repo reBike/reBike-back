@@ -5,8 +5,7 @@ from .views import UserSignupAPI
 #rebikeuser/urls.py
 urlpatterns = [
     path('login/', views.user_login),
-    path('signup/', UserSignupAPI.as_view()),
+    path('signup/', views.UserSignupAPI.as_view()),
     path('changepw/', views.user_pw_change),
     path('changealias/', views.user_alias_change),
 ]
-

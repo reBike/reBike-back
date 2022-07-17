@@ -7,7 +7,7 @@ from .models import user
 def user_change_alias(user, alias):
     if user and alias:
         if user_find_by_alias(alias):   # 해당 alias를 가진 user가 있으면
-            return 'this id is duplicated'
+            return False
         user.alias = alias
         user.save()
         return True
@@ -66,7 +66,7 @@ def user_user_search_by_alias(alias):
 
 #
 def user_compPW(pw, user):
-    pw = pw.encode('utf-8')
+    pw = str(pw).encode('utf-8')
     salt = user.salt
     hash_pw = bcrypt.hashpw(pw, salt)
     return hash_pw == user.pw
