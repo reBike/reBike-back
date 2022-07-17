@@ -10,22 +10,23 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user
-        fields = ['name', 'alias', 'email'] #Front에 3필드만
+        fields = ['name', 'alias', 'email']  # Front에 3필드만
 
 
-#rebikeuser/serializers.py
+# rebikeuser/serializers.py
 class UserSignupResponse(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ['id']#프론트에주는 값
+        fields = ['id']  # 프론트에주는 값
+
 
 class SignupInput(serializers.ModelSerializer):
     # 검증부
-    email=serializers.EmailField()
-    pw=serializers.CharField(max_length=60)
-    alias=serializers.CharField(max_length=20)
-    name=serializers.CharField(max_length=20)
-    class Meta:
-        model=user
-        fields=['name', 'pw', 'alias', 'email']#실제 response할 필드
+    email = serializers.EmailField()
+    pw = serializers.CharField(max_length=60)
+    alias = serializers.CharField(max_length=20)
+    name = serializers.CharField(max_length=20)
 
+    class Meta:
+        model = user
+        fields = ['name', 'pw', 'alias', 'email']  # 실제 response할 필드
