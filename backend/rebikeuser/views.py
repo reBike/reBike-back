@@ -22,14 +22,14 @@ def user_login(request):
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
-                user_data = UserSerializer(user)
-                print(user_data)
-                print("1111111111111111111111111111111111111111111111111111111111111111111111111111")
-    data = {
-        "user": user_data,
-        "is_login": is_login
-    }
-    return JsonResponse(data)
+                user_data = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                if user_data.is_valid():
+                    data = {
+                        "user": user_data.data,
+                        "is_login": is_login
+                    }
+                    return JsonResponse(data)
+
 
 
 #rebikeuser/views.py
@@ -62,7 +62,7 @@ def user_pw_change(request):
             return HttpResponse("성공")
                 #user_change_pw(finduser, input_pw)
     else:
-        return False
+        return HttpResponse('실패')
 
 
 @api_view(['POST'])
@@ -76,6 +76,7 @@ def user_alias_change(request):
             user_change_alias(finduser, input_alias) # True : 변경됨, False : 변경실패
             return HttpResponse('성공')
     return False
+
 
 @api_view(['GET'])
 def on_login(request):

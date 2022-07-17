@@ -4,6 +4,10 @@ from .models import user
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=20)
+    alias = serializers.CharField(max_length=20)
+    email = serializers.CharField(max_length=50)
+
     class Meta:
         model = user
         fields = ['name', 'alias', 'email'] #Front에 3필드만

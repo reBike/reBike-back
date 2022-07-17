@@ -43,8 +43,7 @@ def user_create_client(name, email, pw, alias):
 #
 def user_find_by_name(name):
     qs = user.objects.all()
-    result = qs.filter(name=name)
-    return result
+    return qs.filter(name=name)
 
 #
 def user_find_by_alias(alias):
