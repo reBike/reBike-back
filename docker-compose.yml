@@ -15,11 +15,11 @@ services:
   #      - 3000:3000
   #    volumes:
   #      - ./frontend:/app
-  mysqldb:
-    build: ./db
-    env_file:
-      - "./db/db.env"
-    ports:
-      - "8989:3306"
-    volumes:
-      - "./data/db/mysql:/var/lib/mysql"
+#  mysqldb:
+#    build: ./db
+#    env_file:
+#      - "./db/db.env"
+#    ports:
+#      - "8989:3306"
+#    volumes:
+#      - "./data/db/mysql:/var/lib/mysql"
