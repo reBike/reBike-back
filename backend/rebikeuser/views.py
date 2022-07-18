@@ -19,9 +19,7 @@ from .models import user
 def user_login(request):
     input_name = request.data['name']
     input_pw = request.data['pw']
-    is_login = False
 
-    data = None
     user_data = None
     is_login = False
 
@@ -29,12 +27,14 @@ def user_login(request):
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
-                user_data = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
-                if user_data.is_valid():
-                    data = {
-                        "user": user_data.data,
-                        "is_login": is_login
-                    }
+                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                if temp.is_valid():
+                    user_data = temp.data
+                    is_login = True
+        data = {
+            "user": user_data,
+            "is_login": is_login
+        }
     return JsonResponse(data)
 
 
