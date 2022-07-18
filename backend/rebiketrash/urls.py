@@ -1,11 +1,17 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
+
+from django.contrib import admin
+from django.urls import include, path, re_path
+
+
 
 urlpatterns =[
     #path('mainpage/users/<user_id>/<upload_img>',views.UploadImage.as_view()),
     path('mainpage',views.UploadImage.as_view()),
     path('mainpage/images/<uploaded_trash_image_id>/result',views.ImageResultPage, name='result'),
     path('mainpage/search-words/<search_word>/result',views.SearchResultPage, name='result'),
+
 
 
     path('mypage/users/<user_id>/images',views.histories, name='histories'),
