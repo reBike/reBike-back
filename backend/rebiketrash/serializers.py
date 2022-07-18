@@ -5,7 +5,7 @@ from .models import trash_kind, uploaded_trash_image
 class TrashkindSerializer(serializers.ModelSerializer) :
     class Meta :
         model = trash_kind    
-        fields = '__all__'            
+        fields = ('kind', 'way')          
 
 
 class UploadedtrashimageSerializer(serializers.ModelSerializer) :
@@ -26,10 +26,10 @@ class UploadedtrashimageStatisticsSerializer(serializers.Serializer) :
 
     class Meta :
         model = uploaded_trash_image
-        fields = ("trash_kind","cnt")
+        fields = ("kind","cnt")
 
 
 class UploadedtrashimageCreateSerializer(serializers.ModelSerializer) :
     class Meta :
         model = uploaded_trash_image       
-        fields = ('active', 'img', 'user_id', 'trash_kind')  
+        fields = ('user_id', 'active', 'img', 'trash_kind')  

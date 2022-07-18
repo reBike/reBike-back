@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rebikeuser',
     'rebiketrash',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
