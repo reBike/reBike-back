@@ -17,9 +17,8 @@ services:
   #      - ./frontend:/app
   mysqldb:
     build: ./db
-    restart: always
     env_file:
-      - "db/db.env"
+      - "./db/db.env"
     ports:
       - "8989:3306"
     volumes:
