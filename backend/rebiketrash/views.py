@@ -1,6 +1,8 @@
+from calendar import day_abbr
 from urllib import response
 from django.shortcuts import render, HttpResponse
 from django.db.models import Count
+import datetime
 
 from .models import trash_kind, uploaded_trash_image
 from rebikeuser.models import user
@@ -56,9 +58,12 @@ def statistics(request, user_id):
 
 
 @api_view(['GET'])
-def statistics_by_date(request, user_id, first_day, last_day):
+def statistics_by_date(request, user_id, from_date, to_date):
+    start_date = from_date
+    end_date = datetime.datetime.strptime(to_date, "%Y-%m-%d").date() + datetime.timedelta(days=1)
+    
     uploaded_trashs = uploaded_trash_image.objects.filter(
-        user_id=user_id).values('trash_kind').annotate(cnt=Count('trash_kind'))
+        user_id=user_id, created_at__range=(start_date, end_date)).values('trash_kind').annotate(cnt=Count('trash_kind'))
     serializer = UploadedtrashimageStatisticsSerializer(
         uploaded_trashs, many=True)
     return Response(serializer.data)
@@ -74,7 +79,7 @@ class UploadImage(CreateAPIView):
 
 @api_view(['GET'])
 def ImageResultPage(request, uploaded_trash_image_id):
-    ############## uploaded_trash_image_id 로 ai.. result
+    # uploaded_trash_image_id 로 ai.. result
     result = '유리'
     queryset = trash_kind.objects.filter(kind=result)
     serializer = TrashkindSerializer(queryset, many=True)
@@ -83,7 +88,7 @@ def ImageResultPage(request, uploaded_trash_image_id):
 
 @api_view(['GET'])
 def SearchResultPage(request, search_word):
-    ############## search_word
+    # search_word
     result = search_word
     queryset = trash_kind.objects.filter(kind=result)
     serializer = TrashkindSerializer(queryset, many=True)
