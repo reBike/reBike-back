@@ -1,15 +1,4 @@
-
-from django.contrib import admin
-from django.urls import path, include
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework.permissions import AllowAny
-from django.contrib import admin
-from django.urls import path, include
 from rest_framework import permissions
-from django.urls import include, re_path
-from rest_framework.permissions import AllowAny
-
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.permissions import AllowAny
