@@ -133,7 +133,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-/data
 .env
 .venv
 env/
@@ -183,6 +182,7 @@ node_modules
 bower_components
 
 *.sublime*
+.vscode/
 
 psd
 thumb
@@ -190,3 +190,6 @@ sketch
 
 yarn.lock
 
+#DB
+/data
+.env
