@@ -43,7 +43,6 @@ class UserSignupAPI(APIView):
         email = request.data['email']
 
         str = user_create_client(name, email, pw, alias)
-        print(str)
         if str == 1:
             return HttpResponse('중복된 이름입니다.')
         elif str == 2:
@@ -114,7 +113,7 @@ def on_login(request):
     return HttpResponse(qs)
 
 
-# 미완성 is_login 필드로 넣을지 고민
+# 
 @api_view(['POST'])
 def isAutoSave(request):
     name = request.data['name']
