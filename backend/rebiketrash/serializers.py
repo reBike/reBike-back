@@ -1,13 +1,35 @@
+from pyexpat import model
 from rest_framework import serializers
-from .models import trash_kind, uploaded_trash_image
+from .models import trash_kind, uploaded_trash_image 
 
 class TrashkindSerializer(serializers.ModelSerializer) :
     class Meta :
-        model = trash_kind        # product 모델 사용
-        fields = '__all__'            # 모든 필드 포함
+        model = trash_kind    
+        fields = ('kind', 'way')          
 
 
 class UploadedtrashimageSerializer(serializers.ModelSerializer) :
     class Meta :
-        model = uploaded_trash_image        # product 모델 사용
-        fields = '__all__'            # 모든 필드 포함
+        model = uploaded_trash_image       
+        fields = ("uploaded_trash_image_id","img")            
+
+class UploadedtrashimageDetailSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = uploaded_trash_image       
+        fields = '__all__'  
+
+class UploadedtrashimageStatisticsSerializer(serializers.Serializer) :
+    cnt = serializers.SerializerMethodField()
+
+    def get_cnt(self, model_instance):
+        return model_instance
+
+    class Meta :
+        model = uploaded_trash_image
+        fields = ("kind","cnt")
+
+
+class UploadedtrashimageCreateSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = uploaded_trash_image       
+        fields = ('user_id', 'active', 'img', 'trash_kind')  
