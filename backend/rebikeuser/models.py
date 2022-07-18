@@ -7,7 +7,7 @@ class user(models.Model):
     alias = models.CharField(unique=True, max_length=20)
     pw = models.BinaryField(max_length=60)
     salt = models.BinaryField(max_length=29)
-    email = models.CharField(unique=True, max_length=50)
+    email = models.CharField(max_length=50)
     active = models.IntegerField(default=1)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

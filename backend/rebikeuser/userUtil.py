@@ -2,6 +2,7 @@ import uuid
 import bcrypt
 
 from .models import user
+from django.http import HttpResponse
 
 #
 def user_change_alias(user, alias):
@@ -33,9 +34,9 @@ def user_hash_pw(pw):
 #
 def user_create_client(name, email, pw, alias):
     if user_find_by_name(name):
-        return 'this id is duplicated'
+        return 1
     if user_find_by_alias(alias):
-        return 'this alias is duplicated'
+        return 2
     hash_pw, salt = user_hash_pw(pw)
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
     #return user.objects.all()

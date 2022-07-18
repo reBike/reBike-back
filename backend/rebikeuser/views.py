@@ -38,11 +38,20 @@ class UserSignupAPI(APIView):
         pw = request.data['pw']  # 바디 읽는 법
         alias = request.data['alias']
         email = request.data['email']
+
         serializer = SignupInput(data={'email': email, 'pw': pw, 'alias': alias, 'name': name})
+
         if serializer.is_valid():
             str = user_create_client(name, email, pw, alias)
-            serializer2 = UserSignupResponse(str, many=False)
-            return Response(serializer2.data)  # Only name
+            if str==1:
+                return HttpResponse('중복된 이름입니다.')
+            elif str==2:
+                return HttpResponse('중복된 닉네임입니다.')
+            elif str.email==email:
+                return HttpResponse('중복된 이메일입니다.')
+            else:
+                serializer2 = UserSignupResponse(str, many=False)
+                return Response(serializer2.data)  # Only name
         return redirect('/user/signup/')
 
 
