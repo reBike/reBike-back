@@ -27,7 +27,6 @@ def user_login(request):
                 if temp.is_valid():
                     user_data = temp.data
                     is_login = True
-
         data = {
             "user": user_data,
             "is_login": is_login

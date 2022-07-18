@@ -18,7 +18,12 @@ environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
 
-SECRET_KEY = env('SECRET_KEY')
+if env('IS_DEV'):
+    SECRET_KEY = env('SECRET_KEY')
+    DB_URL = 'localhost:8989'
+else:
+    SECRET_KEY = env('SECRET_KEY')
+    DB_URL = env('DATABASE_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
