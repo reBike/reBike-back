@@ -29,3 +29,8 @@ class SignupInput(serializers.ModelSerializer):
         model=user
         fields=['name', 'pw', 'alias', 'email']#실제 response할 필드
 
+class AutoUpload(serializers.ModelSerializer):
+    save_img = serializers.IntegerField(default=1)
+    class Meta:
+        model=user
+        fields=['save_img']
