@@ -23,13 +23,15 @@ def user_login(request):
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
-                user_data = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
-                if user_data.is_valid():
+                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                if temp.is_valid():
+                    user_data = temp.data
                     is_login = True
-                    data = {
-                        "user": user_data.data,
-                        "is_login": is_login
-                    }
+
+        data = {
+            "user": user_data,
+            "is_login": is_login
+        }
     return JsonResponse(data)
 
 

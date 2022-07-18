@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     # add
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
     # local apps
     'rebikeuser',
     'rebiketrash',
-    'drf_yang',
 ]
 
 MIDDLEWARE = [
