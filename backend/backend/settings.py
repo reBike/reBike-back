@@ -64,28 +64,30 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,  # 로그인 기록 테이블 생성, 로그인 할 때마다 db 들어감
 
     'ALGORITHM': 'HS256',  # jwt 알고리즘
-    'SIGNING_KEY': SECRET_KEY,  # 토큰 생성시 사용할 인증 키
-    'VERIFYING_KEY': None,  #
-    'AUDIENCE': None,  #
-    'ISSUER': None,  #
-    'JWK_URL': None,  #
-    'LEEWAY': 0,  #
+    'SIGNING_KEY': SECRET_KEY,  # 서명 키
+    'VERIFYING_KEY': None,  # 토큰 생성시 사용하는 키 (salt 비슷한것)
+    'AUDIENCE': None,  # 유효성 관련된것같음 잘 모르겠다
+    'ISSUER': None,  # 유효성 관련된것같음 잘 모르겠다
+    'JWK_URL': None,  # 유효성
+    'LEEWAY': 0,  # 만료 시간에 어느정도 여유를 준다
 
-    'AUTH_HEADER_TYPES': ('Bearer',),  #
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',  #
-    'USER_ID_FIELD': 'id',  #
-    'USER_ID_CLAIM': 'user_id',  #
+    'AUTH_HEADER_TYPES': ('Bearer',),  # 헤더 타입
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',  # 헤더 이름
+    'USER_ID_FIELD': 'id',  # 페이로드에 넣을 값의 모델
+    'USER_ID_CLAIM': 'user_id',  # 페이로드에 넣을 값
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    # 권한 확인하는 방법
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    # 모르겠다
+    'TOKEN_TYPE_CLAIM': 'token_type',  # 토큰타입 저장할 때 클레임 이름
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',  #
 
-    'JTI_CLAIM': 'jti',
+    'JTI_CLAIM': 'jti',  #
 
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',  #
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),  #
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  #
 }
 
 MIDDLEWARE = [
@@ -132,10 +134,8 @@ DATABASES = {
     }
 }
 
-
 def test():
     return env
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

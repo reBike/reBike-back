@@ -11,7 +11,11 @@ services:
       - "./data/db/mysql:/var/lib/mysql"
   backend:
     build: ./backend
-    command: [ "python","manage.py","runserver","0.0.0.0:8080" ]
+    command: >
+          bash -c "python wait_mysql.py &&
+                   python manage.py makemigrations &&
+                   python manage.py migrate &&
+                   python manage.py runserver 0.0.0.0:8080"
     ports:
       - "8080:8080"
     volumes:
