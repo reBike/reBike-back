@@ -69,6 +69,3 @@ def SearchResultPage(request, search_word):
     queryset = trash_kind.objects.filter(kind=result)
     serializer = TrashkindSerializer(queryset, many=True)
     return Response(serializer.data)
-
->> >> >> > 5
-f52576bf7b2d6cfe77c7367c95a326786761f4d

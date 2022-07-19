@@ -1,20 +1,6 @@
 version: "3"
 
 services:
-  backend:
-    build: ./backend
-    command: [ "python","manage.py","runserver","0.0.0.0:8080" ]
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./backend:/app
-  #  frontend:
-  #    build: ./frontend
-  #    command: ["npm", "start"]
-  #    ports:
-  #      - 3000:3000
-  #    volumes:
-  #      - ./frontend:/app
   mysqldb:
     build: ./db
     env_file:
@@ -23,3 +9,19 @@ services:
       - "8989:3306"
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
+  backend:
+    build: ./backend
+    command: [ "python","manage.py","runserver","0.0.0.0:8080" ]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mysqldb
+  #  frontend:
+  #    build: ./frontend
+  #    command: ["npm", "start"]
+  #    ports:
+  #      - 3000:3000
+  #    volumes:
+  #      - ./frontend:/app

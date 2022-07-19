@@ -5,6 +5,7 @@ from datetime import timedelta
 import os
 import environ
 
+is_dev = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,21 +13,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-# 환경변수 세팅
-env = environ.Env(DEBUG=(bool, True))
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
-
-if env('IS_DEV'):
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = 'localhost:8989'
-else:
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = env('DATABASE_URL')
-
 # SECURITY WARNING: don't run with debug turned on in production!
+# 환경변수 세팅
+if is_dev:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, 'dev.env')
+    )
+else:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, '.env')
+    )
+
+SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
@@ -41,11 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
-
     # local apps
     'rebikeuser',
     'rebiketrash',
@@ -133,6 +131,11 @@ DATABASES = {
         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
     }
 }
+
+
+def test():
+    return env
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
