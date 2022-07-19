@@ -3,9 +3,6 @@ from django.shortcuts import render, HttpResponse
 from django.db.models import Count
 
 from .models import trash_kind, uploaded_trash_image
-from rebikeuser.models import user
-
-
 
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -13,12 +10,10 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView
 
+from .serializers import TrashkindSerializer, UploadedtrashimageSerializer, UploadedtrashimageDetailSerializer, \
+    UploadedtrashimageStatisticsSerializer, UploadedtrashimageCreateSerializer
 
-from .serializers import TrashkindSerializer, UploadedtrashimageSerializer, UploadedtrashimageDetailSerializer, UploadedtrashimageStatisticsSerializer, UploadedtrashimageCreateSerializer
 
-<<<<<<< HEAD
-# Create your views here.
-=======
 # Create your views here.
 
 @api_view(['GET'])
@@ -52,9 +47,11 @@ def statistics(request, user_id):
         uploaded_trashs, many=True)
     return Response(serializer.data)
 
+
 class UploadImage(CreateAPIView):
     queryset = uploaded_trash_image.objects.all()
     serializer_class = UploadedtrashimageCreateSerializer
+
 
 @api_view(['GET'])
 def ImageResultPage(request, uploaded_trash_image_id):
@@ -64,6 +61,7 @@ def ImageResultPage(request, uploaded_trash_image_id):
     serializer = TrashkindSerializer(queryset, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def SearchResultPage(request, search_word):
     ############## search_word
@@ -71,4 +69,6 @@ def SearchResultPage(request, search_word):
     queryset = trash_kind.objects.filter(kind=result)
     serializer = TrashkindSerializer(queryset, many=True)
     return Response(serializer.data)
->>>>>>> 5f52576bf7b2d6cfe77c7367c95a326786761f4d
+
+>> >> >> > 5
+f52576bf7b2d6cfe77c7367c95a326786761f4d

@@ -1,12 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 
-<<<<<<< HEAD
-# 환경변수 설정
-=======
-
 ####환경변수 설정
->>>>>>> 5f52576bf7b2d6cfe77c7367c95a326786761f4d
 import os
 import environ
 
@@ -46,12 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-<<<<<<< HEAD
+
     'rest_framework_simplejwt',
-=======
     'corsheaders',
     'drf_yasg',
->>>>>>> 5f52576bf7b2d6cfe77c7367c95a326786761f4d
+
     # local apps
     'rebikeuser',
     'rebiketrash',
@@ -66,23 +60,23 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # 엑세스 토큰 생명주기
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # 리프레쉬 토큰 생명주기
-    'ROTATE_REFRESH_TOKENS': False,                 # 리프레쉬 토큰 갱신
-    'BLACKLIST_AFTER_ROTATION': False,              # 토큰 블랙리스트 생성
-    'UPDATE_LAST_LOGIN': False,                     # 로그인 기록 테이블 생성, 로그인 할 때마다 db 들어감
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # 리프레쉬 토큰 생명주기
+    'ROTATE_REFRESH_TOKENS': False,  # 리프레쉬 토큰 갱신
+    'BLACKLIST_AFTER_ROTATION': False,  # 토큰 블랙리스트 생성
+    'UPDATE_LAST_LOGIN': False,  # 로그인 기록 테이블 생성, 로그인 할 때마다 db 들어감
 
-    'ALGORITHM': 'HS256',                           # jwt 알고리즘
-    'SIGNING_KEY': SECRET_KEY,                      # 토큰 생성시 사용할 인증 키
-    'VERIFYING_KEY': None,                          #
-    'AUDIENCE': None,                               #
-    'ISSUER': None,                                 #
-    'JWK_URL': None,                                #
-    'LEEWAY': 0,                                    #
+    'ALGORITHM': 'HS256',  # jwt 알고리즘
+    'SIGNING_KEY': SECRET_KEY,  # 토큰 생성시 사용할 인증 키
+    'VERIFYING_KEY': None,  #
+    'AUDIENCE': None,  #
+    'ISSUER': None,  #
+    'JWK_URL': None,  #
+    'LEEWAY': 0,  #
 
-    'AUTH_HEADER_TYPES': ('Bearer',),               #
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',       #
-    'USER_ID_FIELD': 'id',                          #
-    'USER_ID_CLAIM': 'user_id',                     #
+    'AUTH_HEADER_TYPES': ('Bearer',),  #
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',  #
+    'USER_ID_FIELD': 'id',  #
+    'USER_ID_CLAIM': 'user_id',  #
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
