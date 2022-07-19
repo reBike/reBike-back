@@ -5,7 +5,16 @@ PyMySQL==1.0.2
 mysql-connector-python==8.0.23
 setuptools==58.1.0
 mysqlclient==2.1.1
+djangorestframework==3.13.1
+django-filter==22.1
+django-rest-swagger==2.2.0
+drf-yasg==1.21.0
 bcrypt==3.2.2
+<<<<<<< HEAD
 djangorestframework-simplejwt==5.2.0
 djangorestframework
 pygments
+=======
+pygments
+django-cors-headers==3.13.0
+>>>>>>> 5f52576bf7b2d6cfe77c7367c95a326786761f4d

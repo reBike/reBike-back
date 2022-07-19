@@ -4,6 +4,32 @@ from .models import user
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=20)
+    alias = serializers.CharField(max_length=20)
+    email = serializers.CharField(max_length=50)
+
     class Meta:
         model = user
-        fields = ['name', 'alias', 'email'] #Front에 3필드만
+        fields = ['name', 'alias', 'email']  # Front에 3필드만
+
+
+# rebikeuser/serializers.py
+class UserSignupResponse(serializers.ModelSerializer):
+    class Meta:
+        model = user
+        fields = ['name']  # 프론트에주는 값
+
+
+class SignupInput(serializers.ModelSerializer):
+    # 검증부
+    class Meta:
+        model = user
+        fields = ['email', 'pw', 'alias', 'name']
+
+
+class AutoUpload(serializers.ModelSerializer):
+    save_img = serializers.IntegerField(default=1)
+
+    class Meta:
+        model = user
+        fields = ['save_img']
