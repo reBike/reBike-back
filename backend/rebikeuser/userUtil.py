@@ -19,6 +19,8 @@ def login_check(func):
             return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
         except user.DoesNotExist:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
+        except jwt.exceptions.ExpiredSignatureError:
+            return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
         return func(request, *args, **kwargs)
     return wrapper
 
