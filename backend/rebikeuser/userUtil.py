@@ -26,7 +26,7 @@ def login_check(func):
 
 
 def generate_access_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(seconds=60)}, SECRET_KEY, ALGORITHM)
+    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(seconds=1200)}, SECRET_KEY, ALGORITHM)
 
 
 # def login_check(func):
