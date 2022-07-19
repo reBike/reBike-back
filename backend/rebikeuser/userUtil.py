@@ -2,10 +2,10 @@ import uuid
 import bcrypt
 import jwt
 
-from .JWT_Settings import ALGORITHM, SECRET_KEY
+from .JWT_Settings import ALGORITHM, SECRET_KEY, jWT_EXPIRATION_DELTA
 from .models import user
 from django.http import HttpResponse, JsonResponse
-
+from datetime import datetime, timedelta
 
 # 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
 def login_check(func):
@@ -24,7 +24,7 @@ def login_check(func):
 
 
 def generate_access_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name}, SECRET_KEY, ALGORITHM)
+    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(seconds=60)}, SECRET_KEY, ALGORITHM)
 
 
 # def login_check(func):
