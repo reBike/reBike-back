@@ -22,10 +22,9 @@ class UserSignupResponse(serializers.ModelSerializer):
 
 class SignupInput(serializers.ModelSerializer):
     # 검증부
-    email = serializers.EmailField()
-    pw = serializers.CharField(max_length=60)
-    alias = serializers.CharField(max_length=20)
-    name = serializers.CharField(max_length=20)
+    class Meta:
+        model = user
+        fields = ['email', 'pw', 'alias', 'name']
 
 
 class AutoUpload(serializers.ModelSerializer):
