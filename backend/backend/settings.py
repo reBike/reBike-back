@@ -21,7 +21,7 @@ environ.Env.read_env(
 
 if env('IS_DEV'):
     SECRET_KEY = env('SECRET_KEY')
-    DB_URL = 'localhost:8989'
+    DB_URL = 'localhost:3306'
 else:
     SECRET_KEY = env('SECRET_KEY')
     DB_URL = env('DATABASE_URL')
