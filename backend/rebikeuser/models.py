@@ -12,7 +12,6 @@ class user(models.Model):
     save_img = models.IntegerField(default=1)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
-    save_img = models.IntegerField(default=1)
 
     class Meta:
         managed = False
