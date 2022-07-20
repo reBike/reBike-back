@@ -7,14 +7,13 @@ from .models import user
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
 
-# 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
+#로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
 def login_check(func):
     def wrapper(request, *args, **kwargs):
         try:
             access_token = request.headers.get('Authorization', None)
             payload = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
-            user_name = user.objects.get(name=payload['name'])
-            request.user = user_name
+            request.user = user.objects.get(name=payload['name'])
         except jwt.exceptions.DecodeError:
             return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
         except user.DoesNotExist:
@@ -24,9 +23,13 @@ def login_check(func):
         return func(request, *args, **kwargs)
     return wrapper
 
+#def validate_access_token(user, SECRET_KEY, ALGORITHM):
+
+
 
 def generate_access_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(seconds=1200)}, SECRET_KEY, ALGORITHM)
+    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email, 'save_img': user.save_img,
+                       'exp': datetime.utcnow() + timedelta(seconds=1200)}, SECRET_KEY, ALGORITHM)
 
 
 # def login_check(func):

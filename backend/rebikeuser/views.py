@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 
 from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    login_check, generate_access_token
+    generate_access_token, login_check
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -14,6 +14,9 @@ from .models import user
 from .JWT_Settings import ALGORITHM, SECRET_KEY
 import jwt
 
+def refresh_Header(request):
+    access_token=request.headers.get('Authorization', None)
+    payload=jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
 
 @api_view(['POST'])
 def user_login(request):
@@ -29,7 +32,7 @@ def user_login(request):
         if user:
             if user_compPW(input_pw, user):
                 access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
-                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email, 'id': user.id})
                 if temp.is_valid():
                     user_data = temp.data
                     is_login = True
@@ -39,6 +42,8 @@ def user_login(request):
             "access_token": access_token
         }
     return Response(data)
+
+
 
 
 # rebikeuser/views.py
@@ -118,10 +123,9 @@ def on_login(request):
 
 # 
 @api_view(['POST'])
-#@login_check
+@login_check
 def isAutoSave(request):
     name = request.data['name']
-    #is_login = request.data['is_login']
     user = user_find_by_name(name).first()
     if user.save_img == 1:
         user.save_img = 0
