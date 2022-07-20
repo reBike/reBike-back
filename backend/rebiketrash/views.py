@@ -5,8 +5,6 @@ from django.db.models import Count
 from .models import trash_kind, uploaded_trash_image
 from rebikeuser.models import user
 
-
-
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
