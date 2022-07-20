@@ -11,8 +11,8 @@ class user(models.Model):
     email = models.CharField(max_length=50)
     active = models.IntegerField(default=1)
     save_img = models.IntegerField(default=1)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     save_img = models.IntegerField(default=1)
 
     class Meta:
