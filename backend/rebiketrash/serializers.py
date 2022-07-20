@@ -10,7 +10,7 @@ class TrashkindSerializer(serializers.ModelSerializer) :
 class UploadedtrashimageSerializer(serializers.ModelSerializer) :
     class Meta :
         model = uploaded_trash_image       
-        fields = ("uploaded_trash_image_id","img")            
+        fields = ("uploaded_trash_image_id", "img", "trash_kind")            
 
 class UploadedtrashimageDetailSerializer(serializers.ModelSerializer) :
     class Meta :
@@ -26,10 +26,3 @@ class UploadedtrashimageStatisticsSerializer(serializers.Serializer) :
     class Meta :
         model = uploaded_trash_image
         fields = ("kind","cnt")
-
-
-class UploadedtrashimageCreateSerializer(serializers.ModelSerializer) :
-    class Meta :
-        model = uploaded_trash_image       
-        fields = ('user_id', 'active', 'img', 'trash_kind')  
-
