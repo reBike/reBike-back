@@ -29,7 +29,7 @@ def user_login(request):
         if user:
             if user_compPW(input_pw, user):
                 access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
-                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email, 'id':user.id})
                 if temp.is_valid():
                     user_data = temp.data
                     is_login = True
