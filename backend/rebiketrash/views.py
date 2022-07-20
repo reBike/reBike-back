@@ -44,7 +44,7 @@ class UploadedtrashimageDetailListAPI(APIView):
     #     return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, user_id, uploaded_trash_image_id):
-        uploaded_trashs = uploaded_trash_image.objects.filter(
+        uploaded_trash_image.objects.filter(
             user_id=user_id, active=1, uploaded_trash_image_id=int(uploaded_trash_image_id)).update(active=0)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
