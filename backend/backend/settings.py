@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # local apps
     'rebikeuser',
     'rebiketrash',
+    'storages',
 ]
 
 # jwt 추가
@@ -175,6 +176,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_ACCESS_KEY_ID=env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
+
+# AWS_REGION='ap-northeast-2'
+# AWS_S3_CUSTOM_DOMAIN='%s.s3.%s.amazonaws.com'%(AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+# AWS_S3_OBJECT_PARAMETERS={'CacheControl': 'max-age=86400',}
+# DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+# MEDIA_ROOT=os.path.join(BASE_DIR, 'img_data/')
 
 # ================로깅 테스트===================
 # 로깅설정
