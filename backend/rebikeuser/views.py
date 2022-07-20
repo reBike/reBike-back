@@ -3,12 +3,16 @@ from django.shortcuts import redirect
 from rest_framework.decorators import api_view
 
 from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
-from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias
+from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
+    login_check, generate_access_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.http import HttpResponse
 from .models import user
+
+from .JWT_Settings import ALGORITHM, SECRET_KEY
+import jwt
 
 
 @api_view(['POST'])
@@ -17,21 +21,24 @@ def user_login(request):
     input_pw = request.data['pw']
     is_login = False
     user_data = None
+    access_token = None
 
-    data = {"user": None, "is_login": is_login}
+    data = {"user": None, "is_login": is_login, "access_token": access_token}
     if input_pw and input_name:
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
+                access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
                 temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
                 if temp.is_valid():
                     user_data = temp.data
                     is_login = True
         data = {
             "user": user_data,
-            "is_login": is_login
+            "is_login": is_login,
+            "access_token": access_token
         }
-    return JsonResponse(data)
+    return Response(data)
 
 
 # rebikeuser/views.py
@@ -53,15 +60,9 @@ class UserSignupAPI(APIView):
             serializer2 = UserSignupResponse(str, many=False)
             return Response(serializer2.data)  # Only name
 
-    # return redirect('/user/signup/')
-
-
-# get으로 회원가입 폼 화면 가져오기
-#     def get(self, request):
-#         return HttpResponse('회원가입 폼 페이지 연결')
-
 
 @api_view(['POST'])
+@login_check
 def user_pw_change(request):
     input_name = request.data['name']
     input_pw = request.data['pw']  # 새 비밀번호
@@ -79,6 +80,7 @@ def user_pw_change(request):
 
 
 @api_view(['POST'])
+@login_check
 def user_alias_change(request):
     input_name = request.data['name']
     input_alias = request.data['alias']
@@ -92,6 +94,7 @@ def user_alias_change(request):
 
 
 @api_view(['POST'])
+@login_check
 def deactivateUser(request):
     name = request.data['name']
     pw = request.data['pw']
@@ -115,6 +118,7 @@ def on_login(request):
 
 # 
 @api_view(['POST'])
+@login_check
 def isAutoSave(request):
     name = request.data['name']
     is_login = request.data['is_login']

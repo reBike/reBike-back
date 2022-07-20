@@ -1,10 +1,11 @@
 from pathlib import Path
-
+from datetime import timedelta
 
 ####환경변수 설정
 import os
 import environ
 
+is_dev = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,27 +13,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-####환경변수 세팅
-env = environ.Env(DEBUG=(bool, True))
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
-
-if env('IS_DEV'):
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = 'localhost:8989'
-else:
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = env('DATABASE_URL')
-
 # SECURITY WARNING: don't run with debug turned on in production!
+# 환경변수 세팅
+if is_dev:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, 'dev.env')
+    )
+else:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, '.env')
+    )
+
+SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
+    # 'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
     # local apps
@@ -49,6 +49,47 @@ INSTALLED_APPS = [
     'rebiketrash',
     'storages',
 ]
+
+# jwt 추가
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
+#
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # 엑세스 토큰 생명주기
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # 리프레쉬 토큰 생명주기
+#     'ROTATE_REFRESH_TOKENS': False,  # 리프레쉬 토큰 갱신
+#     'BLACKLIST_AFTER_ROTATION': False,  # 토큰 블랙리스트 생성
+#     'UPDATE_LAST_LOGIN': False,  # 로그인 기록 테이블 생성, 로그인 할 때마다 db 들어감
+#
+#     'ALGORITHM': 'HS256',  # jwt 알고리즘
+#     'SIGNING_KEY': SECRET_KEY,  # 서명 키
+#     'VERIFYING_KEY': None,  # 토큰 생성시 사용하는 키 (salt 비슷한것)
+#     'AUDIENCE': None,  # 유효성 관련된것같음 잘 모르겠다
+#     'ISSUER': None,  # 유효성 관련된것같음 잘 모르겠다
+#     'JWK_URL': None,  # 유효성
+#     'LEEWAY': 0,  # 만료 시간에 어느정도 여유를 준다
+#
+#     'AUTH_HEADER_TYPES': ('Bearer',),  # 헤더 타입
+#     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',  # 헤더 이름
+#     'USER_ID_FIELD': 'id',  # 페이로드에 넣을 값의 모델
+#     'USER_ID_CLAIM': 'user_id',  # 페이로드에 넣을 값
+#     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+#     # 권한 확인하는 방법
+#
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     # 모르겠다
+#     'TOKEN_TYPE_CLAIM': 'token_type',  # 토큰타입 저장할 때 클레임 이름
+#     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',  #
+#
+#     'JTI_CLAIM': 'jti',  #
+#
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',  #
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),  #
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  #
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,6 +134,9 @@ DATABASES = {
         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
     }
 }
+
+def test():
+    return env
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

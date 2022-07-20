@@ -1,5 +1,5 @@
 from django.db import models
-from rebikeuser.models import user 
+from rebikeuser.models import user
 
 
 class trash_kind(models.Model):
@@ -9,7 +9,6 @@ class trash_kind(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
     class Meta:
-        managed = False
         db_table = 'trash_kind'
 
 
@@ -23,5 +22,4 @@ class uploaded_trash_image(models.Model):
     trash_kind = models.ForeignKey(trash_kind, on_delete=models.CASCADE, db_column='trash_kind')
 
     class Meta:
-        managed = False
         db_table = 'uploaded_trash_image'

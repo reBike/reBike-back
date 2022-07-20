@@ -5,6 +5,7 @@ from django.db.models import Count
 from .models import trash_kind, uploaded_trash_image
 from rebikeuser.models import user
 
+
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -55,6 +56,7 @@ def statistics(request, user_id):
     return Response(serializer.data)
 
 
+
 @api_view(['GET'])
 def statistics_by_date(request, user_id, from_date, to_date):
     start_date = from_date
@@ -70,6 +72,7 @@ def statistics_by_date(request, user_id, from_date, to_date):
 
 ############################## main page api ##############################
 ################################## under ##################################
+
 
 @api_view(['GET'])
 def searchResultPage(request, search_word):
