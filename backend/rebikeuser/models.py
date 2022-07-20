@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+
 class user(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(unique=True, max_length=20, null=True, blank=True)
@@ -15,7 +16,5 @@ class user(models.Model):
     save_img = models.IntegerField(default=1)
 
     class Meta:
-        managed = False
         db_table = 'user'
-#, default=str(uuid.uuid4())
-
+# , default=str(uuid.uuid4())

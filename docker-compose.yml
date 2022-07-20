@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  mysql_data:
+
 services:
   mysqldb:
     build: ./db
@@ -8,7 +11,7 @@ services:
     ports:
       - "8989:3306"
     volumes:
-      - "./data/db/mysql:/var/lib/mysql"
+      - "mysql_data:/var/lib/mysql"
   backend:
     build: ./backend
     command: >
