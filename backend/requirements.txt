@@ -12,3 +12,5 @@ drf-yasg==1.21.0
 bcrypt==3.2.2
 pygments
 django-cors-headers==3.13.0
+boto3==1.24.32
+django-storages==1.12.3

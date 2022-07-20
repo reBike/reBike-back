@@ -191,5 +191,5 @@ sketch
 yarn.lock
 
 #DB
-/data
-.env
+data/
+db.env

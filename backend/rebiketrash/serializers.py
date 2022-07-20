@@ -1,12 +1,11 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import trash_kind, uploaded_trash_image 
+from .models import trash_kind, uploaded_trash_image
 
 class TrashkindSerializer(serializers.ModelSerializer) :
     class Meta :
         model = trash_kind    
         fields = ('kind', 'way')          
-
 
 class UploadedtrashimageSerializer(serializers.ModelSerializer) :
     class Meta :
@@ -33,3 +32,4 @@ class UploadedtrashimageCreateSerializer(serializers.ModelSerializer) :
     class Meta :
         model = uploaded_trash_image       
         fields = ('user_id', 'active', 'img', 'trash_kind')  
+

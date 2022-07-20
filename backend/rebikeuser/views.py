@@ -42,20 +42,18 @@ class UserSignupAPI(APIView):
         alias = request.data['alias']
         email = request.data['email']
 
-        serializer = SignupInput(data={'email': email, 'pw': pw, 'alias': alias, 'name': name})
+        str = user_create_client(name, email, pw, alias)
+        if str == 1:
+            return HttpResponse('중복된 이름입니다.')
+        elif str == 2:
+            return HttpResponse('중복된 닉네임입니다.')
+        elif str == 3:
+            return HttpResponse('중복된 이메일입니다.')
+        else:
+            serializer2 = UserSignupResponse(str, many=False)
+            return Response(serializer2.data)  # Only name
 
-        if serializer.is_valid():
-            str = user_create_client(name, email, pw, alias)
-            if str==1:
-                return HttpResponse('중복된 이름입니다.')
-            elif str==2:
-                return HttpResponse('중복된 닉네임입니다.')
-            elif str.email==email:
-                return HttpResponse('중복된 이메일입니다.')
-            else:
-                serializer2 = UserSignupResponse(str, many=False)
-                return Response(serializer2.data)  # Only name
-        return redirect('/user/signup/')
+    # return redirect('/user/signup/')
 
 
 # get으로 회원가입 폼 화면 가져오기
@@ -115,7 +113,7 @@ def on_login(request):
     return HttpResponse(qs)
 
 
-# 미완성 is_login 필드로 넣을지 고민
+# 
 @api_view(['POST'])
 def isAutoSave(request):
     name = request.data['name']

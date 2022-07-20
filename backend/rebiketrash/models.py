@@ -25,4 +25,3 @@ class uploaded_trash_image(models.Model):
     class Meta:
         managed = False
         db_table = 'uploaded_trash_image'
-
