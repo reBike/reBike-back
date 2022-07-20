@@ -1,9 +1,11 @@
 from pathlib import Path
+from datetime import timedelta
 
 ####환경변수 설정
 import os
 import environ
 
+is_dev = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,27 +13,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-####환경변수 세팅
-env = environ.Env(DEBUG=(bool, True))
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
-
-if env('IS_DEV'):
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = 'localhost:8989'
-else:
-    SECRET_KEY = env('SECRET_KEY')
-    DB_URL = env('DATABASE_URL')
-
 # SECURITY WARNING: don't run with debug turned on in production!
+# 환경변수 세팅
+if is_dev:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, 'dev.env')
+    )
+else:
+    env = environ.Env(DEBUG=(bool, True))
+    environ.Env.read_env(
+        env_file=os.path.join(BASE_DIR, '.env')
+    )
+
+SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
+    # 'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
     # local apps
     'rebikeuser',
     'rebiketrash',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -92,6 +94,9 @@ DATABASES = {
     }
 }
 
+def test():
+    return env
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -134,65 +139,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_ACCESS_KEY_ID=env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
-
-# ================로깅 테스트===================
-# 로깅설정
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'filters': {
-#         'require_debug_false': {
-#             '()': 'django.utils.log.RequireDebugFalse',
-#         },
-#         'require_debug_true': {
-#             '()': 'django.utils.log.RequireDebugTrue',
-#         },
-#     },
-#     'formatters': {
-#         'django.server': {
-#             '()': 'django.utils.log.ServerFormatter',
-#             'format': '[{server_time}] {message}',
-#             'style': '{',
-#         },
-#     'standard': {
-#             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-#         },
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'INFO',
-#             'filters': ['require_debug_true'],
-#             'class': 'logging.StreamHandler',
-#         },
-#         'django.server': {
-#             'level': 'INFO',
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'django.server',
-#         },
-#         'mail_admins': {
-#             'level': 'ERROR',
-#             'filters': ['require_debug_false'],
-#             'class': 'django.utils.log.AdminEmailHandler'
-#         },
-#     'file': {
-#             'level': 'INFO',
-#             'filters': ['require_debug_false'],
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': BASE_DIR / 'logs/mylog.log',
-#             'maxBytes': 1024*1024*5,  # 5 MB
-#             'backupCount': 5,
-#             'formatter': 'standard',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console', 'mail_admins', 'file'],
-#             'level': 'INFO',
-#         },
-#         'django.server': {
-#             'handlers': ['django.server'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#     }
-# }

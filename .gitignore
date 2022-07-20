@@ -135,6 +135,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+dev.env
 env/
 venv/
 ENV/
@@ -182,6 +183,7 @@ node_modules
 bower_components
 
 *.sublime*
+.vscode/
 
 psd
 thumb
@@ -189,3 +191,10 @@ sketch
 
 yarn.lock
 
+#DB
+data/
+db.env
+
+#jupyter
+*.ipynb
+.ipynb_checkpoints/

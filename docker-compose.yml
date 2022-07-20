@@ -1,13 +1,30 @@
 version: "3"
 
+volumes:
+  mysql_data:
+
 services:
+  mysqldb:
+    build: ./db
+    env_file:
+      - "./db/db.env"
+    ports:
+      - "8989:3306"
+    volumes:
+      - "mysql_data:/var/lib/mysql"
   backend:
     build: ./backend
-    command: [ "python","manage.py","runserver","0.0.0.0:8080" ]
+    command: >
+      bash -c "python wait_mysql.py &&
+               python manage.py makemigrations &&
+               python manage.py migrate &&
+               python manage.py runserver 0.0.0.0:8080"
     ports:
-      - 8080:8080
+      - "8080:8080"
     volumes:
       - ./backend:/app
+    depends_on:
+      - mysqldb
   #  frontend:
   #    build: ./frontend
   #    command: ["npm", "start"]
@@ -15,18 +32,3 @@ services:
   #      - 3000:3000
   #    volumes:
   #      - ./frontend:/app
-  mysqldb:
-    image: mysql:${MYSQL_VERSION}
-    container_name: ${MYSQL_HOST}
-    restart: always
-    env_file:
-      - ".env"
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - "8989:3306"
-    volumes:
-      - "./data/db/mysql:/var/lib/mysql"

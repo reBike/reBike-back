@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+
 class user(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(unique=True, max_length=20, null=True, blank=True)
@@ -10,12 +11,8 @@ class user(models.Model):
     email = models.CharField(max_length=50)
     active = models.IntegerField(default=1)
     save_img = models.IntegerField(default=1)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
-    save_img = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'user'
-#, default=str(uuid.uuid4())
-
