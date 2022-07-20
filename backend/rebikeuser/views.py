@@ -118,15 +118,15 @@ def on_login(request):
 
 # 
 @api_view(['POST'])
-@login_check
+#@login_check
 def isAutoSave(request):
     name = request.data['name']
-    is_login = request.data['is_login']
+    #is_login = request.data['is_login']
     user = user_find_by_name(name).first()
-    if user.save_img == 1 and is_login:
+    if user.save_img == 1:
         user.save_img = 0
         user.save()
-    elif user.save_img == 0 and is_login:
+    elif user.save_img == 0:
         user.save_img = 1
         user.save()
     else:

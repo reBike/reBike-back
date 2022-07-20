@@ -12,7 +12,7 @@ def login_check(func):
     def wrapper(request, *args, **kwargs):
         try:
             access_token = request.headers.get('Authorization', None)
-            payload = jwt.decode(access_token, SECRET_KEY, algorithm=ALGORITHM)
+            payload = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
             user_name = user.objects.get(name=payload['name'])
             request.user = user_name
         except jwt.exceptions.DecodeError:
@@ -79,6 +79,8 @@ def user_find_by_name(name):
     qs = user.objects.all()
     return qs.filter(name=name)
 
+def user_find_by_id(id):
+    return user.objects.all().filter(id=id)
 
 def user_find_by_email(email):
     return user.objects.all().filter(email=email)
