@@ -75,7 +75,7 @@ def statistics_by_date(request, user_id, from_date, to_date):
 ################################## under ##################################
 
 @api_view(['GET'])
-def ImageResultPage(request, uploaded_trash_image_id):
+def imageResultPage(request, uploaded_trash_image_id):
     # uploaded_trash_image_id 로 ai.. result
     ai_result = '유리'
     queryset = trash_kind.objects.filter(kind=ai_result)
@@ -84,7 +84,7 @@ def ImageResultPage(request, uploaded_trash_image_id):
 
 
 @api_view(['GET'])
-def SearchResultPage(request, search_word):
+def searchResultPage(request, search_word):
     # search_word
     ai_result = search_word
     queryset = trash_kind.objects.filter(kind=ai_result)

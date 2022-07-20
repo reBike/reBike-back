@@ -9,8 +9,8 @@ from django.urls import include, path, re_path
 urlpatterns =[
     #path('mainpage/users/<user_id>/<upload_img>',views.UploadImage.as_view()),
     #path('mainpage/users/<user_id>',views.post_image),
-    path('mainpage/images/<uploaded_trash_image_id>/result',views.ImageResultPage),
-    path('mainpage/search-words/<search_word>/result',views.SearchResultPage),
+    path('mainpage/images/<uploaded_trash_image_id>/result',views.imageResultPage),
+    path('mainpage/search-words/<search_word>/result',views.searchResultPage),
 
     path('mainpage/users/<user_id>',views.UploadImage.as_view()),
 
