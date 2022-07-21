@@ -193,7 +193,7 @@ yarn.lock
 
 #DB
 data/
-db.env
+db/db.env
 
 #jupyter
 *.ipynb
