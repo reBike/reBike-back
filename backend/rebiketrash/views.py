@@ -15,6 +15,10 @@ from .serializers import TrashkindSerializer, UploadedtrashimageSerializer, Uplo
 import boto3
 from datetime import datetime, timedelta
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
+import torch
+import pandas
+import os
 # Create your views here.
 
 
@@ -105,7 +109,10 @@ class UploadImage(APIView):
             image_time+"."+image_type
         image_url = image_url.replace(" ", "/")
 
-        ai_result = "플라스틱"
+        ai_result = get_ai_result(image_url)
+
+        if ai_result == 0: ## 사진이 분류되지 않을 경우
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         user_info = user.objects.get(id=user_id)
 
@@ -115,3 +122,14 @@ class UploadImage(APIView):
         trash_info = trash_kind.objects.filter(kind=ai_result)
         serializer = TrashkindSerializer(trash_info, many=True)
         return Response(serializer.data)
+
+
+def get_ai_result(instance):
+    hubconfig = os.path.join(os.getcwd(),'rebiketrash','yolov5')
+    weightfile = os.path.join(os.getcwd(),'rebiketrash','yolov5','runs','train','garbage_yolov5s_results','weights','best.pt')
+    model=torch.hub.load(hubconfig, 'custom', path=weightfile, source='local')
+    results = model(instance)
+    results_dict = results.pandas().xyxy[0].to_dict(orient="records")
+    if not results_dict:
+        return 0
+    return results_dict[0].get('name')
