@@ -76,7 +76,9 @@ def statistics_by_date(request, user_id, from_date, to_date):
 ################################## under ##################################
 @api_view(['GET'])
 def popularGarbageStatistics(request):
-    uploaded_trashs = uploaded_trash_image.objects.all().values(
+    start_date = datetime.today() + timedelta(days=-6)
+    end_date = datetime.today() + timedelta(days=1)
+    uploaded_trashs = uploaded_trash_image.objects.filter(created_at__range=(start_date, end_date)).values(
         'trash_kind').annotate(cnt=Count('trash_kind')).order_by('-cnt')
     serializer = UploadedtrashimageStatisticsSerializer(
         uploaded_trashs, many=True)
