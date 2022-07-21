@@ -30,9 +30,8 @@ def user_login(request):
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
-                access_token = generate_access_token(user=user, key=SECRET_KEY, algorithm=ALGORITHM)
-                refresh_token = generate_refresh_token(user=user, key=SECRET_KEY, algorithm=ALGORITHM)
-                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
+                access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
+                temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email, 'id':user.id})
                 if temp.is_valid():
                     user_data = temp.data
                     is_login = True
