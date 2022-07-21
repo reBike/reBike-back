@@ -59,7 +59,6 @@ def statistics(request, user_id):
     return Response(serializer.data)
 
 
-
 @api_view(['GET'])
 def statistics_by_date(request, user_id, from_date, to_date):
     start_date = from_date
@@ -75,6 +74,13 @@ def statistics_by_date(request, user_id, from_date, to_date):
 
 ############################## main page api ##############################
 ################################## under ##################################
+@api_view(['GET'])
+def popularGarbageStatistics(request):
+    uploaded_trashs = uploaded_trash_image.objects.all().values(
+        'trash_kind').annotate(cnt=Count('trash_kind')).order_by('-cnt')
+    serializer = UploadedtrashimageStatisticsSerializer(
+        uploaded_trashs, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -111,7 +117,7 @@ class UploadImage(APIView):
 
         ai_result = get_ai_result(image_url)
 
-        if ai_result == 0: ## 사진이 분류되지 않을 경우
+        if ai_result == 0:  # 사진이 분류되지 않을 경우
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         user_info = user.objects.get(id=user_id)
@@ -125,9 +131,11 @@ class UploadImage(APIView):
 
 
 def get_ai_result(instance):
-    hubconfig = os.path.join(os.getcwd(),'rebiketrash','yolov5')
-    weightfile = os.path.join(os.getcwd(),'rebiketrash','yolov5','runs','train','garbage_yolov5s_results','weights','best.pt')
-    model=torch.hub.load(hubconfig, 'custom', path=weightfile, source='local')
+    hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
+    weightfile = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5',
+                              'runs', 'train', 'garbage_yolov5s_results', 'weights', 'best.pt')
+    model = torch.hub.load(hubconfig, 'custom',
+                           path=weightfile, source='local')
     results = model(instance)
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:

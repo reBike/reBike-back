@@ -7,6 +7,7 @@ urlpatterns =[
     path('mainpage/search-words/<search_word>/result',views.searchResultPage),
 
     path('mainpage/users/<user_id>/result',views.UploadImage.as_view()),
+    path('mainpage',views.popularGarbageStatistics),
 
     path('mypage/users/<user_id>/images',views.UploadedtrashimageListAPI.as_view()),
     path('mypage/users/<user_id>/images/<uploaded_trash_image_id>',views.UploadedtrashimageDetailListAPI.as_view()),
