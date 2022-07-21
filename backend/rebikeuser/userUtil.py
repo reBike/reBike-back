@@ -1,15 +1,28 @@
-import uuid
 import bcrypt
 import jwt
 
-from .JWT_Settings import ALGORITHM, SECRET_KEY, jWT_EXPIRATION_DELTA
+from .JWT_Settings import ALGORITHM, SECRET_KEY
 from .models import user
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from datetime import datetime, timedelta
 
 
-# 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
-def login_check(func):
+def accesss_token_reissuance(refresh_token):
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
+        user_data = user.objects.get(name=payload['name']).first()
+        access_token = generate_access_token(user_data, SECRET_KEY, ALGORITHM)
+    except jwt.exceptions.DecodeError:
+        return 'DECODE FAIL'
+    except user.DoesNotExist:
+        return 'INVALID USER'
+    except jwt.exceptions.ExpiredSignatureError:
+        return 'EXPIRED TOKEN'
+    return access_token
+
+
+# 로그인 인증 데코레이터 필요한 경우 @access_token_check으로 실행
+def access_token_check(func):
     def wrapper(request, *args, **kwargs):
         try:
             access_token = request.headers.get('Authorization', None)
@@ -17,23 +30,24 @@ def login_check(func):
             user_name = user.objects.get(name=payload['name'])
             request.user = user_name
         except jwt.exceptions.DecodeError:
-            return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+            return JsonResponse({'message': 'DECODE FAIL'}, status=400)
         except user.DoesNotExist:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
         except jwt.exceptions.ExpiredSignatureError:
-            return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+            return JsonResponse({'message': 'EXPIRED TOKEN'}, status=400)
         return func(request, *args, **kwargs)
 
     return wrapper
 
 
-def generate_access_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(seconds=1200)}, SECRET_KEY, ALGORITHM)
+def generate_access_token(user, key, algorithm):
+    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(minutes=30)}, key, algorithm)
 
 
-# def login_check(func):
+def generate_refresh_token(user, key, algorithm):
+    return jwt.encode({'name': user.name, 'exp': datetime.utcnow() + timedelta(days=14)}, key, algorithm)
 
-#
+
 def user_change_alias(user, alias):
     if user and alias:
         if user_find_by_alias(alias):  # 해당 alias를 가진 user가 있으면

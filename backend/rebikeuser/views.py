@@ -4,15 +4,17 @@ from rest_framework.decorators import api_view
 
 from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    login_check, generate_access_token
+    access_token_check, generate_access_token, generate_refresh_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from django.http import HttpResponse
 from .models import user
-
 from .JWT_Settings import ALGORITHM, SECRET_KEY
-import jwt
+
+
+@api_view(['POST'])
+def user_login(request):
+    input
 
 
 @api_view(['POST'])
@@ -28,7 +30,8 @@ def user_login(request):
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
-                access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
+                access_token = generate_access_token(user=user, key=SECRET_KEY, algorithm=ALGORITHM)
+                refresh_token = generate_refresh_token(user=user, key=SECRET_KEY, algorithm=ALGORITHM)
                 temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email})
                 if temp.is_valid():
                     user_data = temp.data
@@ -36,7 +39,8 @@ def user_login(request):
         data = {
             "user": user_data,
             "is_login": is_login,
-            "access_token": access_token
+            "access_token": access_token,
+            "refresh_token": refresh_token
         }
     return Response(data)
 
@@ -62,7 +66,7 @@ class UserSignupAPI(APIView):
 
 
 @api_view(['POST'])
-@login_check
+@access_token_check
 def user_pw_change(request):
     input_name = request.data['name']
     input_pw = request.data['pw']  # 새 비밀번호
@@ -80,7 +84,7 @@ def user_pw_change(request):
 
 
 @api_view(['POST'])
-@login_check
+@access_token_check
 def user_alias_change(request):
     input_name = request.data['name']
     input_alias = request.data['alias']
@@ -94,7 +98,7 @@ def user_alias_change(request):
 
 
 @api_view(['POST'])
-@login_check
+@access_token_check
 def deactivateUser(request):
     name = request.data['name']
     pw = request.data['pw']
@@ -118,7 +122,7 @@ def on_login(request):
 
 # 
 @api_view(['POST'])
-@login_check
+@access_token_check
 def isAutoSave(request):
     name = request.data['name']
     is_login = request.data['is_login']
