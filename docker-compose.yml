@@ -25,6 +25,12 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
+  nginx:
+    build: ./
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx
   #  frontend:
   #    build: ./frontend
   #    command: ["npm", "start"]
