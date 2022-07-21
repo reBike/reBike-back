@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 
 from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    generate_access_token, login_check
+    generate_access_token, generate_refresh_token, login_check
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -14,9 +14,6 @@ from .models import user
 from .JWT_Settings import ALGORITHM, SECRET_KEY
 import jwt
 
-def refresh_Header(request):
-    access_token=request.headers.get('Authorization', None)
-    payload=jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
 
 @api_view(['POST'])
 def user_login(request):
@@ -25,13 +22,14 @@ def user_login(request):
     is_login = False
     user_data = None
     access_token = None
-
-    data = {"user": None, "is_login": is_login, "access_token": access_token}
+    refresh_token = None
+    data = {"user": None, "is_login": is_login, "access_token": access_token, "refresh_token": refresh_token}
     if input_pw and input_name:
         user = user_find_by_name(input_name).first()
         if user:
             if user_compPW(input_pw, user):
                 access_token = generate_access_token(user, SECRET_KEY, ALGORITHM)
+                refresh_token = generate_refresh_token(user, SECRET_KEY, ALGORITHM)
                 temp = UserSerializer(data={'name': user.name, 'alias': user.alias, 'email': user.email, 'id': user.id})
                 if temp.is_valid():
                     user_data = temp.data
@@ -39,11 +37,10 @@ def user_login(request):
         data = {
             "user": user_data,
             "is_login": is_login,
-            "access_token": access_token
+            "access_token": access_token,
+            "refresh_token": refresh_token
         }
     return Response(data)
-
-
 
 
 # rebikeuser/views.py
@@ -67,49 +64,67 @@ class UserSignupAPI(APIView):
 
 
 @api_view(['POST'])
-@login_check
 def user_pw_change(request):
-    input_name = request.data['name']
-    input_pw = request.data['pw']  # 새 비밀번호
-    input_past_pw = request.data['pastpw']  # 이전 비밀번호
+    ans = login_check(request)
+    if ans == 1:
+        input_name = request.data['name']
+        input_pw = request.data['pw']  # 새 비밀번호
+        input_past_pw = request.data['pastpw']  # 이전 비밀번호
 
-    if input_name and input_pw and input_past_pw:
-        finduser = user_find_by_name(input_name).first()
-        if user_compPW(input_past_pw, finduser):  # 예전 pw와 name으로 찾은 user의 pw 일치여부
-            user_change_pw(finduser, input_pw)
-            return HttpResponse("성공")
+        if input_name and input_pw and input_past_pw:
+            finduser = user_find_by_name(input_name).first()
+            if user_compPW(input_past_pw, finduser):  # 예전 pw와 name으로 찾은 user의 pw 일치여부
+                user_change_pw(finduser, input_pw)
+                return HttpResponse("성공")
+            else:
+                return HttpResponse('이전 비밀번호가 일치 하지 않습니다.')
         else:
-            return HttpResponse('이전 비밀번호가 일치 하지 않습니다.')
+            return HttpResponse('실패')
+    elif not ans:
+        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
     else:
-        return HttpResponse('실패')
+        return JsonResponse({'accesstoken': ans})
 
 
 @api_view(['POST'])
-@login_check
+# @login_check
 def user_alias_change(request):
-    input_name = request.data['name']
-    input_alias = request.data['alias']
+    ans=login_check(request)
+    if ans==1:
+        input_name = request.data['name']
+        input_alias = request.data['alias']
 
-    if input_alias and input_name:
-        finduser = user_find_by_name(input_name).first()
-        if finduser:
-            user_change_alias(finduser, input_alias)  # True : 변경됨, False : 변경실패
-            return HttpResponse('성공')
-    return HttpResponse("실패")
+        if input_alias and input_name:
+            finduser = user_find_by_name(input_name).first()
+            if finduser:
+                user_change_alias(finduser, input_alias)  # True : 변경됨, False : 변경실패
+                return HttpResponse('성공')
+        return HttpResponse("실패")
+    elif not ans:
+        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+    else:
+        return JsonResponse({'accesstoken': ans})
 
 
 @api_view(['POST'])
-@login_check
+# @login_check
 def deactivateUser(request):
-    name = request.data['name']
-    pw = request.data['pw']
-    d_user = user_find_by_name(name).first()
-    if d_user and user_compPW(pw, d_user):
-        d_user.active = 0
-        d_user.save()
-        return HttpResponse("계정이 비활성화 되었습니다.")
+    ans=login_check(request)
+    if ans==1:
+        name = request.data['name']
+        pw = request.data['pw']
+        d_user = user_find_by_name(name).first()
+        if d_user and user_compPW(pw, d_user):
+            d_user.active = 0
+            d_user.save()
+            return HttpResponse("계정이 비활성화 되었습니다.")
+        else:
+            return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
+    elif not ans:
+        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
     else:
-        return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
+        return JsonResponse({'accesstoken': ans})
+
 
 
 @api_view(['GET'])
@@ -123,24 +138,30 @@ def on_login(request):
 
 # 
 @api_view(['POST'])
-@login_check
+# @login_check
 def isAutoSave(request):
-    name = request.data['name']
-    user = user_find_by_name(name).first()
-    if user.save_img == 1:
-        user.save_img = 0
-        user.save()
-    elif user.save_img == 0:
-        user.save_img = 1
-        user.save()
+    ans=login_check(request)
+    if ans==1:
+        name = request.data['name']
+        user = user_find_by_name(name).first()
+        if user.save_img == 1:
+            user.save_img = 0
+            user.save()
+        elif user.save_img == 0:
+            user.save_img = 1
+            user.save()
+        else:
+            return HttpResponse('로그인 하세요')
+        serializer = AutoUpload(data={"save_img": user.save_img})
+        if serializer.is_valid():
+            data = {
+                "save_img": serializer.data
+            }
+            return JsonResponse(data)
+    elif not ans:
+        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
     else:
-        return HttpResponse('로그인 하세요')
-    serializer = AutoUpload(data={"save_img": user.save_img})
-    if serializer.is_valid():
-        data = {
-            "save_img": serializer.data
-        }
-        return JsonResponse(data)
+        return JsonResponse({'accesstoken': ans})
 
 #
 # def user_pw_change(request):
