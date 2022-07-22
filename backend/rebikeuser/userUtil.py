@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 def user_token_to_data(token):
     try:
-        payload = jwt.decode(token)
+        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
     except jwt.exceptions.ExpiredSignatureError:
         return "Expired_Token"
     except jwt.exceptions.DecodeError:
@@ -19,7 +19,7 @@ def user_token_to_data(token):
 
 def user_refresh_to_access(refresh_token):
     try:
-        payload = jwt.decode(refresh_token)
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = user_generate_access_token(payload)
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -28,7 +28,7 @@ def user_refresh_to_access(refresh_token):
 
 def user_generate_access_token(user):
     return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(seconds=40)}, SECRET_KEY, ALGORITHM).decode('utf-8')
+                       'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 def user_generate_refresh_token(user):

@@ -8,16 +8,19 @@ from .userUtil import user_find_by_name, user_compPW, user_create_client, user_c
     user_refresh_to_access
 
 
+#
 @api_view(['POST'])
 def user_decode_token(request):
     access_token = request.headers.get('Authorization')
     payload = user_token_to_data(access_token)
     if payload:
-        return JsonResponse({'name': payload.name, 'alias': payload.alias, 'email': payload.email}, status=200)
+        return JsonResponse({'name': payload.get('name'), 'alias': payload.get('alias'), 'email': payload.get('email')},
+                            status=200)
     else:
         return JsonResponse({"message": payload}, status=403)
 
 
+#
 @api_view(['POST'])
 def user_is_duplicate(request):
     case = request.data['case']
@@ -39,18 +42,23 @@ def user_login(request):
     input_pw = request.data['pw']
     access_token = None
     refresh_token = None
+    num = None
 
     if input_pw and input_name:
+        num = 1
         user_data = user_find_by_name(input_name).first()
         if user_data:
+            num = 2
             if user_compPW(input_pw, user_data):
+                num = 3
                 access_token = user_generate_access_token(user_data)
                 refresh_token = user_generate_refresh_token(user_data)
 
-    data = {"access_token": access_token, "refresh_token": refresh_token, "save_img": user_data.save_img}
+    data = {"debug": num, "access_token": access_token, "refresh_token": refresh_token, "save_img": user_data.save_img}
     return Response(data)
 
 
+@api_view(['POST'])
 def user_sign_up(request):
     name = request.data['name']
     pw = request.data['pw']
@@ -69,8 +77,8 @@ def user_pw_change(request):
     input_past_pw = request.data['pastpw']
 
     payload = user_token_to_data(access_token)
-    if payload:
-        find_user = user_find_by_name(payload.name)
+    if type(payload) != str:
+        find_user = user_find_by_name(payload.get('name')).first()
         if user_compPW(input_past_pw, find_user):
             user_change_pw(find_user, input_pw)
             return JsonResponse({"message": "success"}, status=200)
@@ -86,25 +94,27 @@ def user_alias_change(request):
     access_token = request.headers.get('Authorization', None)
     payload = user_token_to_data(access_token)
     if payload:
-        find_user = user_find_by_name(payload.name)
+        find_user = user_find_by_name(payload.get('name')).first()
         user_change_alias(find_user, input_alias)
         return JsonResponse({"message": "success"}, status=200)
     else:
         return JsonResponse({"message": payload}, status=403)
 
 
+#
 @api_view(['POST'])
 def user_sign_out(request):
     access_token = request.headers.get('Authorization', None)
     payload = user_token_to_data(access_token)
     if payload:
-        d_user = user_find_by_name(payload.name).first()
+        d_user = user_find_by_name(payload.get('name')).first()
         user_deactivate(d_user.pw, d_user)
         return JsonResponse({"message": "success"}, status=200)
     else:
         return JsonResponse({"message": payload}, status=403)
 
 
+#
 @api_view(['POST'])
 def user_reissuance_access_token(request):
     refresh_token = request.headers.get('Authorization', None)
@@ -115,13 +125,14 @@ def user_reissuance_access_token(request):
         return JsonResponse({"message": "Invalid Token"}, status=403)
 
 
+#
 @api_view(['POST'])
 def user_set_autosave(request):
     access_token = request.headers.get('Authorization', None)
     save_img = request.data['save_img']
     payload = user_token_to_data(access_token)
     if payload:
-        user = user_find_by_name(payload.name).first()
+        user = user_find_by_name(payload.get('name')).first()
         user.save_img = save_img
         user.save()
         return JsonResponse({"message": "success"}, status=200)
