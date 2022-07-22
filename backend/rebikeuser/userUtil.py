@@ -8,6 +8,24 @@ from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
 
 
+# # 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
+# def login_check(func):
+#     def wrapper(request, *args, **kwargs):
+#         try:
+#             access_token = request.headers.get('Authorization', None)
+#             payload = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
+#             user_name = user.objects.get(name=payload['name'])
+#             request.user = user_name
+#         except jwt.exceptions.DecodeError:
+#             return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+#         except user.DoesNotExist:
+#             return JsonResponse({'message': 'INVALID USER'}, status=400)
+#         except jwt.exceptions.ExpiredSignatureError:
+#             return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+#         return func(request, *args, **kwargs)
+#
+#     return wrapper
+
 # 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
 # def login_check(func):
 #     def wrapper(request, *args, **kwargs):

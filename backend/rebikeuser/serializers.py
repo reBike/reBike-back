@@ -3,6 +3,7 @@ import uuid
 from django.db.models import fields
 from rest_framework import serializers
 from .models import user
+import uuid
 
 
 class UserSerializer(serializers.ModelSerializer):

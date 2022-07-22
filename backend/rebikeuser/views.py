@@ -85,7 +85,6 @@ def user_pw_change(request):
     else:
         return JsonResponse({'accesstoken': ans})
 
-
 @api_view(['POST'])
 # @login_check
 def user_alias_change(request):
