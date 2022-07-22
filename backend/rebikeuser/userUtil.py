@@ -86,12 +86,6 @@ class user_duplicate_check:
 
 
 def user_create_client(name, email, pw, alias):
-    if user_find_by_name(name):
-        return 1
-    if user_find_by_alias(alias):
-        return 2
-    if user_find_by_email(email):
-        return 3
     hash_pw, salt = user_hash_pw(pw)
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
 

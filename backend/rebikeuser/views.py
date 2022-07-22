@@ -58,10 +58,7 @@ def user_sign_up(request):
     alias = request.data['alias']
 
     new_user = user_create_client(name, email, pw, alias)
-    if type(new_user) == int:
-        data = {'err_code': new_user}
-    else:
-        data = UserSignupResponse(new_user, many=False).data
+    data = UserSignupResponse(new_user, many=False).data
     return Response(data)
 
 
