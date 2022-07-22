@@ -99,17 +99,16 @@ def user_find_by_name(name):
     return qs.filter(name=name)
 
 
+def user_find_by_alias(alias):
+    return user.objects.all().filter(alias=alias)
+
+
 def user_find_by_id(id):
     return user.objects.all().filter(id=id)
 
 
 def user_find_by_email(email):
     return user.objects.all().filter(email=email)
-
-
-#
-def user_find_by_alias(alias):
-    return user.objects.all().filter(alias=alias)
 
 
 #
@@ -140,10 +139,6 @@ def user_deactivate(pw, user):
         return False
 
 
-def user_set_autosave(user):
-    if user.save_img == True:
-        user.save_img = False
-        user.save()
-    else:
-        user.save_img = True
-        user.save()
+def user_set_autosave2(user):
+    user.save_img = not user.save_img
+    user.save()
