@@ -1,11 +1,11 @@
 import uuid
 import bcrypt
 import jwt
+from rest_framework.decorators import api_view
 
 from .JWT_Settings import ALGORITHM, SECRET_KEY
 from .models import user
 from datetime import datetime, timedelta
-
 
 def user_token_to_data(token):
     try:
@@ -67,7 +67,7 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-class user_duplicate_check:
+class user_duplicate_check():
     @staticmethod
     def alias(alias):
         if user_find_by_alias(alias):
