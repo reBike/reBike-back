@@ -116,7 +116,7 @@ def on_login(request):
     return HttpResponse(qs)
 
 
-# 
+
 @api_view(['POST'])
 @login_check
 def isAutoSave(request):

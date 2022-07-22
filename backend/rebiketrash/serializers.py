@@ -1,6 +1,9 @@
+import imp
 from pyexpat import model
 from rest_framework import serializers
 from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
+from django.db.models import Count
+
 
 class TrashKindSerializer(serializers.ModelSerializer) :
     class Meta :
@@ -18,21 +21,26 @@ class UploadedTrashImageDetailSerializer(serializers.ModelSerializer) :
         fields = '__all__'  
 
 class UploadedTrashImageStatisticsSerializer(serializers.Serializer) :
+    trash_kind = serializers.SerializerMethodField()
     cnt = serializers.SerializerMethodField()
-
-    def get_cnt(self, model_instance):
-        return model_instance
 
     class Meta :
         model = uploaded_trash_image
-        fields = ("name","cnt")
+        fields = '__all__'
+    
+    def get_trash_kind(self, model_instance):
+        return model_instance['trash_kind']
 
-class ChallengeSerializer(serializers.Serializer) :
+    def get_cnt(self, model_instance):
+        return model_instance['cnt']
+
+
+class ChallengeSerializer(serializers.ModelSerializer) :
     class Meta :
         model = challenge
         fields = ("number","content")
 
-class UserChallengeSerializer(serializers.Serializer) :
+class UserChallengeSerializer(serializers.ModelSerializer) :
     class Meta :
         model = user_challenge
         fields = ("challenge_number","created_at")
