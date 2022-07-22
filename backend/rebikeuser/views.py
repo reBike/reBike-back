@@ -1,13 +1,11 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import user
-from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
+from .serializers import UserSignupResponse, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check, user_deactivate \
-
-from .JWT_Settings import ALGORITHM, SECRET_KEY
+    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check, user_deactivate, \
+    user_refresh_to_access
 
 
 @api_view(['POST'])
@@ -81,6 +79,15 @@ def user_sign_out(request):
         d_user = user_find_by_name(payload.name).first()
         user_deactivate(d_user.pw, d_user)
         return JsonResponse({"message": "success"}, status=200)
+    else:
+        return JsonResponse({"message": "Invalid Token"}, status=403)
+
+
+def user_reissuance_access_toekn(request):
+    refresh_token = request.headers.get('Authorization', None)
+    access_token = user_refresh_to_access(refresh_token)
+    if access_token:
+        return JsonResponse({"refresh_token": refresh_token, "access_token": access_token}, status=200)
     else:
         return JsonResponse({"message": "Invalid Token"}, status=403)
 
