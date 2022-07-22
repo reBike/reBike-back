@@ -3,8 +3,9 @@ from . import views
 
 # rebikeuser/urls.py
 urlpatterns = [
+    path('', views.user),
+
     path('login/', views.user_login),  # auth , get
-    path('signup/', views.user_sign_up),  # user , post
     path('changepw/', views.user_pw_change),  # user , patch
     path('changealias/', views.user_alias_change),  # user, patch
     path('signout/', views.user_sign_out),  # user patch (delete 가 맞긴 한데 실질적으로 db에서 지우는건 아니니까)

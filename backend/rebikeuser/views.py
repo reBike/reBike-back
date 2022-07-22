@@ -8,6 +8,20 @@ from .userUtil import user_find_by_name, user_compPW, user_create_client, user_c
     user_refresh_to_access
 
 
+@api_view(['GET', 'POST', 'PATCH'])
+def user(request):
+    if request.method == 'GET':
+        return JsonResponse({"method": "get"})
+    if request.method == 'POST':
+        return user_sign_up(request)
+    if request.method == 'PATCH':
+        return JsonResponse({"method": "patch"})
+    if request.method == 'PUT':
+        return JsonResponse({"method": "put"})
+    if request.method == 'DELETE':
+        return JsonResponse({"method": "delete"})
+
+
 #
 @api_view(['POST'])
 def user_decode_token(request):
@@ -55,7 +69,6 @@ def user_login(request):
     return Response(data)
 
 
-@api_view(['POST'])
 def user_sign_up(request):
     name = request.data['name']
     pw = request.data['pw']
