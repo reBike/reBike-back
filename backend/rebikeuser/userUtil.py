@@ -9,15 +9,17 @@ from datetime import datetime, timedelta
 
 def user_token_to_data(token):
     try:
-        payload = jwt.decode(token)
-    except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
-        return False
+        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    except jwt.exceptions.ExpiredSignatureError:
+        return "Expired_Token"
+    except jwt.exceptions.DecodeError:
+        return "Invalid_Token"
     return payload
 
 
 def user_refresh_to_access(refresh_token):
     try:
-        payload = jwt.decode(refresh_token)
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = user_generate_access_token(payload)
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -26,7 +28,7 @@ def user_refresh_to_access(refresh_token):
 
 def user_generate_access_token(user):
     return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(seconds=40)}, SECRET_KEY, ALGORITHM).decode('utf-8')
+                       'exp': datetime.utcnow() + timedelta(hours=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 def user_generate_refresh_token(user):
@@ -84,12 +86,6 @@ class user_duplicate_check:
 
 
 def user_create_client(name, email, pw, alias):
-    if user_find_by_name(name):
-        return 1
-    if user_find_by_alias(alias):
-        return 2
-    if user_find_by_email(email):
-        return 3
     hash_pw, salt = user_hash_pw(pw)
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
 
