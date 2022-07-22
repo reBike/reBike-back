@@ -1,5 +1,7 @@
+from http.client import HTTPResponse
 from optparse import Values
 from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
+from rebikeuser.models import user
 
 import boto3
 from datetime import datetime, timedelta
@@ -44,5 +46,8 @@ def get_ai_result(instance):
     return results_dict[0].get('name')
 
 def check_challenge(user_id):
+    uploaded_img_count = uploaded_trash_image.objects.filter(user_id = user_id).count()
+    if uploaded_img_count == 1:
+        challenge_info = user_challenge.objects.create(user_id = user.objects.get(id=user_id), challenge_number = challenge.objects.get(number=1))
     return 0
-    #if user_challenge.objects.filter(user_id):
+        
