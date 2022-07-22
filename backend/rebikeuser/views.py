@@ -47,8 +47,8 @@ def user_sign_up(request):
 @api_view(['POST'])
 def user_pw_change(request):
     access_token = request.headers.get('Authorization', None)
-    input_pw = request.data['pw']  # 새 비밀번호
-    input_past_pw = request.data['pastpw']  # 이전 비밀번호
+    input_pw = request.data['pw']
+    input_past_pw = request.data['pastpw']
 
     payload = user_token_to_data(access_token)
     if payload:
@@ -63,28 +63,20 @@ def user_pw_change(request):
 
 
 @api_view(['POST'])
-# @login_check
 def user_alias_change(request):
-    ans = login_check(request)
-    if ans == 1:
-        input_name = request.data['name']
-        input_alias = request.data['alias']
-
-        if input_alias and input_name:
-            finduser = user_find_by_name(input_name).first()
-            if finduser:
-                user_change_alias(finduser, input_alias)  # True : 변경됨, False : 변경실패
-                return HttpResponse('성공')
-        return HttpResponse("실패")
-    elif not ans:
-        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
+    input_alias = request.data['alias']
+    access_token = request.headers.get('Authorization', None)
+    payload = user_token_to_data(access_token)
+    if payload:
+        find_user = user_find_by_name(payload.name)
+        user_change_alias(find_user, input_alias)
+        return HttpResponse("success")
     else:
-        return JsonResponse({'accesstoken': ans})
+        return HttpResponse("invalid_token")
 
 
 @api_view(['POST'])
-# @login_check
-def deactivateUser(request):
+def user_deactivate(request):
     ans = login_check(request)
     if ans == 1:
         name = request.data['name']
@@ -102,19 +94,7 @@ def deactivateUser(request):
         return JsonResponse({'accesstoken': ans})
 
 
-@api_view(['GET'])
-def on_login(request):
-    qs = user.objects.all()
-    username = request.GET.get('username', '')
-    if username:
-        qs = qs.filter(user_name=username)
-    return HttpResponse(qs)
-
-
-# 
-@api_view(['POST'])
-# @login_check
-def isAutoSave(request):
+def user_set_autosave(request):
     ans = login_check(request)
     if ans == 1:
         name = request.data['name']
@@ -137,16 +117,3 @@ def isAutoSave(request):
         return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
     else:
         return JsonResponse({'accesstoken': ans})
-
-#
-# def user_pw_change(request):
-#     input_id = request.GET.get('id', '')
-#     input_pw = request.GET.get('pw', '')
-#     result = False
-#
-#     if input_pw and input_id:
-#         user = user_find_by_name(input_id).first()
-#         if user:
-#             result = user_change_pw(user, input_pw)
-#
-#     return HttpResponse(result) #변경완료 시 True
