@@ -140,9 +140,5 @@ def user_deactivate(pw, user):
 
 
 def user_set_autosave(user):
-    if user.save_img == True:
-        user.save_img == False
-        user.save()
-    else:
-        user.save_img = True
-        user.save()
+    user.save_img = not user.save_img
+    user.save()
