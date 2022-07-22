@@ -20,7 +20,7 @@ def user_decode_token(request):
         return JsonResponse({"message": payload}, status=403)
 
 
-#
+# 방법
 @api_view(['POST'])
 def user_is_duplicate(request):
     case = request.data['case']
@@ -101,7 +101,6 @@ def user_alias_change(request):
         return JsonResponse({"message": payload}, status=403)
 
 
-#
 @api_view(['POST'])
 def user_sign_out(request):
     access_token = request.headers.get('Authorization', None)
@@ -114,7 +113,6 @@ def user_sign_out(request):
         return JsonResponse({"message": payload}, status=403)
 
 
-#
 @api_view(['POST'])
 def user_reissuance_access_token(request):
     refresh_token = request.headers.get('Authorization', None)
