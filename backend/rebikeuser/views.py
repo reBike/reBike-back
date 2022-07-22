@@ -1,15 +1,18 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import user_create_client, user_change_value, user_token_to_data, UserDuplicateCheck
+from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_alias, \
+    user_generate_access_token, user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_deactivate, \
+    user_refresh_to_access, user_change_value
 
 
 @api_view(['GET', 'POST', 'PATCH'])
 def user(request):
     if request.method == 'GET':
-        return JsonResponse({"method": "get"})
+        return user_is_duplicate(request)
     if request.method == 'POST':
         return user_sign_up(request)
     if request.method == 'PATCH':
@@ -48,5 +51,37 @@ def user_patch(request):
     if type(payload) != str:
         result = user_change_value(input_dict)
         return JsonResponse({"message": result}, status=200)
+
+
+class Auth(APIView):
+    def get(self, request):
+        token = request.headers.get('Authorization', None)
+        if token:
+            return user_reissuance_access_token(request)
+        else:
+            return login(request)
+
+
+def user_reissuance_access_token(refresh_token):
+    token = user_token_to_data(refresh_token)
+    if token.get('type') == 'refresh_token':
+        return user_refresh_to_access(token)  # new accesstoken 반환
     else:
-        return JsonResponse({"message": payload}, status=403)
+        return False
+
+
+def login(request):
+    input_name = request.GET.get('name')
+    input_pw = request.GET.get('pw')
+    access_token = None
+    refresh_token = None
+
+    if input_pw and input_name:
+        user_data = user_find_by_name(input_name).first()
+        if user_data:
+            if user_compPW(input_pw, user_data):
+                access_token = user_generate_access_token(user_data)
+                refresh_token = user_generate_refresh_token(user_data)
+
+    data = {"access_token": access_token, "refresh_token": refresh_token}
+    return Response(data)
