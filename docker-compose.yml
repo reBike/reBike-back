@@ -26,11 +26,14 @@ services:
     depends_on:
       - mysqldb
   nginx:
-    build: ./
+    build: ./nginx
     ports:
       - 80:80
     volumes:
       - ./nginx:/etc/nginx
+    depends_on:
+      - mysqldb
+      - backend
   #  frontend:
   #    build: ./frontend
   #    command: ["npm", "start"]
