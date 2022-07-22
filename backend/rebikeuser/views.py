@@ -37,7 +37,7 @@ def user_login(request):
                 access_token = user_generate_access_token(user)
                 refresh_token = user_generate_refresh_token(user)
 
-    data = {"access_token": access_token, "refresh_token": refresh_token}
+    data = {"access_token": access_token, "refresh_token": refresh_token, "save_img": user.save_img}
     return Response(data)
 
 
@@ -98,6 +98,7 @@ def user_sign_out(request):
         return JsonResponse({"message": payload}, status=403)
 
 
+@api_view(['POST'])
 def user_reissuance_access_token(request):
     refresh_token = request.headers.get('Authorization', None)
     access_token = user_refresh_to_access(refresh_token)
@@ -107,15 +108,22 @@ def user_reissuance_access_token(request):
         return JsonResponse({"message": "Invalid Token"}, status=403)
 
 
+@api_view(['POST'])
 def user_set_autosave(request):
     access_token = request.headers.get('Authorization', None)
+    save_img = request.data['save_img']
     payload = user_token_to_data(access_token)
     if payload:
         user = user_find_by_name(payload.name).first()
-        user_set_autosave(user)
-        serializer = AutoUpload(data={"save_img": user.save_img})
-        if serializer.is_valid():
-            data = {
-                "save_img": serializer.data
-            }
-            return JsonResponse(data)
+        user.save_img=save_img
+        user.save()
+        # serializer = AutoUpload(data={"save_img": user.save_img})
+        # if serializer.is_valid():
+        #     data = {
+        #         "save_img": serializer.data
+        #     }
+        #     return JsonResponse(data)
+
+# 로그인 => 엑세스토큰 , 리프레시 토큰, 세이브이미지
+# 토글 다다다다다 => 로컬스토리지
+# 엑세스토큰 재발급 => db 접근, 세이브이미지 값 변경해주기
