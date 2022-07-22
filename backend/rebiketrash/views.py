@@ -111,6 +111,9 @@ class UploadImage(APIView):
         return Response(serializer.data)
 
     def get(self, request, user_id):
-        challenges = check_challenge(user_id)
-        return HttpResponse(challenges)
+        challenge_info = check_challenge(user_id)
+        if challenge_info == 0:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = UserChallengeSerializer(challenge_info, many=True)
+        return Response(serializer.data)
 
