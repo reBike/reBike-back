@@ -23,7 +23,7 @@ my_settings.py
 
 # C extensions
 *.so
-
+dev.env
 # Distribution / packaging
 .Python
 build/
@@ -195,6 +195,9 @@ yarn.lock
 data/
 db.env
 dev.env
+
+db/db.env
+
 #jupyter
 *.ipynb
 .ipynb_checkpoints/

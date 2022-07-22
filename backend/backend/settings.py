@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'storages',
+    'torch',
     # local apps
     'rebikeuser',
     'rebiketrash',

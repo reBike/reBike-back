@@ -1,23 +1,23 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import trash_kind, uploaded_trash_image
+from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
 
-class TrashkindSerializer(serializers.ModelSerializer) :
+class TrashKindSerializer(serializers.ModelSerializer) :
     class Meta :
         model = trash_kind    
-        fields = ('kind', 'way')          
+        fields = ('name', 'way')          
 
-class UploadedtrashimageSerializer(serializers.ModelSerializer) :
+class UploadedTrashImageSerializer(serializers.ModelSerializer) :
     class Meta :
         model = uploaded_trash_image       
         fields = ("uploaded_trash_image_id", "img", "trash_kind")            
 
-class UploadedtrashimageDetailSerializer(serializers.ModelSerializer) :
+class UploadedTrashImageDetailSerializer(serializers.ModelSerializer) :
     class Meta :
         model = uploaded_trash_image       
         fields = '__all__'  
 
-class UploadedtrashimageStatisticsSerializer(serializers.Serializer) :
+class UploadedTrashImageStatisticsSerializer(serializers.Serializer) :
     cnt = serializers.SerializerMethodField()
 
     def get_cnt(self, model_instance):
@@ -25,4 +25,14 @@ class UploadedtrashimageStatisticsSerializer(serializers.Serializer) :
 
     class Meta :
         model = uploaded_trash_image
-        fields = ("kind","cnt")
+        fields = ("name","cnt")
+
+class ChallengeSerializer(serializers.Serializer) :
+    class Meta :
+        model = challenge
+        fields = ("number","content")
+
+class UserChallengeSerializer(serializers.Serializer) :
+    class Meta :
+        model = user_challenge
+        fields = ("challenge_number","created_at")
