@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view
 from .serializers import UserSignupResponse
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
     user_generate_access_token, user_generate_refresh_token, user_duplicate_check, user_deactivate, \
-    user_refresh_to_access,user_token_to_data
+    user_refresh_to_access, user_token_to_data, UserDuplicateCheck
+
 
 #
 @api_view(['POST'])
@@ -24,13 +25,14 @@ def user_decode_token(request):
 def user_is_duplicate(request):
     case = request.data['case']
     value = request.data['value']
+    checker = UserDuplicateCheck()
 
     if case == 'name':
-        return JsonResponse({"result": user_duplicate_check.name(value)}, status=200)
+        return JsonResponse({"result": checker.name(value)}, status=200)
     elif case == 'alias':
-        return JsonResponse({"result": user_duplicate_check.alias(value)}, status=200)
+        return JsonResponse({"result": checker.alias(value)}, status=200)
     elif case == 'email':
-        return JsonResponse({"result": user_duplicate_check.email(value)}, status=200)
+        return JsonResponse({"result": checker.email(value)}, status=200)
     else:
         return JsonResponse({"message": "Invalid value"}, status=400)
 
@@ -41,19 +43,15 @@ def user_login(request):
     input_pw = request.data['pw']
     access_token = None
     refresh_token = None
-    num = None
 
     if input_pw and input_name:
-        num = 1
         user_data = user_find_by_name(input_name).first()
         if user_data:
-            num = 2
             if user_compPW(input_pw, user_data):
-                num = 3
                 access_token = user_generate_access_token(user_data)
                 refresh_token = user_generate_refresh_token(user_data)
 
-    data = {"debug": num, "access_token": access_token, "refresh_token": refresh_token, "save_img": user_data.save_img}
+    data = {"access_token": access_token, "refresh_token": refresh_token, "save_img": user_data.save_img}
     return Response(data)
 
 

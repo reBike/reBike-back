@@ -1,4 +1,3 @@
-import uuid
 import bcrypt
 import jwt
 from rest_framework.decorators import api_view
@@ -67,7 +66,11 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
+<<<<<<< HEAD
 class user_duplicate_check():
+=======
+class UserDuplicateCheck:
+>>>>>>> 179baf936f01f3a14ae0ccc10ae8647f24121ded
     @staticmethod
     def alias(alias):
         if user_find_by_alias(alias):
@@ -76,13 +79,13 @@ class user_duplicate_check():
 
     @staticmethod
     def email(email):
-        if user_find_by_alias(email):
+        if user_find_by_email(email):
             return False
         return True
 
     @staticmethod
     def name(name):
-        if user_find_by_alias(name):
+        if user_find_by_name(name):
             return False
         return True
 
