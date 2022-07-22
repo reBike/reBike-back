@@ -4,9 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_alias, \
-    user_generate_access_token, user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_deactivate, \
-    user_refresh_to_access, user_change_value
+from .userUtil import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
+    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
 
 
 @api_view(['GET', 'POST', 'PATCH'])
@@ -31,7 +30,7 @@ def user_is_duplicate(request):
     elif case == 'email':
         return JsonResponse({"result": checker.email(value)}, status=200)
     else:
-        return JsonResponse({"message": "Invalid value"}, status=400)
+        return JsonResponse({"message": "Invalid value"}, status=401)
 
 
 def user_sign_up(request):
@@ -42,7 +41,7 @@ def user_sign_up(request):
 
     new_user = user_create_client(name, email, pw, alias)
     data = UserSignupResponse(new_user, many=False).data
-    return Response(data)
+    return Response(data, status=200)
 
 
 def user_patch(request):
@@ -62,12 +61,17 @@ class Auth(APIView):
             return login(request)
 
 
-def user_reissuance_access_token(refresh_token):
-    token = user_token_to_data(refresh_token)
-    if token.get('type') == 'refresh_token':
-        return user_refresh_to_access(token)  # new accesstoken 반환
+def user_reissuance_access_token(request):
+    token = request.headers.get('Authorization', None)
+    payload = user_token_to_data(request.headers.get('Authorization', None))
+    if type(payload) != str:
+        if payload.get('type') == 'refresh_token':
+            access_token = user_refresh_to_access(token)
+            return JsonResponse({"access_token": access_token}, status=200)  # new accesstoken 반환
+        else:
+            return JsonResponse({"message": "it is not refresh_token"}, status=401)
     else:
-        return False
+        return JsonResponse({"message": payload}, status=401)
 
 
 def login(request):
@@ -82,6 +86,8 @@ def login(request):
             if user_compPW(input_pw, user_data):
                 access_token = user_generate_access_token(user_data)
                 refresh_token = user_generate_refresh_token(user_data)
+        else:
+            return JsonResponse({"message": "invalid_data"}, status=400)
 
     data = {"access_token": access_token, "refresh_token": refresh_token}
-    return Response(data)
+    return JsonResponse(data, status=200)
