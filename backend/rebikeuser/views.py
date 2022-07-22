@@ -4,8 +4,23 @@ from rest_framework.decorators import api_view
 
 from .serializers import UserSignupResponse, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check, user_deactivate, \
-    user_refresh_to_access, user_set_autosave2
+    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check, user_deactivate,\
+    user_refresh_to_access
+
+
+@api_view(['POST'])
+def user_is_duplicate(request):
+    case = request.data['case']
+    value = request.data['value']
+
+    if case == 'name':
+        return JsonResponse({"result": user_duplicate_check.name(value)}, status=200)
+    elif case == 'alias':
+        return JsonResponse({"result": user_duplicate_check.alias(value)}, status=200)
+    elif case == 'email':
+        return JsonResponse({"result": user_duplicate_check.email(value)}, status=200)
+    else:
+        return JsonResponse({"message": "Invalid value"}, status=400)
 
 
 @api_view(['POST'])
