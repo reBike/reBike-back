@@ -139,6 +139,6 @@ def user_deactivate(pw, user):
         return False
 
 
-def user_set_autosave2(user):
-    user.save_img = not user.save_img
-    user.save()
+# def user_set_autosave2(user):
+#     user.save_img = not user.save_img
+#     user.save()
