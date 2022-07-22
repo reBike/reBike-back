@@ -27,7 +27,6 @@ def user_refresh_to_access(refresh_token):
     return access_token
 
 
-
 def user_generate_access_token(user):
     return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
                        'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
@@ -67,7 +66,7 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-class user_duplicate_check:
+class UserDuplicateCheck:
     @staticmethod
     def alias(alias):
         if user_find_by_alias(alias):
@@ -76,13 +75,13 @@ class user_duplicate_check:
 
     @staticmethod
     def email(email):
-        if user_find_by_alias(email):
+        if user_find_by_email(email):
             return False
         return True
 
     @staticmethod
     def name(name):
-        if user_find_by_alias(name):
+        if user_find_by_name(name):
             return False
         return True
 
