@@ -1,6 +1,7 @@
-from django.db.models import fields
+import uuid
 from rest_framework import serializers
 from .models import user
+import uuid
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,10 +28,10 @@ class SignupInput(serializers.ModelSerializer):
     pw = serializers.CharField(max_length=60)
     alias = serializers.CharField(max_length=20)
     name = serializers.CharField(max_length=20)
-        
+
     class Meta:
         model = user
-        fields = ('email','pw','alias','name') # 프론트에주는 값
+        fields = ('email', 'pw', 'alias', 'name')  # 프론트에주는 값
 
 
 class AutoUpload(serializers.ModelSerializer):

@@ -9,8 +9,8 @@ class user(models.Model):
     pw = models.BinaryField(max_length=60)
     salt = models.BinaryField(max_length=29)
     email = models.CharField(max_length=50)
-    active = models.IntegerField(default=1)
-    save_img = models.IntegerField(default=1)
+    active = models.BooleanField(default=True)
+    save_img = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

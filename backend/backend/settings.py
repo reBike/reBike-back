@@ -44,10 +44,11 @@ INSTALLED_APPS = [
     # 'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
+    'storages',
+    'torch',
     # local apps
     'rebikeuser',
     'rebiketrash',
-    'storages',
 ]
 
 MIDDLEWARE = [
@@ -94,8 +95,10 @@ DATABASES = {
     }
 }
 
+
 def test():
     return env
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -136,6 +139,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AWS_ACCESS_KEY_ID=env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
