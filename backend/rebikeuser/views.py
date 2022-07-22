@@ -100,3 +100,9 @@ def user_set_autosave(request):
                     "save_img": serializer.data
                 }
                 return JsonResponse(data)
+
+#
+# 로그인 => 엑세스토큰 , 리프레시 토큰, 세이브이미지
+# 토글 다다다다다 => 로컬스토리지
+# 엑세스토큰 재발급 => db 접근, 세이브이미지 값 변경해주기
+
