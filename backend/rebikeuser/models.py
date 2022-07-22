@@ -16,4 +16,3 @@ class user(models.Model):
 
     class Meta:
         db_table = 'user'
-# , default=str(uuid.uuid4())

@@ -97,17 +97,16 @@ def user_find_by_name(name):
     return qs.filter(name=name)
 
 
+def user_find_by_alias(alias):
+    return user.objects.all().filter(alias=alias)
+
+
 def user_find_by_id(id):
     return user.objects.all().filter(id=id)
 
 
 def user_find_by_email(email):
     return user.objects.all().filter(email=email)
-
-
-#
-def user_find_by_alias(alias):
-    return user.objects.all().filter(alias=alias)
 
 
 #
