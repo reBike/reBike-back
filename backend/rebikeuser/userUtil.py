@@ -63,22 +63,24 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-def user_duplicate_check_alias(alias):
-    if user_find_by_alias():
-        return False
-    return True
+class user_duplicate_check:
+    @staticmethod
+    def alias(alias):
+        if user_find_by_alias(alias):
+            return False
+        return True
 
+    @staticmethod
+    def email(email):
+        if user_find_by_alias(email):
+            return False
+        return True
 
-def user_duplicate_check_email(email):
-    if user_find_by_email():
-        return False
-    return True
-
-
-def user_duplicate_check_name(name):
-    if user_find_by_name():
-        return False
-    return True
+    @staticmethod
+    def name(name):
+        if user_find_by_alias(name):
+            return False
+        return True
 
 
 def user_create_client(name, email, pw, alias):
@@ -127,3 +129,20 @@ def user_compPW(pw, user):
     pw = str(pw).encode('utf-8')
     hash_pw = bcrypt.hashpw(pw, user.salt)
     return hash_pw == user.pw
+
+
+def user_deactivate(pw, user):
+    if user and user_compPW(pw, user):
+        user.active = False
+        user.save()
+    else:
+        return False
+
+
+def user_set_autosave(user):
+    if user.save_img == True:
+        user.save_img == False
+        user.save()
+    else:
+        user.save_img = True
+        user.save()

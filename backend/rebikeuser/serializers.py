@@ -1,6 +1,7 @@
 import uuid
 from rest_framework import serializers
 from .models import user
+import uuid
 
 
 class UserSerializer(serializers.ModelSerializer):

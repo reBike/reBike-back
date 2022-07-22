@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rebikeuser',
     'rebiketrash',
     'storages',
+    'torch'
 ]
 
 MIDDLEWARE = [

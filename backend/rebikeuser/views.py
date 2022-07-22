@@ -6,8 +6,7 @@ from rest_framework.decorators import api_view
 from .models import user
 from .serializers import UserSerializer, UserSignupResponse, SignupInput, AutoUpload
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
-    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check_alias, \
-    user_duplicate_check_email, user_duplicate_check_name
+    user_generate_access_token, user_generate_refresh_token, user_token_to_data, user_duplicate_check
 
 from .JWT_Settings import ALGORITHM, SECRET_KEY
 
@@ -38,7 +37,7 @@ def user_sign_up(request):
 
     new_user = user_create_client(name, email, pw, alias)
     if type(new_user) == int:
-        data = {'err_code': new_user}
+        data = {'err_code': new_user, }
     else:
         data = UserSignupResponse(new_user, many=False).data
     return Response(data)
@@ -55,12 +54,11 @@ def user_pw_change(request):
         find_user = user_find_by_name(payload.name)
         if user_compPW(input_past_pw, find_user):
             user_change_pw(find_user, input_pw)
-            return HttpResponse("success")
+            return JsonResponse({"message": "success"}, status=200 )
         else:
-            return HttpResponse("invalid_password")
+            return JsonResponse({"message": "Invali Password"}, status=400 )
     else:
-        return HttpResponse("invalid_token")
-
+        return JsonResponse({"message": "Invalid Token"}, status=403 )
 
 @api_view(['POST'])
 def user_alias_change(request):
@@ -77,43 +75,28 @@ def user_alias_change(request):
 
 @api_view(['POST'])
 def user_deactivate(request):
-    ans = login_check(request)
-    if ans == 1:
         name = request.data['name']
         pw = request.data['pw']
-        d_user = user_find_by_name(name).first()
-        if d_user and user_compPW(pw, d_user):
-            d_user.active = 0
-            d_user.save()
+        access_token = request.headers.get('Authorization', None)
+        payload = user_token_to_data(access_token)
+        if payload:
+            d_user = user_find_by_name(payload.name).first()
+            user_deactivate(pw, d_user)
             return HttpResponse("계정이 비활성화 되었습니다.")
         else:
             return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
-    elif not ans:
-        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
-    else:
-        return JsonResponse({'accesstoken': ans})
 
 
 def user_set_autosave(request):
-    ans = login_check(request)
-    if ans == 1:
         name = request.data['name']
-        user = user_find_by_name(name).first()
-        if user.save_img == 1:
-            user.save_img = 0
-            user.save()
-        elif user.save_img == 0:
-            user.save_img = 1
-            user.save()
-        else:
-            return HttpResponse('로그인 하세요')
-        serializer = AutoUpload(data={"save_img": user.save_img})
-        if serializer.is_valid():
-            data = {
-                "save_img": serializer.data
-            }
-            return JsonResponse(data)
-    elif not ans:
-        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
-    else:
-        return JsonResponse({'accesstoken': ans})
+        access_token = request.headers.get('Authorization', None)
+        payload = user_token_to_data(access_token)
+        if payload:
+            user = user_find_by_name(payload.name).first()
+            user_set_autosave(user)
+            serializer = AutoUpload(data={"save_img": user.save_img})
+            if serializer.is_valid():
+                data = {
+                    "save_img": serializer.data
+                }
+                return JsonResponse(data)
