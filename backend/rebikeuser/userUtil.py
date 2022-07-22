@@ -10,8 +10,10 @@ from datetime import datetime, timedelta
 def user_token_to_data(token):
     try:
         payload = jwt.decode(token)
-    except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
-        return False
+    except jwt.exceptions.ExpiredSignatureError:
+        return "Expired_Token"
+    except jwt.exceptions.DecodeError:
+        return "Invalid_Token"
     return payload
 
 

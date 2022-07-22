@@ -70,7 +70,7 @@ def user_pw_change(request):
         else:
             return JsonResponse({"message": "Invalid Password"}, status=400)
     else:
-        return JsonResponse({"message": "Invalid Token"}, status=403)
+        return JsonResponse({"message": payload}, status=403)
 
 
 @api_view(['POST'])
@@ -83,7 +83,7 @@ def user_alias_change(request):
         user_change_alias(find_user, input_alias)
         return JsonResponse({"message": "success"}, status=200)
     else:
-        return JsonResponse({"message": "Invalid Token"}, status=403)
+        return JsonResponse({"message": payload}, status=403)
 
 
 @api_view(['POST'])
@@ -95,7 +95,7 @@ def user_sign_out(request):
         user_deactivate(d_user.pw, d_user)
         return JsonResponse({"message": "success"}, status=200)
     else:
-        return JsonResponse({"message": "Invalid Token"}, status=403)
+        return JsonResponse({"message": payload}, status=403)
 
 
 def user_reissuance_access_token(request):
