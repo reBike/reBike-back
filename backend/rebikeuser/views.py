@@ -75,43 +75,28 @@ def user_alias_change(request):
 
 @api_view(['POST'])
 def user_deactivate(request):
-    ans = login_check(request)
-    if ans == 1:
         name = request.data['name']
         pw = request.data['pw']
-        d_user = user_find_by_name(name).first()
-        if d_user and user_compPW(pw, d_user):
-            d_user.active = 0
-            d_user.save()
-            return HttpResponse("계정이 비활성화 되었습니다.")
-        else:
-            return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
-    elif not ans:
-        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
-    else:
-        return JsonResponse({'accesstoken': ans})
+        access_token = request.headers.get('Authorization', None)
+        payload = user_token_to_data(access_token)
+        if payload:
+            d_user = user_find_by_name(payload.name).first()
+            user_deactivate(pw, d_user)
+                return HttpResponse("계정이 비활성화 되었습니다.")
+            else:
+                return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
 
 
 def user_set_autosave(request):
-    ans = login_check(request)
-    if ans == 1:
         name = request.data['name']
-        user = user_find_by_name(name).first()
-        if user.save_img == 1:
-            user.save_img = 0
-            user.save()
-        elif user.save_img == 0:
-            user.save_img = 1
-            user.save()
-        else:
-            return HttpResponse('로그인 하세요')
-        serializer = AutoUpload(data={"save_img": user.save_img})
-        if serializer.is_valid():
-            data = {
-                "save_img": serializer.data
-            }
-            return JsonResponse(data)
-    elif not ans:
-        return JsonResponse({'message': 'INVALID TOKEN'}, status=400)
-    else:
-        return JsonResponse({'accesstoken': ans})
+        access_token = request.headers.get('Authorization', None)
+        payload = user_token_to_data(access_token)
+        if payload:
+            user = user_find_by_name(payload.name).first()
+            user_set_autosave(user)
+            serializer = AutoUpload(data={"save_img": user.save_img})
+            if serializer.is_valid():
+                data = {
+                    "save_img": serializer.data
+                }
+                return JsonResponse(data)

@@ -130,3 +130,19 @@ def user_compPW(pw, user):
     pw = str(pw).encode('utf-8')
     hash_pw = bcrypt.hashpw(pw, user.salt)
     return hash_pw == user.pw
+
+
+def user_deactivate(pw, user):
+    if user and user_compPW(pw, user):
+        user.active=False
+        user.save()
+    else:
+        return False
+
+def user_set_autosave(user):
+    if user.save_img==True:
+        user.save_img==False
+        user.save()
+    else:
+        user.save_img=True
+        user.save()
