@@ -3,19 +3,6 @@ from . import views
 
 # rebikeuser/urls.py
 urlpatterns = [
-<<<<<<< HEAD
-    path('login/', views.user_login),# 로그인
-    path('signup/', views.user_sign_up),# 회원가입
-    path('changepw/', views.user_pw_change),#
-
-    path('changealias/', views.user_alias_change),
-    path('signout/', views.user_sign_out),
-    path('reissuance/', views.user_reissuance_access_token),
-
-    path('decode/', views.user_decode_token),  # csrf 에러
-    path('checkdup/', views.user_is_duplicate),  # 클래스 방법 찾기
-    path('autosave/', views.user_set_autosave)  # 조언 듣기
-=======
     path('login/', views.user_login),  # auth , get
     path('signup/', views.user_sign_up),  # user , post
     path('changepw/', views.user_pw_change),  # user , patch
@@ -29,5 +16,4 @@ urlpatterns = [
 
     # user 를 테이블로 생각
     # auth
->>>>>>> 179baf936f01f3a14ae0ccc10ae8647f24121ded
 ]

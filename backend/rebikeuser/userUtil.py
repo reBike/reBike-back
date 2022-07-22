@@ -66,11 +66,7 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-<<<<<<< HEAD
-class user_duplicate_check():
-=======
-class UserDuplicateCheck:
->>>>>>> 179baf936f01f3a14ae0ccc10ae8647f24121ded
+class UserDuplicateCheck():
     @staticmethod
     def alias(alias):
         if user_find_by_alias(alias):
