@@ -2,72 +2,41 @@ import uuid
 import bcrypt
 import jwt
 
-from .JWT_Settings import ALGORITHM, SECRET_KEY, jWT_EXPIRATION_DELTA
+from .JWT_Settings import ALGORITHM, SECRET_KEY
 from .models import user
-from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
 
 
-# 로그인 인증 데코레이터 필요한 경우 @login_check으로 실행
-# def login_check(func):
-#     def wrapper(request, *args, **kwargs):
-#         try:
-#             access_token = request.headers.get('Authorization', None)
-#             refresh_token = request.headers.get('Authorization2', None)
-#             access_payload = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
-#             refresh_payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
-#
-#
-#
-#         return func(request, *args, **kwargs)
-#
-#     return wrapper
-
-
-# def validate_access_token(user, SECRET_KEY, ALGORITHM):
-def login_check(request):
+def user_token_to_data(token):
     try:
-        access_token = request.headers.get('Authorization', None)
-        refresh_token = request.data['refreshtoken']
-        access_payload = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
-        finduser = user.objects.get(name=access_payload['name'])
-        if finduser:
-            return 1
-        else:
-            return False
+        payload = jwt.decode(token)
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
-        refresh_payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
-        user2 = user.objects.filter(name=refresh_payload['name']).first()
-        return generate_access_token(user2, SECRET_KEY, ALGORITHM)
+        return False
+    return payload
 
-def generate_access_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email, 'save_img': user.save_img,
+
+def user_refresh_to_access(refresh_token):
+    try:
+        payload = jwt.decode(refresh_token)
+        access_token = user_generate_access_token(payload)
+    except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
+        return False
+    return access_token
+
+
+def user_generate_access_token(user):
+    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
                        'exp': datetime.utcnow() + timedelta(seconds=40)}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
-def generate_refresh_token(user, SECRET_KEY, ALGORITHM):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email, 'save_img': user.save_img,
+
+def user_generate_refresh_token(user):
+    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
                        'exp': datetime.utcnow() + timedelta(days=7)}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
-
-# accesstoken 재발급
-def validateTokens(access_payload, refresh_payload):
-    acc = user.objects.get(name=access_payload['name'])
-    ref = user.objects.get(name=refresh_payload['name'])
-    if (acc is None) and ref:
-        newAccessToken = generate_access_token(ref, SECRET_KEY, ALGORITHM)
-    else:
-        newAccessToken = None
-    return newAccessToken
-
-
-
-
-
-#
 def user_change_alias(user, alias):
     if user and alias:
-        if user_find_by_alias(alias):  # 해당 alias를 가진 user가 있으면
+        if user_find_by_alias(alias):
             return False
         user.alias = alias
         user.save()
@@ -94,7 +63,24 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-#
+def user_duplicate_check_alias(alias):
+    if user_find_by_alias():
+        return False
+    return True
+
+
+def user_duplicate_check_email(email):
+    if user_find_by_email():
+        return False
+    return True
+
+
+def user_duplicate_check_name(name):
+    if user_find_by_name():
+        return False
+    return True
+
+
 def user_create_client(name, email, pw, alias):
     if user_find_by_name(name):
         return 1
@@ -104,10 +90,8 @@ def user_create_client(name, email, pw, alias):
         return 3
     hash_pw, salt = user_hash_pw(pw)
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
-    # return user.objects.all()
 
 
-#
 def user_find_by_name(name):
     qs = user.objects.all()
     return qs.filter(name=name)
@@ -142,6 +126,5 @@ def user_user_search_by_alias(alias):
 #
 def user_compPW(pw, user):
     pw = str(pw).encode('utf-8')
-    salt = user.salt
-    hash_pw = bcrypt.hashpw(pw, salt)
+    hash_pw = bcrypt.hashpw(pw, user.salt)
     return hash_pw == user.pw
