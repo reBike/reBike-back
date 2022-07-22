@@ -134,15 +134,16 @@ def user_compPW(pw, user):
 
 def user_deactivate(pw, user):
     if user and user_compPW(pw, user):
-        user.active=False
+        user.active = False
         user.save()
     else:
         return False
 
+
 def user_set_autosave(user):
-    if user.save_img==True:
-        user.save_img==False
+    if user.save_img == True:
+        user.save_img == False
         user.save()
     else:
-        user.save_img=True
+        user.save_img = True
         user.save()

@@ -82,9 +82,9 @@ def user_deactivate(request):
         if payload:
             d_user = user_find_by_name(payload.name).first()
             user_deactivate(pw, d_user)
-                return HttpResponse("계정이 비활성화 되었습니다.")
-            else:
-                return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
+            return HttpResponse("계정이 비활성화 되었습니다.")
+        else:
+            return HttpResponse("아이디 또는 비밀번호가 틀렸습니다."), redirect('/user/login/')
 
 
 def user_set_autosave(request):
