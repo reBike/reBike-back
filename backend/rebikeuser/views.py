@@ -1,12 +1,52 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
 from .userUtil import user_find_by_name, user_compPW, user_create_client, user_change_pw, user_change_alias, \
     user_generate_access_token, user_generate_refresh_token, UserDuplicateCheck, user_deactivate, \
     user_refresh_to_access, user_token_to_data, UserDuplicateCheck
+    user_generate_access_token, user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_deactivate, \
+    user_refresh_to_access
 
+
+class Auth(APIView):
+    def post(self, request):
+        return JsonResponse({"method": "post"})
+
+    def get(self, request):
+        input_name = request.GET.get('name')
+        input_pw = request.GET.get('pw')
+        access_token = None
+        refresh_token = None
+
+        if input_pw and input_name:
+            user_data = user_find_by_name(input_name).first()
+            if user_data:
+                if user_compPW(input_pw, user_data):
+                    access_token = user_generate_access_token(user_data)
+                    refresh_token = user_generate_refresh_token(user_data)
+
+        data = {"access_token": access_token, "refresh_token": refresh_token}
+        return Response(data)
+
+    def patch(self, request):
+        return JsonResponse({"method": "patch"})
+
+    def put(self, request):
+        return JsonResponse({"method": "put"})
+
+    def delete(self, request):
+        return JsonResponse({"method": "delete"})
+
+@api_view(['GET'])
+def user_reissuance_access_token(request):
+    token = user_token_to_data(request.headers.get('Authorization', None))
+    if token.get('type')=='refreshtoken':
+        return user_refresh_to_access(token) # new accesstoken 반환
+    else:
+        return False
 
 #
 @api_view(['POST'])
@@ -37,25 +77,6 @@ def user_is_duplicate(request):
         return JsonResponse({"message": "Invalid value"}, status=400)
 
 
-@api_view(['POST'])
-def user_login(request):
-    input_name = request.data['name']
-    input_pw = request.data['pw']
-    access_token = None
-    refresh_token = None
-
-    if input_pw and input_name:
-        user_data = user_find_by_name(input_name).first()
-        if user_data:
-            if user_compPW(input_pw, user_data):
-                access_token = user_generate_access_token(user_data)
-                refresh_token = user_generate_refresh_token(user_data)
-
-    data = {"access_token": access_token, "refresh_token": refresh_token, "save_img": user_data.save_img}
-    return Response(data)
-
-
-@api_view(['POST'])
 def user_sign_up(request):
     name = request.data['name']
     pw = request.data['pw']
@@ -110,14 +131,7 @@ def user_sign_out(request):
         return JsonResponse({"message": payload}, status=403)
 
 
-@api_view(['POST'])
-def user_reissuance_access_token(request):
-    refresh_token = request.headers.get('Authorization', None)
-    access_token = user_refresh_to_access(refresh_token)
-    if access_token:
-        return JsonResponse({"refresh_token": refresh_token, "access_token": access_token}, status=200)
-    else:
-        return JsonResponse({"message": "Invalid Token"}, status=403)
+
 
 
 #

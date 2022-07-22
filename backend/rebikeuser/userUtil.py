@@ -29,12 +29,12 @@ def user_refresh_to_access(refresh_token):
 
 def user_generate_access_token(user):
     return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(hours=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
+                       'exp': datetime.utcnow() + timedelta(hours=5), 'type':'accesstoken'}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 def user_generate_refresh_token(user):
     return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(days=7)}, SECRET_KEY, ALGORITHM).decode('utf-8')
+                       'exp': datetime.utcnow() + timedelta(days=7), 'type': "refreshtoken"}, SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 def user_change_alias(user, alias):
@@ -134,8 +134,3 @@ def user_deactivate(pw, user):
         user.save()
     else:
         return False
-
-
-# def user_set_autosave2(user):
-#     user.save_img = not user.save_img
-#     user.save()
