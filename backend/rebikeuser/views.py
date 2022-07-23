@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
+from .user_util import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
     user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
 
 
