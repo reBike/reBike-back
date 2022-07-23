@@ -16,7 +16,7 @@ def user_token_to_data(token):
         return "Invalid_Token"
     return payload
 
-
+#refreshtoken의 정보로 accesstoken 재발급
 def user_refresh_to_access(refresh_token):
     try:
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
