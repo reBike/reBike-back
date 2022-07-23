@@ -193,11 +193,10 @@ yarn.lock
 
 #DB
 data/
-db.env
-dev.env
-
 db/db.env
 
+db.env
+dev.env
 #jupyter
 *.ipynb
 .ipynb_checkpoints/
