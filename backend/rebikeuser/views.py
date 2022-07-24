@@ -48,7 +48,7 @@ def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
     if type(payload) != str:
-        result = user_change_value(input_dict)
+        result = user_change_value(input_dict, payload.get('alias'))
         return JsonResponse({"message": result}, status=200)
 
 
