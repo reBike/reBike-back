@@ -67,7 +67,7 @@ def user_reissuance_access_token(request):
     if type(payload) != str:
         if payload.get('type') == 'refresh_token':
             access_token = user_refresh_to_access(token)
-            return JsonResponse({"access_token": access_token}, status=200)  # new accesstoken 반환
+            return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환
         else:
             return JsonResponse({"message": "it is not refresh_token"}, status=401)
     else:
