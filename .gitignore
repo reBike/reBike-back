@@ -141,6 +141,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+JWT_settings.py
 
 # Spyder project settings
 .spyderproject
