@@ -24,7 +24,6 @@ class uploaded_trash_image(models.Model):
     class Meta:
         db_table = 'uploaded_trash_image'
 
-
 class challenge(models.Model):
     number = models.AutoField(primary_key=True)
     content = models.CharField(max_length=200)

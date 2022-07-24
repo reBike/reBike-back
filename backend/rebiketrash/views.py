@@ -1,4 +1,3 @@
-
 from urllib import response
 from django.shortcuts import render, HttpResponse
 from django.db.models import Count
@@ -90,10 +89,9 @@ def statistics(user_id):
 
 
 @api_view(['GET'])
-def statistics_by_date(user_id, from_date, to_date):
+def statistics_by_date(request, user_id, from_date, to_date):
     start_date = from_date
-    end_date = datetime.strptime(
-        to_date, "%Y-%m-%d").date() + timedelta(days=1)
+    end_date = datetime.strptime(to_date, "%Y-%m-%d").date() + timedelta(days=1)
 
     uploaded_trashs = uploaded_trash_image.objects.filter(
         user_id=user_id, created_at__range=(start_date, end_date)).values('trash_kind').annotate(cnt=Count('trash_kind'))

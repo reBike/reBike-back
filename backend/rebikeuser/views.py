@@ -21,14 +21,13 @@ def user(request):
 def user_is_duplicate(request):
     case = request.GET.get('case')
     value = request.GET.get('value')
-    checker = UserDuplicateCheck()
 
     if case == 'name':
-        return JsonResponse({"result": checker.name(value)}, status=200)
+        return JsonResponse({"result": UserDuplicateCheck.name(value)}, status=200)
     elif case == 'alias':
-        return JsonResponse({"result": checker.alias(value)}, status=200)
+        return JsonResponse({"result": UserDuplicateCheck.alias(value)}, status=200)
     elif case == 'email':
-        return JsonResponse({"result": checker.email(value)}, status=200)
+        return JsonResponse({"result": UserDuplicateCheck.email(value)}, status=200)
     else:
         return JsonResponse({"message": "Invalid value"}, status=401)
 
@@ -38,7 +37,6 @@ def user_sign_up(request):
     pw = request.data['pw']
     email = request.data['email']
     alias = request.data['alias']
-
     new_user = user_create_client(name, email, pw, alias)
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
@@ -50,6 +48,8 @@ def user_patch(request):
     if type(payload) != str:
         result = user_change_value(input_dict)
         return JsonResponse({"message": result}, status=200)
+    else:
+        return JsonResponse({"message": "Re-login"})
 
 
 class Auth(APIView):
@@ -69,7 +69,7 @@ def user_reissuance_access_token(request):
             access_token = user_refresh_to_access(token)
             return JsonResponse({"access_token": access_token}, status=200)  # new accesstoken 반환
         else:
-            return JsonResponse({"message": "it is not refresh_token"}, status=401)
+            return JsonResponse({"message": "Not Refreshtoken"}, status=401)
     else:
         return JsonResponse({"message": payload}, status=401)
 

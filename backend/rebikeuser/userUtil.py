@@ -51,19 +51,19 @@ def user_hash_pw(pw):
 class UserDuplicateCheck():
     @staticmethod
     def alias(alias):
-        if user_find_by_alias(alias):
+        if user_find_by_alias(alias).first():
             return False
         return True
 
     @staticmethod
     def email(email):
-        if user_find_by_email(email):
+        if user_find_by_email(email).first():
             return False
         return True
 
     @staticmethod
     def name(name):
-        if user_find_by_name(name):
+        if user_find_by_name(name).first():
             return False
         return True
 
