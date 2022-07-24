@@ -68,7 +68,7 @@ class UserDuplicateCheck():
         return True
 
 
-def user_change_value(value):
+def user_change_value(value,name):
     find_user = user_find_by_name(value.get('name'))
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
