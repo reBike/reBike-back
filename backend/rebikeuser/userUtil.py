@@ -28,16 +28,15 @@ def user_refresh_to_access(refresh_token):
     return access_token
 
 
-def user_generate_access_token(user):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(hours=5), 'type': 'access_token'}, SECRET_KEY,
-                      ALGORITHM).decode('utf-8')
+def user_generate_access_token(user_data):
+    return jwt.encode(
+        {'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(minutes=30), 'type': 'access_token'},
+        SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
-def user_generate_refresh_token(user):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
-                       'exp': datetime.utcnow() + timedelta(days=7), 'type': "refresh_token"}, SECRET_KEY,
-                      ALGORITHM).decode('utf-8')
+def user_generate_refresh_token(user_data):
+    return jwt.encode({'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(days=7), 'type': "refresh_token"},
+                      SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 # Password Hashing
@@ -48,7 +47,7 @@ def user_hash_pw(pw):
     return hash_pw, salt
 
 
-class UserDuplicateCheck():
+class UserDuplicateCheck:
     @staticmethod
     def alias(alias):
         if user_find_by_alias(alias):
@@ -94,7 +93,7 @@ def user_create_client(name, email, pw, alias):
     return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
 
 
-def user_compPW(pw, user):
+def user_compPW(pw, user_data):
     pw = str(pw).encode('utf-8')
     hash_pw = bcrypt.hashpw(pw, user.salt)
-    return hash_pw == user.pw
+    return hash_pw == user_data.pw
