@@ -20,7 +20,7 @@ def user(request):
 
 def user_is_duplicate(request):
     case = request.GET.get('case')
-    value = request.GET.get('case')
+    value = request.GET.get('value')
     checker = UserDuplicateCheck()
 
     if case == 'name':

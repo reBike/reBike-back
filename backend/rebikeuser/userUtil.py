@@ -95,5 +95,5 @@ def user_create_client(name, email, pw, alias):
 
 def user_compPW(pw, user_data):
     pw = str(pw).encode('utf-8')
-    hash_pw = bcrypt.hashpw(pw, user.salt)
+    hash_pw = bcrypt.hashpw(pw, user_data.salt)
     return hash_pw == user_data.pw
