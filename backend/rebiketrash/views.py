@@ -8,7 +8,7 @@ from .serializers import TrashFindResponse
 
 
 @api_view(['GET', 'POST', 'PATCH'])
-def images(request):
+def trash(request):
     if request.method == 'GET':
         trash_find(request)
     if request.method == 'POST':
