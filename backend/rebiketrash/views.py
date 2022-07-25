@@ -2,7 +2,7 @@ from urllib import response
 from django.shortcuts import render, HttpResponse
 from django.db.models import Count
 
-from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
+from .models import trash_kind, trash, challenge, user_challenge
 from rebikeuser.models import user
 
 from rest_framework import status, viewsets
@@ -15,7 +15,7 @@ from .serializers import TrashKindSerializer, UploadedTrashImageSerializer, Uplo
 
 import boto3
 from datetime import datetime, timedelta
-from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+# from ..backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 import torch
 import os
@@ -38,7 +38,7 @@ def get_ai_result(instance):
 
 class UploadedTrashImageListAPI(APIView):
     def get(self, user_id):
-        uploaded_trashs = uploaded_trash_image.objects.filter(
+        uploaded_trashs = trash.objects.filter(
             user_id=user_id, active=1)
         serializer = UploadedTrashImageSerializer(uploaded_trashs, many=True)
         return Response(serializer.data)
@@ -46,21 +46,21 @@ class UploadedTrashImageListAPI(APIView):
 
 class UploadedTrashImageDetailListAPI(APIView):
     def get(self, user_id, uploaded_trash_image_id):
-        uploaded_trash = uploaded_trash_image.objects.filter(
+        uploaded_trash = trash.objects.filter(
             user_id=user_id, active=1, uploaded_trash_image_id=int(uploaded_trash_image_id))
         serializer = UploadedTrashImageDetailSerializer(
             uploaded_trash, many=True)
         return Response(serializer.data)
 
     def delete(self, user_id, uploaded_trash_image_id):
-        uploaded_trash_image.objects.filter(
+        trash.objects.filter(
             user_id=user_id, active=1, uploaded_trash_image_id=int(uploaded_trash_image_id)).update(active=0)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
 def statistics(user_id):
-    uploaded_trashs = uploaded_trash_image.objects.filter(
+    uploaded_trashs = trash.objects.filter(
         user_id=user_id).values('trash_kind').annotate(cnt=Count('trash_kind'))
     serializer = UploadedTrashImageStatisticsSerializer(
         uploaded_trashs, many=True)
@@ -73,7 +73,7 @@ def statistics_by_date(user_id, from_date, to_date):
     end_date = datetime.strptime(
         to_date, "%Y-%m-%d").date() + timedelta(days=1)
 
-    uploaded_trashs = uploaded_trash_image.objects.filter(
+    uploaded_trashs = trash.objects.filter(
         user_id=user_id, created_at__range=(start_date, end_date)).values('trash_kind').annotate(
         cnt=Count('trash_kind'))
     serializer = UploadedTrashImageStatisticsSerializer(
@@ -101,7 +101,7 @@ def get_user_challenges(user_id):
 def popular_garbage_statistics():
     start_date = datetime.today() + timedelta(days=-6)
     end_date = datetime.today() + timedelta(days=1)
-    queryset = uploaded_trash_image.objects.filter(created_at__range=(start_date, end_date)).values(
+    queryset = trash.objects.filter(created_at__range=(start_date, end_date)).values(
         'trash_kind').annotate(cnt=Count('trash_kind')).order_by('-cnt')
     serializer = UploadedTrashImageStatisticsSerializer(queryset, many=True)
     return Response(serializer.data)
@@ -126,7 +126,7 @@ class UploadImage(APIView):
 
         user_info = user.objects.get(id=user_id)
 
-        uploaded_trash_image.objects.create(
+        trash.objects.create(
             active=user_info.save_img, img=image_url, user_id=user_info,
             trash_kind=trash_kind.objects.get(kind=ai_result))
 

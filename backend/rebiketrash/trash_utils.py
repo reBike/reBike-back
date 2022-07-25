@@ -1,6 +1,6 @@
 import boto3
 import time
-from backend.backend.settings import AWS_ACCESS_KEY_ID , AWS_SECRET_ACCESS_KEY
+from ..backend.settings import AWS_ACCESS_KEY_ID , AWS_SECRET_ACCESS_KEY
 
 
 def image_upload_s3(uploaded_image, user_name):
