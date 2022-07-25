@@ -20,12 +20,12 @@ def trash(request):
 def trash_upload(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(token)
-    if payload != str:
+    if type(payload) != str:
         uploaded_image = request.FILES['image']
         image_url = trash_image_upload_s3(uploaded_image)
         user_data = user_find_by_alias(payload.get('alias')).first()
         trash_kind = 'plastic'
-        trash_create(user_data.save_img, image_url, user_data.id, trash_kind)
+        trash_create(user_data.save_img, image_url, user_data, trash_kind)
         return JsonResponse({"message": 'success'}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)
@@ -35,7 +35,7 @@ def trash_upload(request):
 def trash_find(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(token)
-    if payload != str:
+    if type(payload) != str:
         result = TrashFindResponse(trash_find_by_owner_id(payload.get('uuid'))).data
         return JsonResponse({'message': result}, status=200)
     else:

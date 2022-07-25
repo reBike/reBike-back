@@ -8,7 +8,7 @@ class trash(models.Model):
     img = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
-    owner_uuid = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
+    owner = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
     trash_kind = models.CharField(max_length=20)
 
     class Meta:
