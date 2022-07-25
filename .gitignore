@@ -52,7 +52,7 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
-
+JWT_settings.py
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -195,7 +195,7 @@ yarn.lock
 data/
 db/db.env
 db.env
-
+backend/dev.env
 #jupyter
 *.ipynb
 .ipynb_checkpoints/
