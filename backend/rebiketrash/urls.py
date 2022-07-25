@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 
-
 urlpatterns =[
     path('mainpage/search-words/<search_word>/result',views.search_result_page),
     path('mainpage/users/<user_id>/result',views.UploadImage.as_view()),

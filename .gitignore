@@ -196,7 +196,10 @@ data/
 db/db.env
 
 db.env
+dev.env
 backend/dev.env
+JWT_settings.py
+
 #jupyter
 *.ipynb
 .ipynb_checkpoints/
