@@ -2,44 +2,14 @@ from django.db import models
 from rebikeuser.models import user
 
 
-class trash_kind(models.Model):
-    name = models.CharField(primary_key=True, max_length=30)
-    way = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True)
-
-    class Meta:
-        db_table = 'trash_kind'
-
-
 class trash(models.Model):
     trash_id = models.AutoField(primary_key=True)
     is_on_basket = models.BooleanField(default=False)
-    img = models.CharField(max_length=200)  
+    img = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
     owner_uuid = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
-    trash_kind = models.ForeignKey(trash_kind, on_delete=models.CASCADE, db_column='trash_kind')
+    trash_kind = models.CharField(max_length=20)
 
     class Meta:
         db_table = 'trash'
-
-
-class challenge(models.Model):
-    number = models.AutoField(primary_key=True)
-    content = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True)
-
-    class Meta:
-        db_table = 'challenge'
-
-
-class user_challenge(models.Model):
-    user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
-    challenge_number = models.ForeignKey(challenge, on_delete=models.CASCADE, db_column='challenge_number')
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True)
-
-    class Meta:
-        db_table = 'user_challenge'
