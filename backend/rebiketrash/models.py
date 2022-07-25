@@ -12,9 +12,9 @@ class trash_kind(models.Model):
         db_table = 'trash_kind'
 
 
-class uploaded_trash_image(models.Model):
-    uploaded_trash_image_id = models.AutoField(primary_key=True)
-    active = models.IntegerField(default=1)
+class trash(models.Model):
+    trash = models.AutoField(primary_key=True)
+    is_on_basket = models.BooleanField(default=False)
     img = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)

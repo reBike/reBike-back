@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
-from .serializers import TrashKindSerializer, UploadedTrashImageSerializer, UploadedTrashImageDetailSerializer, UploadedTrashImageStatisticsSerializer, ChallengeSerializer, UserChallengeSerializer
+from .serializers import TrashKindSerializer, UploadedTrashImageSerializer, UploadedTrashImageDetailSerializer, \
+    UploadedTrashImageStatisticsSerializer, ChallengeSerializer, UserChallengeSerializer
 
 import boto3
 from datetime import datetime, timedelta
@@ -19,29 +20,6 @@ from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 import torch
 import os
 
-############################## utils ##############################
-def get_img_url(request):
-    s3_client = boto3.client(
-        's3',
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
-    )
-
-    image = request.FILES['filename']
-    image_time = (str(datetime.now())).replace(" ", "")
-    image_type = (image.content_type).split("/")[1]
-    s3_client.upload_fileobj(
-        image,
-        "image-bucket2",
-        image_time+"."+image_type,
-        ExtraArgs={
-            "ContentType": image.content_type
-        }
-    )
-    image_url = "http://image-bucket2.s3.ap-northeast-2.amazonaws.com/" + \
-        image_time+"."+image_type
-    image_url = image_url.replace(" ", "/")
-    return image_url
 
 def get_ai_result(instance):
     hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
@@ -54,6 +32,7 @@ def get_ai_result(instance):
     if not results_dict:
         return 0
     return results_dict[0].get('name')
+
 
 ############################## mypage api ##############################
 
@@ -95,10 +74,12 @@ def statistics_by_date(user_id, from_date, to_date):
         to_date, "%Y-%m-%d").date() + timedelta(days=1)
 
     uploaded_trashs = uploaded_trash_image.objects.filter(
-        user_id=user_id, created_at__range=(start_date, end_date)).values('trash_kind').annotate(cnt=Count('trash_kind'))
+        user_id=user_id, created_at__range=(start_date, end_date)).values('trash_kind').annotate(
+        cnt=Count('trash_kind'))
     serializer = UploadedTrashImageStatisticsSerializer(
         uploaded_trashs, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def get_all_challenges():
@@ -106,11 +87,13 @@ def get_all_challenges():
     serializer = ChallengeSerializer(all_challenges)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def get_user_challenges(user_id):
-    user_challenges = user_challenge.objects.filter(user_id = user_id).order_by('challenge_number')
+    user_challenges = user_challenge.objects.filter(user_id=user_id).order_by('challenge_number')
     serializer = UserChallengeSerializer(user_challenges)
     return Response(serializer.data)
+
 
 ############################## mainpage api ##############################
 
@@ -144,9 +127,9 @@ class UploadImage(APIView):
         user_info = user.objects.get(id=user_id)
 
         uploaded_trash_image.objects.create(
-            active=user_info.save_img, img=image_url, user_id=user_info, trash_kind=trash_kind.objects.get(kind=ai_result))
+            active=user_info.save_img, img=image_url, user_id=user_info,
+            trash_kind=trash_kind.objects.get(kind=ai_result))
 
         trash_info = trash_kind.objects.filter(kind=ai_result)
         serializer = TrashKindSerializer(trash_info, many=True)
         return Response(serializer.data)
-

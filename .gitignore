@@ -141,6 +141,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+JWT_settings.py
 
 # Spyder project settings
 .spyderproject
@@ -194,7 +195,6 @@ yarn.lock
 #DB
 data/
 db/db.env
-
 db.env
 backend/dev.env
 #jupyter

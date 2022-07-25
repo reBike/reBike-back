@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 
-####환경변수 설정
+# 환경변수 설정
 import os
 import environ
 
@@ -39,9 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # add
+    # plugins
     'rest_framework',
-    # 'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
     'storages',
