@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
+from .models import trash_kind, trash, challenge, user_challenge
 
 
 @admin.register(trash_kind)
@@ -9,11 +9,11 @@ class TrashKindAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-@admin.register(uploaded_trash_image)
+@admin.register(trash)
 class UploadedTrashImageAdmin(admin.ModelAdmin):
-    list_display = ['uploaded_trash_image_id', 'active', 'img',
+    list_display = ['trash_id', 'active', 'img',
                     'created_at', 'updated_at', 'user_id', 'trash_kind']
-    search_fields = ['uploaded_trash_image_id']
+    search_fields = ['trash_id']
 
     
 @admin.register(challenge)

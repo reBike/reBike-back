@@ -23,7 +23,6 @@ my_settings.py
 
 # C extensions
 *.so
-dev.env
 # Distribution / packaging
 .Python
 build/

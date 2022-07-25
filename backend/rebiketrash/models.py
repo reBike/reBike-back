@@ -13,16 +13,16 @@ class trash_kind(models.Model):
 
 
 class trash(models.Model):
-    trash = models.AutoField(primary_key=True)
+    trash_id = models.AutoField(primary_key=True)
     is_on_basket = models.BooleanField(default=False)
-    img = models.CharField(max_length=200)
+    img = models.CharField(max_length=200)  
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
-    user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
+    owner_uuid = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
     trash_kind = models.ForeignKey(trash_kind, on_delete=models.CASCADE, db_column='trash_kind')
 
     class Meta:
-        db_table = 'uploaded_trash_image'
+        db_table = 'trash'
 
 
 class challenge(models.Model):

@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
+from . import testviews
 
 
 urlpatterns =[
-    path('')
+    path('', testviews.images)
     # path('mainpage/search-words/<search_word>/result',views.search_result_page),
     # path('mainpage/users/<user_id>/result',views.UploadImage.as_view()),
     # path('mainpage',views.popular_garbage_statistics),
