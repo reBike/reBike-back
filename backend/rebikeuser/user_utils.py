@@ -73,7 +73,7 @@ def user_change_value(value, alias):
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
         value.update({"pw": hash_pw, "salt": salt})
-    find_user.update(**value)
+    find_user=find_user.update(**value)
     return find_user
 
 

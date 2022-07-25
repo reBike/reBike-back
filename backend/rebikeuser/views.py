@@ -92,6 +92,7 @@ def login(request):
             return JsonResponse({"message": "invalid_data"}, status=400)
 
     data = {"access_token": access_token, "refresh_token": refresh_token}
+
     return JsonResponse(data, status=200)
 
 
