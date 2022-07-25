@@ -21,7 +21,7 @@ def user_refresh_to_access(refresh_token):
     try:
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = jwt.encode(
-            {'name': payload.get('name'), 'alias': payload.get('alias'), 'email': payload.get('email'),
+            {'id': payload.get('id'), 'name': payload.get('name'), 'alias': payload.get('alias'), 'email': payload.get('email'),
              'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -29,13 +29,13 @@ def user_refresh_to_access(refresh_token):
 
 
 def user_generate_access_token(user):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
+    return jwt.encode({'id': user.id, 'name': user.name, 'alias': user.alias, 'email': user.email,
                        'exp': datetime.utcnow() + timedelta(hours=5), 'type': 'access_token'}, SECRET_KEY,
                       ALGORITHM).decode('utf-8')
 
 
 def user_generate_refresh_token(user):
-    return jwt.encode({'name': user.name, 'alias': user.alias, 'email': user.email,
+    return jwt.encode({'id': user.id, 'name': user.name, 'alias': user.alias, 'email': user.email,
                        'exp': datetime.utcnow() + timedelta(days=7), 'type': "refresh_token"}, SECRET_KEY,
                       ALGORITHM).decode('utf-8')
 
@@ -74,7 +74,7 @@ def user_change_value(value):
         hash_pw, salt = user_hash_pw(value.get('pw'))
         value.update({"pw": hash_pw, "salt": salt})
     find_user.update(**value)
-    return True
+    return find_user
 
 
 def user_find_by_name(name):
