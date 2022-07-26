@@ -71,15 +71,17 @@ class UserDuplicateCheck:
 
 
 def user_change_value(value, alias):
-    uuid = user_find_by_alias(alias).first().id
+    user=user_find_by_alias(alias)
 
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
-        value["pw"] = hash_pw
-        value['salt'] = salt
+        user.pw = hash_pw
+        user.salt = salt
         # value.update({"pw": hash_pw, "salt": salt})
-    value['alias'] = alias
-    return user_find_by_id(uuid).first()
+    elif value.get('alias'):
+        user.alias=value.get('alias')
+    user.save()
+    return user
 
 
 def user_find_by_id(id):

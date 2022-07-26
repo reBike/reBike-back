@@ -43,7 +43,6 @@ def user_sign_up(request):
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
 
-
 def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
@@ -51,10 +50,10 @@ def user_patch(request):
         result = user_change_value(value=input_dict, alias=payload.get('alias'))
         access_token = user_generate_access_token(result)
         refresh_token = user_generate_refresh_token(result)
-        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token, "jhi":"hi"},
+        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
                             status=200)
     else:
-        Response({"message ": payload})
+        JsonResponse({"message ": payload}, status=401)
 
 
 class Auth(APIView):
