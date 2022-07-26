@@ -21,7 +21,8 @@ def user_refresh_to_access(refresh_token):
     try:
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = jwt.encode(
-            {'id': payload.get('id'), 'name': payload.get('name'), 'alias': payload.get('alias'), 'email': payload.get('email'),
+            {'id': payload.get('id'), 'name': payload.get('name'), 'alias': payload.get('alias'),
+             'email': payload.get('email'),
              'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -30,12 +31,14 @@ def user_refresh_to_access(refresh_token):
 
 def user_generate_access_token(user_data):
     return jwt.encode(
-        {'id': user.id,'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(minutes=30), 'type': 'access_token'},
+        {'id': str(user_data.id), 'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(minutes=30),
+         'type': 'access_token'},
         SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
 def user_generate_refresh_token(user_data):
-    return jwt.encode({'id': user.id,'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(days=7), 'type': "refresh_token"},
+    return jwt.encode({'id': str(user_data.id), 'alias': user_data.alias, 'exp': datetime.utcnow() + timedelta(days=7),
+                       'type': "refresh_token"},
                       SECRET_KEY, ALGORITHM).decode('utf-8')
 
 
@@ -69,12 +72,18 @@ class UserDuplicateCheck:
 
 def user_change_value(value, alias):
     find_user = user_find_by_alias(alias)
+    uuid = find_user.first().id
 
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
         value.update({"pw": hash_pw, "salt": salt})
-    find_user=find_user.update(**value)
-    return find_user
+    find_user.update(**value)
+    result_user = user_find_by_id(uuid).first()
+    return result_user
+
+
+def user_find_by_id(id):
+    return user.objects.filter(id=id)
 
 
 def user_find_by_name(name):

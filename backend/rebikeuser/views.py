@@ -48,10 +48,11 @@ def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
     if type(payload) != str:
-        result = user_change_value(input_dict)
+        result = user_change_value(value=input_dict, alias=payload.get('alias'))
         access_token = user_generate_access_token(result)
         refresh_token = user_generate_refresh_token(result)
-        return JsonResponse({"message": result, "access_token": access_token, "refresh_token": refresh_token}, status=200)
+        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
+                            status=200)
 
 
 class Auth(APIView):
@@ -94,7 +95,3 @@ def login(request):
     data = {"access_token": access_token, "refresh_token": refresh_token}
 
     return JsonResponse(data, status=200)
-
-
-
-
