@@ -47,12 +47,14 @@ def user_sign_up(request):
 def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
-    if type(payload) != str:
+    if payload:
         result = user_change_value(value=input_dict, alias=payload.get('alias'))
         access_token = user_generate_access_token(result)
         refresh_token = user_generate_refresh_token(result)
-        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
+        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token, "jhi":"hi"},
                             status=200)
+    else:
+        Response({"message ": payload})
 
 
 class Auth(APIView):
@@ -67,7 +69,7 @@ class Auth(APIView):
 def user_reissuance_access_token(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(request.headers.get('Authorization', None))
-    if type(payload) != str:
+    if payload:
         if payload.get('type') == 'refresh_token':
             access_token = user_refresh_to_access(token)
             return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환

@@ -11,9 +11,9 @@ def user_token_to_data(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
     except jwt.exceptions.ExpiredSignatureError:
-        return "Expired_Token"
+        return False
     except jwt.exceptions.DecodeError:
-        return "Invalid_Token"
+        return False
     return payload
 
 
@@ -22,7 +22,7 @@ def user_refresh_to_access(refresh_token):
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = jwt.encode(
             {'id': payload.get('id'), 'name': payload.get('name'), 'alias': payload.get('alias'),
-             'email': payload.get('email'),
+             'email': payload.get('email'),'type':"access_token",
              'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -71,15 +71,15 @@ class UserDuplicateCheck:
 
 
 def user_change_value(value, alias):
-    find_user = user_find_by_alias(alias)
-    uuid = find_user.first().id
+    uuid = user_find_by_alias(alias).first().id
 
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
-        value.update({"pw": hash_pw, "salt": salt})
-    find_user.update(**value)
-    result_user = user_find_by_id(uuid).first()
-    return result_user
+        value["pw"] = hash_pw
+        value['salt'] = salt
+        # value.update({"pw": hash_pw, "salt": salt})
+    value['alias'] = alias
+    return user_find_by_id(uuid).first()
 
 
 def user_find_by_id(id):
