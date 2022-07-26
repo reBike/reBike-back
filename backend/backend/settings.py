@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'storages',
     'torch',
+    'django_celery_results',
     # local apps
     'rebikeuser',
     'rebiketrash',
@@ -142,3 +143,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+CELERY_RESULT_BACKEND = 'django-db'
