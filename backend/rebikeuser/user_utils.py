@@ -5,6 +5,7 @@ import jwt
 
 from .JWT_Settings import ALGORITHM, SECRET_KEY
 from .models import user
+from .serializers import UserSerializer
 
 
 def user_token_to_data(token):
@@ -22,7 +23,7 @@ def user_refresh_to_access(refresh_token):
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=ALGORITHM)
         access_token = jwt.encode(
             {'id': payload.get('id'), 'name': payload.get('name'), 'alias': payload.get('alias'),
-             'email': payload.get('email'),'type':"access_token",
+             'email': payload.get('email'), 'type': "access_token",
              'exp': datetime.utcnow() + timedelta(minutes=5)}, SECRET_KEY, ALGORITHM).decode('utf-8')
     except jwt.exceptions.ExpiredSignatureError or jwt.exceptions.DecodeError:
         return False
@@ -71,16 +72,19 @@ class UserDuplicateCheck:
 
 
 def user_change_value(value, alias):
-    user=user_find_by_alias(alias)
-
+    user = user_find_by_alias(alias).first()
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
         user.pw = hash_pw
         user.salt = salt
         # value.update({"pw": hash_pw, "salt": salt})
     elif value.get('alias'):
-        user.alias=value.get('alias')
-    user.save()
+        user.alias = value.get('alias')
+    user = UserSerializer(
+        data={'id': user.id, 'name': user.name, 'alias': user.alias, 'pw': user.pw, 'email': user.email,
+              })
+    if user.is_valid():
+        user.save()
     return user
 
 

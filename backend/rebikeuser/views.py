@@ -53,7 +53,7 @@ def user_patch(request):
         return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
                             status=200)
     else:
-        JsonResponse({"message ": payload}, status=401)
+        return JsonResponse({"message ": payload}, status=401)
 
 
 class Auth(APIView):
