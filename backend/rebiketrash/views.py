@@ -26,7 +26,7 @@ def trash_upload(request):
         user_data = user_find_by_alias(payload.get('alias')).first()
         trash_kind = 'plastic'
         trash_create(user_data.save_img, image_url, user_data, trash_kind)
-        return JsonResponse({"message": 'success'}, status=200)
+        return JsonResponse({"message": trash_kind}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)
 
