@@ -47,9 +47,9 @@ def trash_to_basket(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(token)
     if payload != str:
-        trash = trash_find_by_id(trash_id).first()
-        result = not trash.is_on_basket
-        trash.update({'is_on_basket': result})
+        trash_data = trash_find_by_id(trash_id).first()
+        result = not trash_data.is_on_basket
+        trash_data.update({'is_on_basket': result})
         return JsonResponse({'m'})
     else:
         return JsonResponse({'message': payload}, status=401)
