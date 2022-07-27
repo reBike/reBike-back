@@ -54,6 +54,6 @@ def trash_to_basket(request):
         result = not trash_data.is_on_basket
         new_value = {'is_on_basket': result}
         trash_find_by_id(trash_id).update(**new_value)
-        return JsonResponse({'message': 'sueccess'}, status=200)
+        return JsonResponse({'message': 'success'}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)
