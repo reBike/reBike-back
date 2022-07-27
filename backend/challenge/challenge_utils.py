@@ -1,6 +1,7 @@
 from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
 from rebikeuser.models import user
 
+
 def check_challenge(user_id):
     uploaded_img_count = uploaded_trash_image.objects.filter(user_id=user_id).count()
 
