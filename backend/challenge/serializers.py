@@ -2,7 +2,7 @@
 from pyexpat import model
 from rest_framework import serializers
 
-from .models import challenge, user_challenge
+from models import challenge, user_challenge
 
 
 
@@ -14,4 +14,4 @@ class ChallengeSerializer(serializers.ModelSerializer) :
 class UserChallengeSerializer(serializers.ModelSerializer) :
     class Meta :
         model = user_challenge
-        fields = ("challenge_number","created_at")
+        fields = ("challenge_number", "created_at")

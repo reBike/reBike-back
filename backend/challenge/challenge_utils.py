@@ -1,6 +1,7 @@
 from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
 from rebikeuser.models import user
-
+import jwt
+from rebikeuser.JWT_Settings import SECRET_KEY, ALGORITHM
 
 def check_challenge(user_id):
     uploaded_img_count = uploaded_trash_image.objects.filter(user_id=user_id).count()
@@ -16,6 +17,12 @@ def check_challenge(user_id):
 
 
 def create_user_challenge(user_id, challenge_number):
-    user_challenge.objects.create(user_id=user.objects.get(id=user_id),
-                                  challenge_number=challenge.objects.get(number=challenge_number))
+    user_challenge.objects.create(user_id=user.objects.get(id=user_id).id,
+                                  challenge_number=challenge.objects.get(number=challenge_number).challenge_number)
     return user_challenge.objects.filter(user_id=user_id, challenge_number=challenge_number)
+
+
+def find_user(request):
+    token = request.headers.get('Authorization', None)
+    payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    return payload.get('id')
