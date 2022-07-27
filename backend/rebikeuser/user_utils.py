@@ -11,9 +11,9 @@ def user_token_to_data(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
     except jwt.exceptions.ExpiredSignatureError:
-        return False
+        return "Expired_Token"
     except jwt.exceptions.DecodeError:
-        return False
+        return "Invalid_Token"
     return payload
 
 
@@ -84,8 +84,8 @@ def user_change_value(value, alias):
     return user_data
 
 
-def user_find_by_id(id):
-    return user.objects.filter(id=id)
+def user_find_by_id(user_id):
+    return user.objects.filter(id=user_id)
 
 
 def user_find_by_name(name):

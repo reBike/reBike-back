@@ -1,4 +1,3 @@
-
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
@@ -11,7 +10,7 @@ from .serializers import TrashFindResponse
 @api_view(['GET', 'POST', 'PATCH'])
 def trash(request):
     if request.method == 'GET':
-        trash_find(request)
+        return trash_find(request)
     if request.method == 'POST':
         return trash_upload(request)
     if request.method == 'PATCH':
@@ -37,8 +36,10 @@ def trash_find(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(token)
     if type(payload) != str:
-        result = TrashFindResponse(trash_find_by_owner_id(payload.get('uuid'))).data
-        return JsonResponse({'message': result}, status=200)
+        result = TrashFindResponse(trash_find_by_owner_id(payload.get('id')), many=True).data
+        user_uuid = payload.get('id')
+        owner = trash_find_by_owner_id(payload.get('id')).first()
+        return JsonResponse({'message': str(result), 'owner': str(owner), "user_uuid": str(user_uuid)}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)
 
@@ -50,7 +51,8 @@ def trash_to_basket(request):
     if payload != str:
         trash_data = trash_find_by_id(trash_id).first()
         result = not trash_data.is_on_basket
-        trash_data.update({'is_on_basket': result})
-        return JsonResponse({'m'})
+        new_value = {'is_on_basket': result}
+        trash_find_by_id(trash_id).update(**new_value)
+        return JsonResponse({'message': 'sueccess'}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)

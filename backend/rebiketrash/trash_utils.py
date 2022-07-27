@@ -13,7 +13,7 @@ def trash_image_upload_s3(uploaded_image):
 
 
 def trash_find_by_id(trash_id):
-    result = trash.objects.filter(owner=trash_id)
+    result = trash.objects.filter(trash_id=trash_id)
     return result
 
 
