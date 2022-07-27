@@ -37,12 +37,10 @@ def trash_find(request):
     payload = user_token_to_data(token)
     if type(payload) != str:
         trash_list = TrashFindResponse(trash_find_by_owner_id(payload.get('id')), many=True).data
-        user_uuid = payload.get('id')
-        owner = trash_find_by_owner_id(payload.get('id')).first()
         result = []
         for item in trash_list:
             result.append(dict(item))
-        return JsonResponse({'message': result, 'owner': str(owner), "user_uuid": str(user_uuid)}, status=200)
+        return JsonResponse({'message': result}, status=200)
     else:
         return JsonResponse({'message': payload}, status=401)
 

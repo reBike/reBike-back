@@ -5,4 +5,4 @@ from .models import trash
 class TrashFindResponse(serializers.ModelSerializer):
     class Meta:
         model = trash
-        fields = ['is_on_basket', 'img']
+        fields = ['is_on_basket', 'trash_kind', 'img']
