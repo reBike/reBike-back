@@ -72,20 +72,17 @@ class UserDuplicateCheck:
 
 
 def user_change_value(value, alias):
-    user = user_find_by_alias(alias).first()
+    user_data = user_find_by_alias(alias).first()
+
     if value.get('pw'):
         hash_pw, salt = user_hash_pw(value.get('pw'))
-        user.pw = hash_pw
-        user.salt = salt
+        user_data.pw = hash_pw
+        user_data.salt = salt
         # value.update({"pw": hash_pw, "salt": salt})
     elif value.get('alias'):
-        user.alias = value.get('alias')
-    user = UserSerializer(
-        data={'id': user.id, 'name': user.name, 'alias': user.alias, 'pw': user.pw, 'email': user.email,
-              })
-    if user.is_valid():
-        user.save()
-    return user
+        user_data.alias = value.get('alias')
+    user_data.save()
+    return user_data
 
 
 def user_find_by_id(id):

@@ -43,6 +43,7 @@ def user_sign_up(request):
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
 
+
 def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
