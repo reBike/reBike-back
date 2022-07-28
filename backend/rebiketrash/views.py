@@ -84,11 +84,8 @@ def popular_garbage_statistics(request):
 
 @api_view(['GET'])
 def search_result_page(request,search_word):
-    # search_word
     ai_result = search_word
-    queryset = trash_kind.objects.filter(name=ai_result)
-    serializer = TrashKindSerializer(queryset, many=True)
-    return Response(serializer.data)
+    return JsonResponse({'trash_kind':ai_result})
 
 
 class UploadImage(APIView):
