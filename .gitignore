@@ -193,6 +193,8 @@ yarn.lock
 
 #DB
 data/
+db/db.env
+
 db.env
 backend/dev.env
 #jupyter

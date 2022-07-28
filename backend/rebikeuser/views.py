@@ -1,15 +1,17 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import user_create_client, user_change_value, user_token_to_data, UserDuplicateCheck
+from .userUtil import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
+    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
 
 
 @api_view(['GET', 'POST', 'PATCH'])
 def user(request):
     if request.method == 'GET':
-        return JsonResponse({"method": "get"})
+        return user_is_duplicate(request)
     if request.method == 'POST':
         return user_sign_up(request)
     if request.method == 'PATCH':
@@ -18,7 +20,7 @@ def user(request):
 
 def user_is_duplicate(request):
     case = request.GET.get('case')
-    value = request.GET.get('case')
+    value = request.GET.get('value')
     checker = UserDuplicateCheck()
 
     if case == 'name':
@@ -28,7 +30,7 @@ def user_is_duplicate(request):
     elif case == 'email':
         return JsonResponse({"result": checker.email(value)}, status=200)
     else:
-        return JsonResponse({"message": "Invalid value"}, status=400)
+        return JsonResponse({"message": "Invalid value"}, status=401)
 
 
 def user_sign_up(request):
@@ -39,14 +41,59 @@ def user_sign_up(request):
 
     new_user = user_create_client(name, email, pw, alias)
     data = UserSignupResponse(new_user, many=False).data
-    return Response(data)
+    return Response(data, status=200)
 
 
 def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
-    if type(payload) != str:
-        result = user_change_value(input_dict)
-        return JsonResponse({"message": result}, status=200)
+    if payload:
+        result = user_change_value(value=input_dict, alias=payload.get('alias'))
+        access_token = user_generate_access_token(result)
+        refresh_token = user_generate_refresh_token(result)
+        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
+                            status=200)
     else:
-        return JsonResponse({"message": payload}, status=403)
+        return JsonResponse({"message ": payload}, status=401)
+
+
+class Auth(APIView):
+    def get(self, request):
+        token = request.headers.get('Authorization', None)
+        if token:
+            return user_reissuance_access_token(request)
+        else:
+            return login(request)
+
+
+def user_reissuance_access_token(request):
+    token = request.headers.get('Authorization', None)
+    payload = user_token_to_data(request.headers.get('Authorization', None))
+    if payload:
+        if payload.get('type') == 'refresh_token':
+            access_token = user_refresh_to_access(token)
+            return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환
+        else:
+            return JsonResponse({"message": "it is not refresh_token"}, status=401)
+    else:
+        return JsonResponse({"message": payload}, status=401)
+
+
+def login(request):
+    input_name = request.GET.get('name')
+    input_pw = request.GET.get('pw')
+    access_token = None
+    refresh_token = None
+
+    if input_pw and input_name:
+        user_data = user_find_by_name(input_name).first()
+        if user_data:
+            if user_compPW(input_pw, user_data):
+                access_token = user_generate_access_token(user_data)
+                refresh_token = user_generate_refresh_token(user_data)
+        else:
+            return JsonResponse({"message": "invalid_data"}, status=400)
+
+    data = {"access_token": access_token, "refresh_token": refresh_token}
+
+    return JsonResponse(data, status=200)
