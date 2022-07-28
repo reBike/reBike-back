@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .serializers import UserSignupResponse
-from .userUtil import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
+from .user_utils import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
     user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
 
 
@@ -47,9 +47,14 @@ def user_sign_up(request):
 def user_patch(request):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     input_dict = dict(request.data['value'])
-    if type(payload) != str:
-        result = user_change_value(input_dict)
-        return JsonResponse({"message": result}, status=200)
+    if payload:
+        result = user_change_value(value=input_dict, alias=payload.get('alias'))
+        access_token = user_generate_access_token(result)
+        refresh_token = user_generate_refresh_token(result)
+        return JsonResponse({"access_token": access_token, "refresh_token": refresh_token},
+                            status=200)
+    else:
+        return JsonResponse({"message ": payload}, status=401)
 
 
 class Auth(APIView):
@@ -64,10 +69,10 @@ class Auth(APIView):
 def user_reissuance_access_token(request):
     token = request.headers.get('Authorization', None)
     payload = user_token_to_data(request.headers.get('Authorization', None))
-    if type(payload) != str:
+    if payload:
         if payload.get('type') == 'refresh_token':
             access_token = user_refresh_to_access(token)
-            return JsonResponse({"access_token": access_token}, status=200)  # new accesstoken 반환
+            return JsonResponse({"access_token": access_token}, status=200)  # new access_token 반환
         else:
             return JsonResponse({"message": "it is not refresh_token"}, status=401)
     else:
@@ -90,4 +95,5 @@ def login(request):
             return JsonResponse({"message": "invalid_data"}, status=400)
 
     data = {"access_token": access_token, "refresh_token": refresh_token}
+
     return JsonResponse(data, status=200)
