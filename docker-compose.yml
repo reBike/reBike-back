@@ -2,10 +2,13 @@ version: "3"
 
 volumes:
   mysql_data:
+  nginx:
 
 services:
   mysqldb:
-    build: ./db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     env_file:
       - "./db/db.env"
     ports:
@@ -13,7 +16,9 @@ services:
     volumes:
       - "mysql_data:/var/lib/mysql"
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     command: >
       bash -c "python wait_mysql.py &&
                python manage.py makemigrations &&
@@ -25,15 +30,17 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
-#  nginx:
-#    build: ./nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./nginx:/etc/nginx
-#    depends_on:
-#      - mysqldb
-#      - backend
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx:/etc/nginx
+    depends_on:
+      - mysqldb
+      - backend
   #  frontend:
   #    build: ./frontend
   #    command: ["npm", "start"]
