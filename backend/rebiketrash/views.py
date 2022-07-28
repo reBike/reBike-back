@@ -16,13 +16,23 @@ from datetime import datetime, timedelta
 
 from .utils import get_img_url, get_ai_result, check_challenge
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 ############################## mypage api ##############################
 
 class UploadedTrashImageListAPI(APIView):
-    def get(self, request, user_id):
-        uploaded_trashs = uploaded_trash_image.objects.filter(
-            user_id=user_id, active=1)
-        serializer = UploadedTrashImageSerializer(uploaded_trashs, many=True)
+    def get(self, request, user_id, page_number):
+        uploaded_trashs = uploaded_trash_image.objects.filter(user_id=user_id, active=1).order_by('-created_at')
+        paginator = Paginator(uploaded_trashs, 10)
+        page = page_number
+        try:
+            contacts = paginator.page(page)
+        except PageNotAnInteger:
+            contacts = paginator.page(1)
+        except EmptyPage:
+            contacts = paginator.page(paginator.num_pages)
+
+        serializer = UploadedTrashImageSerializer(contacts, many=True)
         return Response(serializer.data)
 
 
