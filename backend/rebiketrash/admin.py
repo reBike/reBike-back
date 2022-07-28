@@ -1,12 +1,7 @@
 from django.contrib import admin
 
-from .models import trash_kind, uploaded_trash_image, challenge, user_challenge
+from .models import uploaded_trash_image, challenge, user_challenge
 
-
-@admin.register(trash_kind)
-class TrashKindAdmin(admin.ModelAdmin):
-    list_display = ['name', 'way']
-    search_fields = ['name']
 
 
 @admin.register(uploaded_trash_image)
