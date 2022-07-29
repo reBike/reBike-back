@@ -47,7 +47,7 @@ def get_ai_result(instance):
         ai_result = []
         for result in results_dict:
             ai_result.append(result.get('name'))
-        return ' '.join(ai_result)
+        return ','.join(ai_result)
 
 def check_challenge(user_id):
     uploaded_img_count = uploaded_trash_image.objects.filter(user_id = user_id).count()
