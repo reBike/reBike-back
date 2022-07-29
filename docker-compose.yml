@@ -41,3 +41,30 @@ services:
 #      - 3000:3000
 #    volumes:
 #    - ./frontend:/app
+#####################################################
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/config/:/etc/prometheus/
+      - ./prometheus/prometheus-volume:/prometheus # volumes 설정한다면 이부분 주석처리
+      # - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+
+#  grafana:
+#    image: grafana/grafana
+#    container_name: grafana
+#    depends_on:
+#      - prometheus
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ~/prometheus/grafana-volume:/var/lib/grafana # volumes 설정한다면 이부분 주석처리
+#      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
+#      # - grafana_data:/var/lib/grafana
+#    restart: always
