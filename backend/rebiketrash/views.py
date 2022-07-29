@@ -90,9 +90,9 @@ def search_result_page(request,search_word):
 
 class UploadImage(APIView):
     def post(self, request, user_id):
-        
-        image_url = get_img_url(request)
-        ai_result = get_ai_result(image_url)
+
+        #image_url = get_img_url(request)
+        ai_result, image_url = get_ai_result(request)
 
         if ai_result == 0:  # 사진이 분류되지 않을 경우
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -101,7 +101,7 @@ class UploadImage(APIView):
 
         uploaded_trash_image.objects.create(
             active=user_info.save_img, img=image_url, user_id=user_info, trash_kind=ai_result)
-        return JsonResponse({'trash_kind':ai_result})
+        return JsonResponse({'img':image_url,'trash_kind':ai_result})
 
     def get(self, request, user_id):
         challenge_info = check_challenge(user_id)
