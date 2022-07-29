@@ -34,10 +34,10 @@ services:
 #    depends_on:
 #      - mysqldb
 #      - backend
-  #  frontend:
-  #    build: ./frontend
-  #    command: ["npm", "start"]
-  #    ports:
-  #      - 3000:3000
-  #    volumes:
-  #      - ./frontend:/app
+#  frontend:
+#    build: ./frontend
+#    command: ["npm", "start"]
+#    ports:
+#      - 3000:3000
+#    volumes:
+#    - ./frontend:/app
