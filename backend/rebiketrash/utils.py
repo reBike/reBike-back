@@ -15,7 +15,6 @@ def get_img_url(img):
         aws_access_key_id=AWS_ACCESS_KEY_ID,
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY
     )
-
     image = img
     image_time = (str(datetime.now())).replace(" ", "")
     image_type = "jpg"
@@ -26,7 +25,6 @@ def get_img_url(img):
     return image_url
 
 def get_ai_result(request):
-    #img = request.FILES.get('filename')
     img = Image.open(io.BytesIO(request.FILES.get('filename').read()))
     hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
     weightfile = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5',
@@ -34,12 +32,7 @@ def get_ai_result(request):
     model = torch.hub.load(hubconfig, 'custom',
                            path=weightfile, source='local')
     results = model(img)
-    results.render()
-    encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),100]
-    success, a_numpy = cv2.imencode('.jpg', results.imgs[0],encode_param)
-    image = a_numpy.tostring()
-    image_url = get_img_url(image)
-
+    
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:
         return 0
@@ -48,7 +41,13 @@ def get_ai_result(request):
         for result in results_dict:
             if result.get('name') not in ai_result:
                 ai_result.append(result.get('name'))
-        return ','.join(ai_result), image_url
+
+    results.render()
+    encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),100]
+    success, a_numpy = cv2.imencode('.jpg', results.imgs[0],encode_param)
+    image = a_numpy.tostring()
+    image_url = get_img_url(image)
+    return ','.join(ai_result), image_url
 
 def check_challenge(user_id):
     uploaded_img_count = uploaded_trash_image.objects.filter(user_id = user_id).count()
