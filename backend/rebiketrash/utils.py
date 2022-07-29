@@ -46,7 +46,8 @@ def get_ai_result(instance):
     else:
         ai_result = []
         for result in results_dict:
-            ai_result.append(result.get('name'))
+            if result.get('name') not in ai_result:
+                ai_result.append(result.get('name'))
         return ','.join(ai_result)
 
 def check_challenge(user_id):
