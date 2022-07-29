@@ -43,7 +43,11 @@ def get_ai_result(instance):
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:
         return 0
-    return results_dict[0].get('name')
+    else:
+        ai_result = []
+        for result in results_dict:
+            ai_result.append(result.get('name'))
+        return ' '.join(ai_result)
 
 def check_challenge(user_id):
     uploaded_img_count = uploaded_trash_image.objects.filter(user_id = user_id).count()

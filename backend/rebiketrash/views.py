@@ -90,6 +90,7 @@ def search_result_page(request,search_word):
 
 class UploadImage(APIView):
     def post(self, request, user_id):
+        
         image_url = get_img_url(request)
         ai_result = get_ai_result(image_url)
 
