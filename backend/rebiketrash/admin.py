@@ -1,15 +1,17 @@
 from django.contrib import admin
 
-from .models import uploaded_trash_image, challenge, user_challenge
+from .models import trash_image, trash_kind, challenge, user_challenge
 
 
 
-@admin.register(uploaded_trash_image)
-class UploadedTrashImageAdmin(admin.ModelAdmin):
-    list_display = ['uploaded_trash_image_id', 'active', 'img',
-                    'created_at', 'updated_at', 'user_id', 'trash_kind']
-    search_fields = ['uploaded_trash_image_id']
+@admin.register(trash_image)
+class TrashImageAdmin(admin.ModelAdmin):
+    list_display = ['trash_image_id', 'active', 'image','created_at', 'updated_at', 'user_id']
+    search_fields = ['trash_image_id']
 
+@admin.register(trash_kind)
+class TrashKindAdmin(admin.ModelAdmin):
+    list_display = ['trash_image_id', 'user_id', 'kind', 'created_at', 'updated_at']
     
 @admin.register(challenge)
 class ChallengeAdmin(admin.ModelAdmin):

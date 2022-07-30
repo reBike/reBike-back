@@ -2,15 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns =[
-    path('mainpage/search-words/<search_word>/result',views.search_result_page),
-    path('mainpage/users/<user_id>/result',views.UploadImage.as_view()),
-    path('mainpage',views.popular_garbage_statistics),
+    path('search-words/<search_word>/kind',views.get_search_result),
+    path('users/<user_id>/results',views.UploadImage.as_view()),
+    path('statistics/ranking',views.get_statistics_ranking),
 
-    path('mypage/users/<user_id>/images',views.UploadedTrashImageListAPI.as_view()),
-    path('mypage/users/<user_id>/images/<uploaded_trash_image_id>',views.UploadedTrashImageDetailListAPI.as_view()),
-    path('mypage/users/<user_id>/statistics',views.statistics),
-    path('mypage/users/<user_id>/statistics/period/<from_date>/<to_date>',views.statistics_by_date),
-    path('mypage/challenges',views.get_all_challenges),
-    path('mypage/users/<user_id>/challenges',views.get_user_challenges),
+    path('users/<user_id>/images',views.TrashImageListAPI.as_view()),
+    path('users/<user_id>/images/<trash_image_id>',views.TrashImageDetailListAPI.as_view()),
+    path('users/<user_id>/images/<trash_image_id>/kinds',views.get_trash_kinds),
+    path('users/<user_id>/statistics',views.get_user_statistics),
+    path('users/<user_id>/statistics/period/<from_date>/<to_date>',views.get_user_statistics_by_date),
+    path('challenges',views.get_all_challenges),
+    path('users/<user_id>/challenges',views.get_user_challenges),
 ]
 
