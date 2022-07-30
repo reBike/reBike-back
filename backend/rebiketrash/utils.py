@@ -35,7 +35,7 @@ def get_ai_result(request):
     
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:
-        return 0
+        return 0, 0
     else:
         ai_result = []
         for result in results_dict:
@@ -47,6 +47,7 @@ def get_ai_result(request):
     success, a_numpy = cv2.imencode('.jpg', results.imgs[0],encode_param)
     image = a_numpy.tostring()
     image_url = get_img_url(image)
+    
     return ','.join(ai_result), image_url
 
 def check_challenge(user_id):
