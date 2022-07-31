@@ -6,7 +6,7 @@ urlpatterns =[
     path('users/<user_id>/results',views.UploadImage.as_view()),
     path('statistics/ranking',views.get_statistics_ranking),
 
-    path('users/<user_id>/images',views.TrashImageListAPI.as_view()),
+    path('users/<user_id>/pages/<page_number>',views.TrashImageListAPI.as_view()),
     path('users/<user_id>/images/<trash_image_id>',views.TrashImageDetailListAPI.as_view()),
     path('users/<user_id>/images/<trash_image_id>/kinds',views.get_trash_kinds),
     path('users/<user_id>/statistics',views.get_user_statistics),

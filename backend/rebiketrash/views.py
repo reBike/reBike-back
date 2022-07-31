@@ -15,7 +15,7 @@ from .serializers import TrashImageSerializer, TrashImageDetailSerializer, Trash
 from datetime import datetime, timedelta
 
 from .utils import get_ai_result, check_challenge
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 ############################## result page api ##############################
 
 class TrashImageDetailListAPI(APIView):
@@ -36,9 +36,18 @@ def get_trash_kinds(request, user_id, trash_image_id):
 
 ############################## user page api ##############################
 class TrashImageListAPI(APIView):
-    def get(self, request, user_id):
-        trashs = trash_image.objects.filter(user_id=user_id, active=1)
-        serializer = TrashImageSerializer(trashs, many=True)
+    def get(self, request, user_id, page_number):
+        trashs = trash_image.objects.filter(user_id=user_id, active=1).order_by('-created_at')
+        paginator = Paginator(trashs, 10)
+        page = page_number
+        try:
+            contacts = paginator.page(page)
+        except PageNotAnInteger:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except EmptyPage:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = TrashImageSerializer(contacts, many=True)
         return Response(serializer.data)
 #pagination !!!!
 
