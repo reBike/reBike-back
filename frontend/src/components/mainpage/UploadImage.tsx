@@ -4,12 +4,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
 import Api from "../../utils/customApi";
+import { ReduxModule } from "../../modules/ReduxModule";
+
+import { useDispatch } from "react-redux";
+import { save_ID } from "../../actions/ImgIDActions";
 
 function UploadImage() {
   const [isImg, setIsImg] = useState(null);
   const [urlImg, setUrlImg] = useState("");
   const [respondImg, setRespondImg] = useState(null);
   const navigate = useNavigate();
+  const userIdtoRedux = ReduxModule().decodeInfo?.id;
+  console.log(userIdtoRedux, "in uploadImage");
 
   const resizeFile = (file: Blob) =>
     new Promise((resolve) => {
@@ -27,6 +33,12 @@ function UploadImage() {
       );
     });
 
+  //❌
+
+  const dispatch = useDispatch();
+
+  //❌
+
   const onChangeImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file: any =
@@ -43,59 +55,25 @@ function UploadImage() {
     }
   };
 
-  // const sendImage: () => Promise<any> = async () => {
-  //   const trashFormData = new FormData();
-  //   trashFormData.append("filename", respondImg as any);
-
-  //   await Api.post(
-  //     `/trash/mainpage/users/f446242a-a219-44b9-aef7-86932259f799/result`,
-  //     trashFormData
-  //   )
-  //     .then((res) => {
-  //       const sendAxiosTrashResult: rs.TrashResult = {
-  //         state: {
-  //           trashName: res.data[0].name,
-  //           throwWay: res.data[0].way,
-  //           imgSrc: urlImg,
-  //         },
-  //       };
-  //       navigate(`/mainpage/resultpage`, { state: sendAxiosTrashResult.state });
-  //     })
-  //     .catch((error) => {
-  //       console.log("An error occurred:", error.response);
-  //     });
-  // };
-
-  // const onClickImgResult = () => {
-  //   if (isImg === null) return alert("no image");
-  //   else {
-  //     sendImage();
-  //   }
-  // };
   const sendImage: () => Promise<any> = async () => {
     const trashFormData = new FormData();
     trashFormData.append("filename", respondImg as any);
 
-    return await Api.post(
-      `/trash/mainpage/users/959f9b1c-c0bf-44b1-bb31-4ff08e86f782/result`,
-      trashFormData
-    );
+    await Api.post(`/trash/users/${userIdtoRedux}/results`, trashFormData)
+      .then((res) => {
+        dispatch(save_ID(res.data.image_id));
+        //res.data.challenge : NONE 확인해야함
+        navigate(`/mainpage/resultpage`);
+      })
+      .catch((error) => {
+        console.log("An error occurred:", error.response);
+      });
   };
 
   const onClickImgResult = () => {
     if (isImg === null) return alert("no image");
     else {
-      (async () => {
-        const res = await sendImage();
-        // const tN = res.data[0].name;
-        navigate(`/mainpage/resultpage`, {
-          state: {
-            trashName: res.data[0].name,
-            throwWay: res.data[0].way,
-            imgSrc: urlImg,
-          },
-        });
-      })();
+      sendImage();
     }
   };
 
