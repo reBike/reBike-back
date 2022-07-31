@@ -41,15 +41,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-    # 'rest_framework_simplejwt',
+    'django_elasticsearch_dsl',
     'corsheaders',
     'drf_yasg',
     'storages',
     'torch',
     # local apps
+    'elastic_search',
     'rebikeuser',
     'rebiketrash',
 ]
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'elasticsearch'
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
