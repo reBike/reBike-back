@@ -28,9 +28,9 @@ class UploadedTrashImageListAPI(APIView):
         try:
             contacts = paginator.page(page)
         except PageNotAnInteger:
-            contacts = paginator.page(1)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except EmptyPage:
-            contacts = paginator.page(paginator.num_pages)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         serializer = UploadedTrashImageSerializer(contacts, many=True)
         return Response(serializer.data)
