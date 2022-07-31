@@ -17,6 +17,7 @@ services:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
+               pip install -r test.txt &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
