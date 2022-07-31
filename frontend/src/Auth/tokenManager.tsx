@@ -6,7 +6,7 @@ import { decodeToken } from "./tokenGetter";
 const setAccessToken = (accessToken: string) => {
   console.log("잘 들r어왔나?", accessToken);
   const today = new Date();
-  const accessExpires = new Date().setTime(today.getTime() + 1000 * 60 * 3); // 만료 30분
+  const accessExpires = new Date().setTime(today.getTime() + 1000 * 60 * 30); // 만료 30분
 
   // const accessExpires = new Date();
 
@@ -28,7 +28,9 @@ const setRefreshToken = (refreshtoken: string) => {
   // const refreshExpires = new Date().setTime(
   //   today.getTime() + 1000 * 60 * 60 * 24 * 14
   // );
-  const refreshExpires = new Date().setTime(today.getTime() + 1000 * 60 * 8);
+  const refreshExpires = new Date().setTime(
+    today.getTime() + 1000 * 60 * 24 * 14
+  );
 
   // const refreshExpires = new Date();
 

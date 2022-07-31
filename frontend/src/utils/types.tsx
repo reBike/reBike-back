@@ -25,11 +25,23 @@ export namespace rs {
     trashlist: Array<Trash>;
   }
 
+  //❌
   export interface TrashResult {
     state: {
       trashName: string;
       throwWay: string;
       imgSrc: string;
     };
+  }
+  //❌
+  export interface Challenge {
+    challenge_number: number;
+    type: boolean;
+  }
+  export interface ChallengeInfo {
+    id: number;
+    imgT: string;
+    imgF: string;
+    test: string;
   }
 }

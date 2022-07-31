@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { Typography, Button, Grid, Box } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import * as React from "react";
+import { Typography, Button, Grid, Box } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -16,21 +16,20 @@ const theme = createTheme({
 });
 
 function formatDate(date: Date) {
-  return (
-    [
-      date.getFullYear(),
-      (date.getMonth() + 1).toString().padStart(2, '0'),
-      date.getDate().toString().padStart(2, '0')
-    ].join('-')
-  );
+  return [
+    date.getFullYear(),
+    (date.getMonth() + 1).toString().padStart(2, "0"),
+    date.getDate().toString().padStart(2, "0"),
+  ].join("-");
 } // 날짜 상태
 
-function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반환 : onClickRetrieve
+function Dates({ onClickRetrieve }: { onClickRetrieve: any }) {
+  // 함수의 반환 : onClickRetrieve
 
   const [StartDate, setStartDate] = React.useState<string | null>(null);
   const [StartLock, setStartLock] = React.useState<Date | null>(null);
   const [EndDate, setEndDate] = React.useState<string | null>(null);
-  const [EndLock, setEndLock] = React.useState<Date | null> (null);
+  const [EndLock, setEndLock] = React.useState<Date | null>(null);
 
   const HandleStartChange = (date: Date) => {
     const dateresult = formatDate(date);
@@ -52,18 +51,20 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반
   };
 
   const fetchUserData = () => {
-    const periodStr = StartDate !== null || EndDate !== null ? '/period' : '';
-    const startDateStr = StartDate !== null ? `/${StartDate}` : '';
-    const endDateStr = EndDate !== null ? `/${EndDate}` : '';
+    const periodStr = StartDate !== null || EndDate !== null ? "/period" : "";
+    const startDateStr = StartDate !== null ? `/${StartDate}` : "";
+    const endDateStr = EndDate !== null ? `/${EndDate}` : "";
 
-    if(StartLock !== null && EndLock !== null){
-      if(EndLock < StartLock){
+    if (StartLock !== null && EndLock !== null) {
+      if (EndLock < StartLock) {
         alert("종료 날짜가 시작 날짜보다 앞에 있을수는 없습니다!");
       }
     }
 
     axios
-      .get(`http://localhost:8080/trash/mypage/users/8ffd6fae-2ebf-4a32-be0d-f4b4d61bb2d2/statistics${periodStr}${startDateStr}${endDateStr}`)
+      .get(
+        `http://localhost:8080/trash/mypage/users/2c762f6e-b369-4985-96f9-29ccb4f9fc34/statistics${periodStr}${startDateStr}${endDateStr}`
+      )
       .then((response) => {
         // Handle success.
         const responseUserData = response.data;
@@ -75,7 +76,7 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반
         // Handle error.
         console.log("An error occurred:", error.response);
       });
-  }
+  };
 
   React.useEffect(() => {
     fetchUserData();
@@ -83,7 +84,8 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container
+      <Grid
+        container
         component="form"
         direction="row"
         justifyContent="center"
@@ -93,23 +95,31 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반
         noValidate
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Grid container
+          <Grid
+            container
             direction="row"
             justifyContent="center"
-            alignItems="center">
+            alignItems="center"
+          >
             <Box margin="4px">
               <DatePicker
                 label="시작 날짜"
                 inputFormat="yyyy/MM/dd"
                 value={StartDate}
                 onChange={HandleStartChange as any}
-                renderInput={(params) => <TextField size="small" {...params} sx={{ width: '100%' }} />}
+                renderInput={(params) => (
+                  <TextField size="small" {...params} sx={{ width: "100%" }} />
+                )}
               />
             </Box>
-            <Box margin="4px"
-              justifyContent="center"
-              alignItems="center">
-              <Typography color="black" fontWeight="bold" sx={{ fontSize: "medium", mx: 2 }}>to</Typography>
+            <Box margin="4px" justifyContent="center" alignItems="center">
+              <Typography
+                color="black"
+                fontWeight="bold"
+                sx={{ fontSize: "medium", mx: 2 }}
+              >
+                to
+              </Typography>
             </Box>
             <Box margin="4px">
               <DatePicker
@@ -118,16 +128,26 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) { // 함수의 반
                 value={EndDate}
                 onChange={HandleEndChange as any}
                 minDate={StartLock}
-                renderInput={(params) => <TextField size="small" {...params} sx={{ width: '100%' }} />}
+                renderInput={(params) => (
+                  <TextField size="small" {...params} sx={{ width: "100%" }} />
+                )}
               />
             </Box>
             <Box margin="4px">
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ height: 40, color: 'white', fontWeight: 'bold', fontSize: 18, marginLeft: 3, backgroundColor: "#759F98" }}
+                sx={{
+                  height: 40,
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  marginLeft: 3,
+                  backgroundColor: "#759F98",
+                }}
               >
-                조회</Button>
+                조회
+              </Button>
             </Box>
           </Grid>
         </LocalizationProvider>

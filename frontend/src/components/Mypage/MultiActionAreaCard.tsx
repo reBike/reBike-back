@@ -50,8 +50,7 @@ export default function MultiActionAreaCard({ image = "", kind = "" }) {
           variant="outlined"
           sx={{
             margin: "auto",
-            fontSize: 3,
-            width: 30,
+            width: 70,
             height: 20,
             bgcolor: "#76F2BE",
             borderColor: "#76F2BE",
@@ -60,9 +59,9 @@ export default function MultiActionAreaCard({ image = "", kind = "" }) {
         >
           <Link
             href={`/mypage/trashNum/:${kind}/howTo`}
-            sx={{ color: "black", textDecoration: "none" }}
+            sx={{ fontSize: 2, color: "black", textDecoration: "none" }}
           >
-            더보기
+            상세보기
           </Link>
         </MyTrashcanBtn>
       </CardActions>

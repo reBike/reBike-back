@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import "./fonts/fonts.css";
 
 import rootReducer from "../src/reducers";
 import { createStore, applyMiddleware } from "redux";
@@ -11,7 +12,7 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+export const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export type RootReducerType = ReturnType<typeof rootReducer>;
 

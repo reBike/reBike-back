@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import SearchBar from "../components/mainpage/SearchBar";
 import UploadImage from "../components/mainpage/UploadImage";
 import PopularTrash from "../components/mainpage/PopularTrash";
+import Footer from "../components/common/Footer";
 
 const MainPage = () => {
   return (
@@ -12,6 +13,7 @@ const MainPage = () => {
         <UploadImage />
         <PopularTrash />
       </div>
+      <Footer />
     </Box>
   );
 };

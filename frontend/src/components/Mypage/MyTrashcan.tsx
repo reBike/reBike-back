@@ -1,11 +1,23 @@
 import { useState, useEffect, useRef } from "react";
-import { alpha, createTheme } from "@mui/material/styles";
-import { Box, Typography, Container, styled, Switch } from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import {
+  Box,
+  Typography,
+  Container,
+  styled,
+  Switch,
+  Button,
+} from "@mui/material";
 import MultiActionAreaCard from "./MultiActionAreaCard";
 import Api from "../../utils/customApi";
 import lottie from "lottie-web";
+import MoreIcon from "../../images/moreIcon";
 import { rs } from "src/utils/types";
 import { getToken, getAccess } from "src/Auth/tokenManager";
+
+interface Props {
+  trashlist?: Array<rs.Trash>;
+}
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -34,36 +46,37 @@ const GetNoTrashLottie = () => {
   return <Box ref={element} style={{ height: 300 }}></Box>;
 };
 
-function MyTrashcan() {
+function MyTrashcan(props: Props) {
   const what: any = getAccess();
   console.log(what);
 
-  const trashList = [] as unknown as rs.TrashList;
-
-  const [trashes, setTrashes] = useState<rs.TrashList>(trashList);
+  // const trashList = [] as unknown as rs.TrashList;
+  const [trashes, setTrashes] = useState(props.trashlist);
+  const [more, setMore] = useState(false);
+  const [page, setPage] = useState(1);
 
   const fetchMyTrash = async () => {
-    const result = await Api.get(
-      "/trash/mypage/users/2c762f6e-b369-4985-96f9-29ccb4f9fc34/images"
-    ).then((res) => res.data as rs.TrashList);
-    // setTrashes(result);
-    setTrashes(result);
-    console.log("api요청 결과", result);
+    await Api.get(
+      `/trash/users/95fd1cd5-0461-4c27-aaea-9e0c838cae03/images`
+    ).then((res) => {
+      const newArray = trashes ? [...trashes, ...res.data] : res.data;
+      setTrashes(newArray);
+    });
+  };
 
-    // console.log("api요청 결과 아이디?",result[0].img)
-    // console.log("정보 저장1",trashes)
+  const changePage = () => {
+    if (!more) return setMore(true);
+    return setPage(page + 1);
   };
 
   useEffect(() => {
     if (what !== "") {
       fetchMyTrash();
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     console.log("정보 저장2", trashes);
-    // console.log("정보 저장2", trashes.message.length);
-    console.log("api요청 gilli", Object.keys(trashes).length);
   }, [trashes]);
 
   return (
@@ -109,23 +122,17 @@ function MyTrashcan() {
         </Box>
       </Box>
       <Container
-        // style={{
-        //   backgroundColor: "white",
-        //   border: "solid",
-        //   borderRadius: 5,
-        //   borderColor: "white",
-        //   height: "50vh",
-        //   paddingTop: 3,
-        //   paddingBottom: 20,
-        // }}
-        // sx={{ mt: 3 }}
-
         style={{
           borderRadius: 8,
           backgroundColor: "white",
-          height: "50vh",
+          height: "100vh",
         }}
-        sx={{ mt: 2 }}
+        sx={{
+          mt: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
         {trashes && Object.keys(trashes)?.length === 0 ? (
           <Box
@@ -168,6 +175,12 @@ function MyTrashcan() {
               ))}
           </Box>
         )}
+        <Box display="flex" alignItems="center" sx={{ margin: 5 }}>
+          <Button onClick={changePage} style={{ color: "#76F2BE" }}>
+            더보기
+            <MoreIcon />
+          </Button>
+        </Box>
       </Container>
     </Container>
   );
