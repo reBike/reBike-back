@@ -35,3 +35,8 @@ class ChallengeSerializer(serializers.ModelSerializer) :
     class Meta :
         model = challenge
         fields = ("number","content")
+
+class UserChallengeSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = user_challenge
+        fields = ("challenge_number","created_at")
