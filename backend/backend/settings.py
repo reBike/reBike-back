@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     # local apps
     'rebikeuser',
     'rebiketrash',
+    'django_prometheus'
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,6 +62,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
+
 ]
 
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000']
@@ -88,13 +92,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': env.db(),
+#     'OPTIONS': {
+#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+#     }
+# }
 DATABASES = {
-    'default': env.db(),
-    'OPTIONS': {
-        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-    }
+    'default': env.db()
 }
-
 
 def test():
     return env
