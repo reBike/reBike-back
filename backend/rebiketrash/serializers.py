@@ -1,42 +1,44 @@
 import imp
 from pyexpat import model
 from rest_framework import serializers
-from .models import uploaded_trash_image, challenge, user_challenge
+from .models import trash_image, challenge, trash_kind, user_challenge
 from django.db.models import Count
 
-  
 
-class UploadedTrashImageSerializer(serializers.ModelSerializer) :
-    class Meta :
-        model = uploaded_trash_image       
-        fields = ("uploaded_trash_image_id", "img", "trash_kind")            
+class TrashImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = trash_image
+        fields = ("trash_image_id", "image")
 
-class UploadedTrashImageDetailSerializer(serializers.ModelSerializer) :
-    class Meta :
-        model = uploaded_trash_image       
-        fields = '__all__'  
 
-class UploadedTrashImageStatisticsSerializer(serializers.Serializer) :
-    trash_kind = serializers.SerializerMethodField()
+class TrashImageDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = trash_kind
+        fields = ('kind',)
+
+
+class TrashImageStatisticsSerializer(serializers.Serializer):
+    kind = serializers.SerializerMethodField()
     cnt = serializers.SerializerMethodField()
 
-    class Meta :
-        model = uploaded_trash_image
+    class Meta:
+        model = trash_image
         fields = '__all__'
-    
-    def get_trash_kind(self, model_instance):
-        return model_instance['trash_kind']
+
+    def get_kind(self, model_instance):
+        return model_instance['kind']
 
     def get_cnt(self, model_instance):
         return model_instance['cnt']
 
 
-class ChallengeSerializer(serializers.ModelSerializer) :
-    class Meta :
+class ChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
         model = challenge
-        fields = ("number","content")
+        fields = ("number", "content")
 
-class UserChallengeSerializer(serializers.ModelSerializer) :
-    class Meta :
+
+class UserChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
         model = user_challenge
-        fields = ("challenge_number","created_at")
+        fields = ("challenge_number", "created_at")

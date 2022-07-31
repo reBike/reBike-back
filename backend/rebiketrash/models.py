@@ -3,18 +3,27 @@ from rebikeuser.models import user
 
 
 
-class uploaded_trash_image(models.Model):
-    uploaded_trash_image_id = models.AutoField(primary_key=True)
+class trash_image(models.Model):
+    trash_image_id = models.AutoField(primary_key=True)
     active = models.IntegerField(default=1)
-    img = models.CharField(max_length=200)
-    trash_kind = models.CharField(max_length=30)
+    image = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
     user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
 
+    class Meta:
+        db_table = 'trash_image'
+
+
+class trash_kind(models.Model):
+    trash_image_id = models.ForeignKey(trash_image, on_delete=models.CASCADE, db_column='trash_image_id')
+    user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
+    kind = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
 
     class Meta:
-        db_table = 'uploaded_trash_image'
+        db_table = 'trash_kind'
 
 
 class challenge(models.Model):
