@@ -80,8 +80,8 @@ def user_reissuance_access_token(request):
 
 
 def login(request):
-    input_name = request.GET.get('name')
-    input_pw = request.GET.get('pw')
+    input_name = request.data['name']
+    input_pw = request.data['pw']
     access_token = None
     refresh_token = None
 
