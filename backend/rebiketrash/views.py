@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 
 from .utils import get_ai_result, check_challenge
 from rebikeuser.userUtil import user_token_to_data
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 ############################## result page api ##############################
 
@@ -55,11 +56,19 @@ def get_trash_kinds(request, user_id, trash_image_id):
 
 ############################## user page api ##############################
 class TrashImageListAPI(APIView):
-    def get(self, request, user_id):
+    def get(self, request, user_id, page_number):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-            trashs = trash_image.objects.filter(user_id=user_id, active=1)
-            serializer = TrashImageSerializer(trashs, many=True)
+            trashs = trash_image.objects.filter(user_id=user_id, active=1).order_by('-created_at')
+            paginator = Paginator(trashs, 10)
+            page = page_number
+            try:
+                contacts = paginator.page(page)
+            except PageNotAnInteger:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except EmptyPage:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            serializer = TrashImageSerializer(contacts, many=True)
             return Response(serializer.data)
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
