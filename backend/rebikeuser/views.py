@@ -58,7 +58,7 @@ def user_patch(request):
 
 
 class Auth(APIView):
-    def get(self, request):
+    def post(self, request):
         token = request.headers.get('Authorization', None)
         if token:
             return user_reissuance_access_token(request)
