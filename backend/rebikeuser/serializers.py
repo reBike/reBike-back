@@ -7,8 +7,8 @@ class UserSignupResponse(serializers.ModelSerializer):
         model = user
         fields = ['name']  # 프론트에주는 값
 
-class UserSerializer(serializers.ModelSerializer):
 
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ['id', 'name', 'alias', 'pw', 'email']
+        fields = ['id', 'name', 'alias', 'password', 'email']
