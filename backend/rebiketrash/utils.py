@@ -58,7 +58,7 @@ def check_challenge(user_id):
     challenge_info = 0
     challenge_id = 1
     for i in [1, 3, 5, 7, 10]:
-        if not user_challenge.objects.filter(user_id=user_id, challenge_number=challenge_id):
+        if not user_challenge.objects.filter(user_id=user_id, challenge_id=challenge_id):
             if uploaded_img_count == i:
                 challenge_info = create_user_challenge(user_id, challenge_id)
         challenge_id += 1
@@ -67,12 +67,12 @@ def check_challenge(user_id):
         challenge_id = 'NONE'
         challenge_content = 'NONE'
     else:
-        challenge_id = challenge_info.number
+        challenge_id = challenge_info.id
         challenge_content = challenge_info.content
     return challenge_id, challenge_content
 
 
 def create_user_challenge(user_id, challenge_number):
     user_challenge.objects.create(user_id=user.objects.get(id=user_id),
-                                  challenge_number=challenge.objects.get(number=challenge_number))
-    return challenge.objects.get(number=challenge_number)
+                                  challenge_id=challenge.objects.get(id=challenge_number))
+    return challenge.objects.get(id=challenge_number)

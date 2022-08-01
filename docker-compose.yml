@@ -66,5 +66,5 @@ services:
 #    volumes:
 #      - ~/prometheus/grafana-volume:/var/lib/grafana # volumes 설정한다면 이부분 주석처리
 #      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
-      # - grafana_data:/var/lib/grafana
+#      # - grafana_data:/var/lib/grafana
     restart: always

@@ -17,6 +17,8 @@ from datetime import datetime, timedelta
 
 from .utils import get_ai_result, check_challenge
 from rebikeuser.userUtil import user_token_to_data
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 ############################## result page api ##############################
 
@@ -24,21 +26,19 @@ class TrashImageDetailListAPI(APIView):
     def get(self, request, user_id, trash_image_id):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-            image = trash_image.objects.get(trash_image_id=int(trash_image_id), user_id=user_id).image
+            image = trash_image.objects.get(id=int(trash_image_id), user_id=user_id).image
             return JsonResponse({"image": image})
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
-
 
     def delete(self, request, user_id, trash_image_id):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
             trash_image.objects.filter(
-                user_id=user_id, active=1, trash_image_id=int(trash_image_id)).update(active=0)
+                user_id=user_id, active=1, id=int(trash_image_id)).update(active=0)
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
-
 
 
 @api_view(['GET'])
@@ -52,17 +52,25 @@ def get_trash_kinds(request, user_id, trash_image_id):
         return JsonResponse({"message": "Invalid_Token"}, status=401)
 
 
-
 ############################## user page api ##############################
 class TrashImageListAPI(APIView):
-    def get(self, request, user_id):
+    def get(self, request, user_id, page_number):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-            trashs = trash_image.objects.filter(user_id=user_id, active=1)
-            serializer = TrashImageSerializer(trashs, many=True)
+            trashs = trash_image.objects.filter(user_id=user_id, active=1).order_by('-created_at')
+            paginator = Paginator(trashs, 10)
+            page = page_number
+            try:
+                contacts = paginator.page(page)
+            except PageNotAnInteger:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except EmptyPage:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            serializer = TrashImageSerializer(contacts, many=True)
             return Response(serializer.data)
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
+
 
 # pagination !!!!
 
@@ -75,6 +83,7 @@ def get_user_statistics(request, user_id):
         return Response(serializer.data)
     else:
         return JsonResponse({"message": "Invalid_Token"}, status=401)
+
 
 @api_view(['GET'])
 def get_user_statistics_by_date(request, user_id, from_date, to_date):
@@ -94,7 +103,6 @@ def get_user_statistics_by_date(request, user_id, from_date, to_date):
         return JsonResponse({"message": "Invalid_Token"}, status=401)
 
 
-
 @api_view(['GET'])
 def get_all_challenges(request):
     all_challenges = challenge.objects.all()
@@ -106,12 +114,11 @@ def get_all_challenges(request):
 def get_user_challenges(request, user_id):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == user_id):
-        user_challenges = user_challenge.objects.filter(user_id=user_id).order_by('challenge_number')
+        user_challenges = user_challenge.objects.filter(user_id=user_id).order_by('challenge_id')
         serializer = UserChallengeSerializer(user_challenges, many=True)
         return Response(serializer.data)
     else:
         return JsonResponse({"message": "Invalid_Token"}, status=401)
-
 
 
 ############################## main page api ##############################
@@ -143,7 +150,7 @@ class UploadImage(APIView):
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
             user_info = user.objects.get(id=user_id)
-            trash_image.objects.create(active=user_info.save_img, image=image_url, user_id=user_info)
+            trash_image.objects.create(active=user_info.autosave, image=image_url, user_id=user_info)
 
             image_info = trash_image.objects.get(image=image_url, user_id=user_info)
             for ai_result in ai_results:
@@ -153,6 +160,6 @@ class UploadImage(APIView):
             challenge_id, challenge_content = check_challenge(user_id)
 
             return JsonResponse(
-                {'image_id': image_info.trash_image_id, 'challenge': challenge_id, 'challenge_content': challenge_content})
+                {'image_id': image_info.id, 'challenge': challenge_id, 'challenge_content': challenge_content})
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
