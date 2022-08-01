@@ -18,7 +18,7 @@ schema_view_v1 = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users', include('rebikeuser.urls')),
+    path('api/users/', include('rebikeuser.urls')),
     path('api/trash/', include('rebiketrash.urls')),
     path('', include('django_prometheus.urls')),
 

@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'storages',
     'torch',
-    'django_celery_beat',
+    #'django_celery_beat',
     # 'django_celery_results',
     # local apps
     'rebikeuser',
@@ -151,9 +151,9 @@ AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Seoul'
-CELERY_RESULT_BACKEND = env('CELERY_BROKER_URL')
+# CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Seoul'
+# CELERY_RESULT_BACKEND = env('CELERY_BROKER_URL')

@@ -99,11 +99,11 @@ def login(request):
     return JsonResponse(data, status=200)
 
 
-# class Autosave(APIView):
-#     def get(self, request):
-#         payload = user_token_to_data(request.headers.get('Authorization', None))
-#         return payload.get('autosave')
-#
-#     def patch(self, request):
-#         payload = user_token_to_data(request.headers.get('Authorization', None))
-#         return not payload.get('autosave')
+class Autosave(APIView):
+    def get(self, request):
+        payload = user_token_to_data(request.headers.get('Authorization', None))
+        return payload.get('autosave')
+
+    def patch(self, request):
+        payload = user_token_to_data(request.headers.get('Authorization', None))
+        return not payload.get('autosave')
