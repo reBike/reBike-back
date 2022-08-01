@@ -2,7 +2,7 @@
 ***
 ## 생활쓰레기들의 AI 분석 및 분리수거 생활화를 위한 플랫폼
 
-
+### System Architecture
 
 ### Core Screen
 1. Mainpage
@@ -13,8 +13,6 @@
 
 4. Statistics
 
-
-### System Architecture
 
 ### Tech Stack
 
