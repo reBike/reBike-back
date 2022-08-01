@@ -8,6 +8,8 @@ from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 import torch, cv2
 import os
 
+from PIL import Image
+import io, base64
 
 def get_img_url(img):
     s3_client = boto3.client(
@@ -24,8 +26,9 @@ def get_img_url(img):
     image_url = image_url.replace(" ", "/")
     return image_url
 
-def get_ai_result(image_instance):
-    img = image_instance
+def get_ai_result(image):
+    img = Image.frombytes(image['mode'], image['size'], image['pixels'])
+
     hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
     weightfile = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5',
                               'runs', 'train', 'garbage_yolov5s_results', 'weights', 'best.pt')
@@ -41,13 +44,16 @@ def get_ai_result(image_instance):
         for result in results_dict:
             if result.get('name') not in ai_results:
                 ai_results.append(result.get('name'))
-
+    
     results.render()
+    RGB_img = cv2.cvtColor(results.imgs[0], cv2.COLOR_RGB2BGR)    
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 100]
-    success, a_numpy = cv2.imencode('.jpg', results.imgs[0], encode_param)
+    success, a_numpy = cv2.imencode('.jpg', RGB_img, encode_param)
     image = a_numpy.tostring()
+
     image_url = get_img_url(image)
-    return ai_results, image_url
+
+    return {"ai_results":' '.join(ai_results), "image_url":image_url}
 
 
 def check_challenge(user_id):

@@ -1,3 +1,5 @@
+from encodings import utf_8
+from tkinter.tix import IMAGE
 from django.shortcuts import render, HttpResponse
 from django.db.models import Count
 from django.http import JsonResponse
@@ -19,8 +21,11 @@ from rebikeuser.userUtil import user_token_to_data
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .utils import get_ai_result, check_challenge
+
+import io, base64
+from .tasks import ai_task
 from PIL import Image
-import io
+import pickle
 ############################## result page api ##############################
 
 class TrashImageDetailListAPI(APIView):
@@ -144,17 +149,37 @@ class UploadImage(APIView):
     def post(self, request, user_id):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-            image_instance = Image.open(io.BytesIO(request.FILES.get('filename').read()))
-            ai_results, image_url = get_ai_result(image_instance)
+            im = Image.open(io.BytesIO(request.FILES.get('filename').read()))
+            
+            img_instance = {
+                'pixels': im.tobytes(),
+                'size': im.size,
+                'mode': im.mode,
+            }
+
+            
+            r = ai_task.delay(img_instance)
+            while True:
+                if r.ready()==True:
+                    break
+
+            # AsyncResult
+            # polling 
+
+            #r = get_ai_result(img_instance)
+
+            ai_results = r.get("ai_results")
+            image_url = r.get("image_url")
 
             if ai_results == 0:  # 사진이 분류되지 않을 경우
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
             user_info = user.objects.get(id=user_id)
-            trash_image.objects.create(active=user_info.autosave, image=image_url, user_id=user_info)
+            trash_image.objects.create(active=user_info.autosave, image=image_url["image_url"], user_id=user_info)
 
-            image_info = trash_image.objects.get(image=image_url, user_id=user_info)
-            for ai_result in ai_results:
+            image_info = trash_image.objects.get(image=image_url["image_url"], user_id=user_info)
+    
+            for ai_result in ai_results['ai_results'].split(" "):
                 trash_kind.objects.create(trash_image_id=image_info, user_id=user_info, kind=ai_result)
 
             # 챌린지 달성 여부 조사
