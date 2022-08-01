@@ -25,15 +25,25 @@ def get_img_url(img):
     image_url = image_url.replace(" ", "/")
     return image_url
 
-
-def get_ai_result(request):
-    img = Image.open(io.BytesIO(request.FILES.get('filename').read()))
+def set_ai_model(img):
     hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
     weightfile = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5',
                               'runs', 'train', 'garbage_yolov5s_results', 'weights', 'best.pt')
     model = torch.hub.load(hubconfig, 'custom',
                            path=weightfile, source='local')
     results = model(img)
+    return results
+
+def get_ai_result(request):
+    img = Image.open(io.BytesIO(request.FILES.get('filename').read()))
+    # hubconfig = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5')
+    # weightfile = os.path.join(os.getcwd(), 'rebiketrash', 'yolov5',
+    #                           'runs', 'train', 'garbage_yolov5s_results', 'weights', 'best.pt')
+    # model = torch.hub.load(hubconfig, 'custom',
+    #                        path=weightfile, source='local')
+    # results = model(img)
+
+    results = set_ai_model(img)
 
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:

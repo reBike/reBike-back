@@ -47,7 +47,7 @@ def user_generate_refresh_token(user_data):
 def user_hash_password(password):
     password = str(password).encode('utf-8')
     salt = bcrypt.gensalt()
-    hash_password = bcrypt.hashpassword(password, salt)
+    hash_password = bcrypt.hashpw(password, salt)
     return hash_password, salt
 
 
@@ -108,5 +108,5 @@ def user_create_client(name, email, password, alias):
 
 def user_comppassword(password, user_data):
     password = str(password).encode('utf-8')
-    hash_password = bcrypt.hashpassword(password, user_data.salt)
+    hash_password = bcrypt.hashpw(password, user_data.salt)
     return hash_password == user_data.password

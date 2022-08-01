@@ -1,7 +1,9 @@
-from .utils import get_ai_result
 from __future__ import absolute_import, unicode_literals
+from .utils import set_ai_model
+from celery import shared_task
+from backend.celery import app
 
- 
-@celery.task
-def ai_task(request):
-    return get_ai_result(request)
+
+@app.task
+def ai_task(img):
+    return set_ai_model(img)

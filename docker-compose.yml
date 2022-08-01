@@ -68,3 +68,28 @@ services:
 #      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
 #      # - grafana_data:/var/lib/grafana
 #    restart: always
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "5672:5672" # Default Port
+      - "15672:15672" # For UI
+    expose:
+      - "15672"
+    
+  celery_worker:
+    container_name: 'celery_worker'
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    volumes:
+      - ./backend:/backend
+    ports: []
+    depends_on:
+      - rabbitmq
+      - backend
+    command: sh -c "celery -A backend worker --loglevel=info"
