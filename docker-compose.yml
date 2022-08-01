@@ -56,15 +56,15 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
 
-#  grafana:
-#    image: grafana/grafana
-#    container_name: grafana
-#    depends_on:
-#      - prometheus
-#    ports:
-#      - 3000:3000
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
 #    volumes:
 #      - ~/prometheus/grafana-volume:/var/lib/grafana # volumes 설정한다면 이부분 주석처리
 #      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
-#      # - grafana_data:/var/lib/grafana
-#    restart: always
+      # - grafana_data:/var/lib/grafana
+    restart: always
