@@ -44,11 +44,11 @@ def user_generate_refresh_token(user_data):
 
 
 # Password Hashing
-def user_hash_pw(pw):
-    pw = str(pw).encode('utf-8')
+def user_hash_password(password):
+    password = str(password).encode('utf-8')
     salt = bcrypt.gensalt()
-    hash_pw = bcrypt.hashpw(pw, salt)
-    return hash_pw, salt
+    hash_password = bcrypt.hashpw(password, salt)
+    return hash_password, salt
 
 
 class UserDuplicateCheck:
@@ -74,11 +74,11 @@ class UserDuplicateCheck:
 def user_change_value(value, alias):
     user_data = user_find_by_alias(alias).first()
 
-    if value.get('pw'):
-        hash_pw, salt = user_hash_pw(value.get('pw'))
-        user_data.pw = hash_pw
+    if value.get('password'):
+        hash_password, salt = user_hash_password(value.get('password'))
+        user_data.password = hash_password
         user_data.salt = salt
-        # value.update({"pw": hash_pw, "salt": salt})
+        # value.update({"password": hash_password, "salt": salt})
     elif value.get('alias'):
         user_data.alias = value.get('alias')
     user_data.save()
@@ -101,12 +101,11 @@ def user_find_by_email(email):
     return user.objects.filter(email=email)
 
 
-def user_create_client(name, email, pw, alias):
-    hash_pw, salt = user_hash_pw(pw)
-    return user.objects.create(name=name, alias=alias, pw=hash_pw, salt=salt, email=email)
+def user_create_client(name, email, password, alias):
+    hash_password, salt = user_hash_password(password)
+    return user.objects.create(name=name, alias=alias, password=hash_password, salt=salt, email=email)
 
-
-def user_compPW(pw, user_data):
+def user_comppassword(pw, user_data):
     pw = str(pw).encode('utf-8')
     hash_pw = bcrypt.hashpw(pw, user_data.salt)
-    return hash_pw == user_data.pw
+    return hash_pw == user_data.password

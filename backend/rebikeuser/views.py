@@ -1,11 +1,15 @@
 from django.http import JsonResponse
+from django.shortcuts import HttpResponse
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from .serializers import UserSignupResponse
-from .userUtil import user_find_by_name, user_compPW, user_create_client, user_generate_access_token, \
-    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
+from .serializers import UserSignupResponse, AutoUpload
+from .userUtil import user_find_by_name, user_comppassword, user_create_client, user_generate_access_token, \
+    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value, \
+    user_find_by_id
+import operator
 
 
 @api_view(['GET', 'POST', 'PATCH'])
@@ -35,11 +39,11 @@ def user_is_duplicate(request):
 
 def user_sign_up(request):
     name = request.data['name']
-    pw = request.data['pw']
+    password = request.data['password']
     email = request.data['email']
     alias = request.data['alias']
 
-    new_user = user_create_client(name, email, pw, alias)
+    new_user = user_create_client(name, email, password, alias)
     data = UserSignupResponse(new_user, many=False).data
     return Response(data, status=200)
 
@@ -81,14 +85,14 @@ def user_reissuance_access_token(request):
 
 def login(request):
     input_name = request.data['name']
-    input_pw = request.data['pw']
+    input_password = request.data['password']
     access_token = None
     refresh_token = None
 
-    if input_pw and input_name:
+    if input_password and input_name:
         user_data = user_find_by_name(input_name).first()
         if user_data:
-            if user_compPW(input_pw, user_data):
+            if user_comppassword(input_password, user_data):
                 access_token = user_generate_access_token(user_data)
                 refresh_token = user_generate_refresh_token(user_data)
         else:
@@ -97,3 +101,19 @@ def login(request):
     data = {"access_token": access_token, "refresh_token": refresh_token}
 
     return JsonResponse(data, status=200)
+
+
+class Autosave(APIView):
+    def get(self, request):
+        payload = user_token_to_data(request.headers.get('Authorization', None))
+        user_data = user_find_by_id(payload.get('id')).first()
+        data = {"user_autosave": user_data.autosave}
+        return JsonResponse(data, status=200)
+
+    def patch(self, request):
+        payload = user_token_to_data(request.headers.get('Authorization', None))
+        user_data = user_find_by_id(payload.get('id')).first()
+        user_data.autosave = not user_data.autosave
+        user_data.save()
+        data = {"user_autosave": user_data.autosave}
+        return JsonResponse(data, status=200)
