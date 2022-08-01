@@ -25,7 +25,7 @@ class TrashImageDetailListAPI(APIView):
     def get(self, request, user_id, trash_image_id):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-            image = trash_image.objects.get(trash_image_id=int(trash_image_id), user_id=user_id).image
+            image = trash_image.objects.get(id=int(trash_image_id), user_id=user_id).image
             return JsonResponse({"image": image})
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
@@ -35,7 +35,7 @@ class TrashImageDetailListAPI(APIView):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
             trash_image.objects.filter(
-                user_id=user_id, active=1, trash_image_id=int(trash_image_id)).update(active=0)
+                user_id=user_id, active=1, id=int(trash_image_id)).update(active=0)
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)
@@ -115,7 +115,7 @@ def get_all_challenges(request):
 def get_user_challenges(request, user_id):
     payload = user_token_to_data(request.headers.get('Authorization', None))
     if (payload.get('id') == user_id):
-        user_challenges = user_challenge.objects.filter(user_id=user_id).order_by('challenge_number')
+        user_challenges = user_challenge.objects.filter(user_id=user_id).order_by('challenge_id')
         serializer = UserChallengeSerializer(user_challenges, many=True)
         return Response(serializer.data)
     else:
@@ -162,6 +162,6 @@ class UploadImage(APIView):
             challenge_id, challenge_content = check_challenge(user_id)
 
             return JsonResponse(
-                {'image_id': image_info.trash_image_id, 'challenge': challenge_id, 'challenge_content': challenge_content})
+                {'image_id': image_info.id, 'challenge': challenge_id, 'challenge_content': challenge_content})
         else:
             return JsonResponse({"message": "Invalid_Token"}, status=401)

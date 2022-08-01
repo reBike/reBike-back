@@ -10,7 +10,7 @@ class user(models.Model):
     salt = models.BinaryField(max_length=29)
     email = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
-    save_img = models.BooleanField(default=True)
+    save_image = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
