@@ -4,7 +4,7 @@ import json
 from elasticsearch_dsl import connections
 
 try:
-    conn = connections.create_connection(hosts=['elasticsearch:9200'], timeout=20)
+    conn = connections.create_connection(hosts=['elasticsearch'], timeout=20)
     search_path = os.getcwd()
     with open(search_path + "/search_config.json", encoding='utf-8') as json_file:
         json_data = json.loads(json_file.read())
