@@ -17,7 +17,6 @@ services:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
-               pip install -r test.txt &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -42,15 +41,15 @@ services:
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       discovery.type: single-node
-#  nginx:
-#    build: ./nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./nginx:/etc/nginx
-#    depends_on:
-#      - mysqldb
-#      - backend
+  #  nginx:
+  #    build: ./nginx
+  #    ports:
+  #      - 80:80
+  #    volumes:
+  #      - ./nginx:/etc/nginx
+  #    depends_on:
+  #      - mysqldb
+  #      - backend
   #  frontend:
   #    build: ./frontend
   #    command: ["npm", "start"]
