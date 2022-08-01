@@ -1,11 +1,15 @@
 from django.http import JsonResponse
+from django.shortcuts import HttpResponse
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from .serializers import UserSignupResponse
+from .serializers import UserSignupResponse, AutoUpload
 from .userUtil import user_find_by_name, user_comppassword, user_create_client, user_generate_access_token, \
-    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value
+    user_generate_refresh_token, user_token_to_data, UserDuplicateCheck, user_refresh_to_access, user_change_value, \
+    user_find_by_id
+import operator
 
 
 @api_view(['GET', 'POST', 'PATCH'])
@@ -102,8 +106,14 @@ def login(request):
 class Autosave(APIView):
     def get(self, request):
         payload = user_token_to_data(request.headers.get('Authorization', None))
-        return payload.get('autosave')
+        user_data = user_find_by_id(payload.get('id')).first()
+        data = {"user_autosave": user_data.autosave}
+        return JsonResponse(data, status=200)
 
     def patch(self, request):
         payload = user_token_to_data(request.headers.get('Authorization', None))
-        return not payload.get('autosave')
+        user_data = user_find_by_id(payload.get('id')).first()
+        user_data.autosave = not user_data.autosave
+        user_data.save()
+        data = {"user_autosave": user_data.autosave}
+        return JsonResponse(data, status=200)
