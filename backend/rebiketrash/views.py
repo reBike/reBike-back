@@ -15,12 +15,12 @@ from .serializers import TrashImageSerializer, TrashImageDetailSerializer, Trash
 
 from datetime import datetime, timedelta
 
-from .utils import get_ai_result, check_challenge
 from rebikeuser.userUtil import user_token_to_data
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .tasks import ai_task
-
+from .utils import get_ai_result, check_challenge
+from PIL import Image
+import io
 ############################## result page api ##############################
 
 class TrashImageDetailListAPI(APIView):
@@ -144,8 +144,8 @@ class UploadImage(APIView):
     def post(self, request, user_id):
         payload = user_token_to_data(request.headers.get('Authorization', None))
         if (payload.get('id') == user_id):
-
-            ai_results, image_url = ai_task.delay(request)
+            image_instance = Image.open(io.BytesIO(request.FILES.get('filename').read()))
+            ai_results, image_url = get_ai_result(image_instance)
 
             if ai_results == 0:  # 사진이 분류되지 않을 경우
                 return Response(status=status.HTTP_204_NO_CONTENT)
