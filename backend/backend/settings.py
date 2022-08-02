@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-    # 'rest_framework_simplejwt',
+    'django_elasticsearch_dsl',
     'corsheaders',
     'drf_yasg',
     'storages',
@@ -49,17 +49,24 @@ INSTALLED_APPS = [
     #'django_celery_beat',
     # 'django_celery_results',
     # local apps
+    'elastic_search',
     'rebikeuser',
     'rebiketrash',
     'django_prometheus'
 ]
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'elasticsearch'
+    },
+}
 
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

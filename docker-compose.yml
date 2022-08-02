@@ -2,6 +2,7 @@ version: "3"
 
 volumes:
   mysql_data:
+  elastic_search:
 
 services:
   mysqldb:
@@ -16,6 +17,7 @@ services:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
+               python setup_elastic_search.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -25,6 +27,8 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
+      - elasticsearch
+
 #  nginx:
 #    build: ./nginx
 #    ports:
@@ -34,13 +38,13 @@ services:
 #    depends_on:
 #      - mysqldb
 #      - backend
-  frontend:
-    build: ./frontend
-    command: ["npm", "start"]
-    ports:
-      - 3000:3000
-    volumes:
-    - ./frontend:/app
+#  frontend:
+#    build: ./frontend
+#    command: ["npm", "start"]
+#    ports:
+#      - 3000:3000
+#    volumes:
+#    - ./frontend:/app
 #####################################################
   prometheus:
     image: prom/prometheus
@@ -82,3 +86,20 @@ services:
 #      - /sys:/sys:ro
 #      - /var/lib/docker/:/var/lib/docker:ro
 #    restart: always
+
+  #  nginx:
+  #    build: ./nginx
+  #    ports:
+  #      - 80:80
+  #    volumes:
+  #      - ./nginx:/etc/nginx
+  #    depends_on:
+  #      - mysqldb
+  #      - backend
+  #  frontend:
+  #    build: ./frontend
+  #    command: ["npm", "start"]
+  #    ports:
+  #      - 3000:3000
+  #    volumes:
+  #      - ./frontend:/app
