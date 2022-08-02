@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns =[
     path('search-words/<search_word>/kind',views.get_search_result),
-    path('users/<user_id>/results',views.UploadImage.as_view()),
+    path('users/<user_id>/results/tasks',views.get_task_id),
+    path('users/<user_id>/results/tasks/<task_id>',views.get_task_result),
     path('statistics/ranking',views.get_statistics_ranking),
 
     path('users/<user_id>/pages/<page_number>',views.TrashImageListAPI.as_view()),

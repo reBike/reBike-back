@@ -68,7 +68,13 @@ services:
 #      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
 #      # - grafana_data:/var/lib/grafana
 #    restart: always
-  
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management-alpine
@@ -82,7 +88,7 @@ services:
       - "15672"
     
   celery_worker:
-    container_name: 'celery_worker'
+    container_name: celery_worker
     build:
       context: ./backend
       dockerfile: dockerfile

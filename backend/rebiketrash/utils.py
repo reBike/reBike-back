@@ -11,6 +11,8 @@ import os
 from PIL import Image
 import io, base64
 
+from uuid import uuid4
+
 def get_img_url(img):
     s3_client = boto3.client(
         's3',
@@ -18,11 +20,11 @@ def get_img_url(img):
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY
     )
     image = img
-    image_time = (str(datetime.now())).replace(" ", "")
     image_type = "jpg"
-    s3_client.put_object(Body=image, Bucket='image-bucket2', Key=image_time + "." + image_type)
+    image_uuid = str(uuid4())
+    s3_client.put_object(Body=image, Bucket='image-bucket2', Key=image_uuid + "." + image_type)
     image_url = "http://image-bucket2.s3.ap-northeast-2.amazonaws.com/" + \
-                image_time + "." + image_type
+                image_uuid + "." + image_type
     image_url = image_url.replace(" ", "/")
     return image_url
 
@@ -38,7 +40,7 @@ def get_ai_result(image):
 
     results_dict = results.pandas().xyxy[0].to_dict(orient="records")
     if not results_dict:
-        return 0, 0
+        return {"ai_results":0, "image_url":0}
     else:
         ai_results = []
         for result in results_dict:
