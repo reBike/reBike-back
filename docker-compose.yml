@@ -34,13 +34,13 @@ services:
 #    depends_on:
 #      - mysqldb
 #      - backend
-#  frontend:
-#    build: ./frontend
-#    command: ["npm", "start"]
-#    ports:
-#      - 3000:3000
-#    volumes:
-#    - ./frontend:/app
+  frontend:
+    build: ./frontend
+    command: ["npm", "start"]
+    ports:
+      - 3000:3000
+    volumes:
+    - ./frontend:/app
 #####################################################
   prometheus:
     image: prom/prometheus
@@ -55,6 +55,8 @@ services:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
+    depends_on:
+      - cadvisor
 
   grafana:
     image: grafana/grafana
@@ -62,9 +64,21 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
-#    volumes:
+      - 3100:3100
+    volumes:
 #      - ~/prometheus/grafana-volume:/var/lib/grafana # volumes 설정한다면 이부분 주석처리
-#      - ./config/grafana-init.ini:/etc/grafana/grafana.ini
-#      # - grafana_data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      # - grafana_data:/var/lib/grafana
     restart: always
+
+#  cadvisor:
+#    image: gcr.io/cadvisor/cadvisor:latest
+#    container_name: cadvisor
+#    ports:
+#      - 8090:8090
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:rw
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#    restart: always
