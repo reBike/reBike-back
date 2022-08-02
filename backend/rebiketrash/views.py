@@ -1,7 +1,3 @@
-from encodings import utf_8
-from tkinter.tix import IMAGE
-from urllib import request
-from django.shortcuts import render, HttpResponse
 from django.db.models import Count
 from django.http import JsonResponse
 
@@ -183,7 +179,7 @@ def get_task_result(request, user_id, task_id):
 
     ai_results = task.get("ai_results")
     image_url = task.get("image_url")
-    
+
     if ai_results['ai_results'] == 0:  # 사진이 분류되지 않을 경우
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -202,4 +198,4 @@ def get_task_result(request, user_id, task_id):
     challenge_id, challenge_content = check_challenge(user_id)
 
     return JsonResponse(
-        {'image_id': image_info.id, 'challenge': challenge_id, 'challenge_content': challenge_content})
+        {'image_id': image_info.id, 'challenge_id': challenge_id, 'challenge_content': challenge_content})

@@ -2,14 +2,12 @@ from .models import trash_image, challenge, user_challenge
 from rebikeuser.models import user
 
 import boto3
-from datetime import datetime, timedelta
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 import torch, cv2
 import os
 
 from PIL import Image
-import io, base64
 
 from uuid import uuid4
 
