@@ -176,17 +176,17 @@ def get_task_id(request, user_id):
 def get_task_result(request, user_id, task_id):
     task = AsyncResult(task_id)
     if not task.ready():  # 작업이 완료되지 않았을 경우
-        return JsonResponse({"ai_result":"notyet"})
+        return JsonResponse({"ai_result": "notyet"})
 
     ai_results = task.get("ai_results")
     image_url = task.get("image_url")
 
     if ai_results['ai_results'] == 0:  # 재활용할 쓰레기가 없는 경우
-        return JsonResponse({"ai_result":"false"})
-    
+        return JsonResponse({"ai_result": "false"})
+
     try:
-        trash_image.objects.get(image = image_url["image_url"])
-        return JsonResponse({"ai_result":"exist"})
+        trash_image.objects.get(image=image_url["image_url"])
+        return JsonResponse({"ai_result": "exist"})
     except trash_image.DoesNotExist:
         user_info = user.objects.get(id=user_id)
         trash_image.objects.create(
@@ -201,7 +201,6 @@ def get_task_result(request, user_id, task_id):
 
         # 챌린지 달성 여부 조사
         challenge_id, challenge_content = check_challenge(user_id)
-        
+
         return JsonResponse(
             {'image_id': image_info.id, 'challenge_id': challenge_id, 'challenge_content': challenge_content})
-    
