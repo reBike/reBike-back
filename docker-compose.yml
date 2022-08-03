@@ -1,7 +1,8 @@
-version: "3"
+version: "3.8"
 
 volumes:
   mysql_data:
+  elasticsearch_volume:
 
 services:
   mysqldb:
@@ -11,11 +12,17 @@ services:
     ports:
       - "8989:3306"
     volumes:
-      - "mysql_data:/var/lib/mysql"
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
   backend:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
+               python setup_es.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -24,25 +31,11 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
 
-#  nginx:
-#    build: ./nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./nginx:/etc/nginx
-#    depends_on:
-#      - mysqldb
-#      - backend
-#  frontend:
-#    build: ./frontend
-#    command: ["npm", "start"]
-#    ports:
-#      - 3000:3000
-#    volumes:
-#    - ./frontend:/app
-#####################################################
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -56,6 +49,8 @@ services:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
+#    depends_on:
+#      - cadvisor
 
   grafana:
     image: grafana/grafana
@@ -111,24 +106,44 @@ services:
     ports: []
     depends_on:
       - rabbitmq
-      - backend
+      - redis
     environment:
       - C_FORCE_ROOT=true
     command: sh -c "celery -A backend worker --loglevel=info"
 
-  #  nginx:
-  #    build: ./nginx
-  #    ports:
-  #      - 80:80
-  #    volumes:
-  #      - ./nginx:/etc/nginx
-  #    depends_on:
-  #      - mysqldb
-  #      - backend
-  #  frontend:
-  #    build: ./frontend
-  #    command: ["npm", "start"]
-  #    ports:
-  #      - 3000:3000
-  #    volumes:
-  #      - ./frontend:/app
+  elasticsearch:
+    build:
+      context: elastic_search/
+      args:
+        ELK_VERSION: 7.16.3
+    restart: always
+    volumes:
+      - ./elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - elasticsearch_volume:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+    healthcheck:
+      test: curl -u elastic:elastic -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx:/etc/nginx
+    depends_on:
+      - mysqldb
+      - backend
+  frontend:
+    build: ./frontend
+    command: ["npm", "start"]
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app

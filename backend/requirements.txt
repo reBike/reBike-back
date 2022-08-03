@@ -1,3 +1,4 @@
+# backend
 bcrypt==3.2.2
 Django==4.0.6
 djangorestframework==3.13.1
@@ -9,11 +10,15 @@ drf-yasg==1.21.0
 django-environ==0.9.0
 django-storages==1.12.3
 mysqlclient==2.1.1
+elasticsearch==7.17.4
 
+django_elasticsearch_dsl
+django_prometheus
 gunicorn
-django-prometheus
+torch
+pandas
 
-#yolov5
+# yolov5
 matplotlib>=3.2.2
 numpy>=1.18.5
 opencv-python>=4.1.1
@@ -32,7 +37,7 @@ ipython
 psutil 
 thop>=0.1.1 
 
-#trash api
+# trash api
 boto3
 paginator
 PyAMQP

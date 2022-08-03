@@ -1,0 +1,162 @@
+[
+  {
+    "key": "BIODEGRADABLE",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "음식물",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "음식물쓰레기",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "음쓰",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "바나나 껍질",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "사과 껍질",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "과일 껍질",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "껍질",
+    "value": "BIODEGRADABLE"
+  },
+  {
+    "key": "GLASS",
+    "value": "GLASS"
+  },
+  {
+    "key": "유라",
+    "value": "GLASS"
+  },
+  {
+    "key": "술병",
+    "value": "GLASS"
+  },
+  {
+    "key": "공병",
+    "value": "GLASS"
+  },
+  {
+    "key": "병",
+    "value": "GLASS"
+  },
+  {
+    "key": "소주병",
+    "value": "GLASS"
+  },
+  {
+    "key": "유리잔",
+    "value": "GLASS"
+  },
+  {
+    "key": "소주잔",
+    "value": "GLASS"
+  },
+  {
+    "key": "유리컵",
+    "value": "GLASS"
+  },
+  {
+    "key": "와인병",
+    "value": "GLASS"
+  },
+  {
+    "key": "CARDBOARD",
+    "value": "CARDBOARD"
+  },
+  {
+    "key": "카드보드지",
+    "value": "CARDBOARD"
+  },
+  {
+    "key": "종이상자",
+    "value": "CARDBOARD"
+  },
+  {
+    "key": "종이박스",
+    "value": "CARDBOARD"
+  },
+  {
+    "key": "박스",
+    "value": "CARDBOARD"
+  },
+  {
+    "key": "METAL",
+    "value": "METAL"
+  },
+  {
+    "key": "금속",
+    "value": "METAL"
+  },
+  {
+    "key": "캔",
+    "value": "METAL"
+  },
+  {
+    "key": "철",
+    "value": "METAL"
+  },
+  {
+    "key": "스뎅",
+    "value": "METAL"
+  },
+  {
+    "key": "스테인리스",
+    "value": "METAL"
+  },
+  {
+    "key": "고철",
+    "value": "METAL"
+  },
+  {
+    "key": "PAPER",
+    "value": "PAPER"
+  },
+  {
+    "key": "종이",
+    "value": "PAPER"
+  },
+  {
+    "key": "책",
+    "value": "PAPER"
+  },
+  {
+    "key": "종이",
+    "value": "PAPER"
+  },
+  {
+    "key": "재생지",
+    "value": "PAPER"
+  },
+  {
+    "key": "PLASTIC",
+    "value": "PLASTIC"
+  },
+  {
+    "key": "플라스틱",
+    "value": "PLASTIC"
+  },
+  {
+    "key": "페트",
+    "value": "PLASTIC"
+  },
+  {
+    "key": "페트병",
+    "value": "PLASTIC"
+  },
+  {
+    "key": "PET",
+    "value": "PLASTIC"
+  }
+]

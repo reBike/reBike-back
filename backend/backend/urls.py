@@ -1,4 +1,3 @@
-from rest_framework import permissions
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.permissions import AllowAny
@@ -17,12 +16,11 @@ schema_view_v1 = get_schema_view(
 )
 
 urlpatterns = [
-
-    path('API/admin/', admin.site.urls),
-    path('API/users/', include('rebikeuser.urls')),
-    path('API/trash/', include('rebiketrash.urls')),
+    path('api/admin', admin.site.urls),
+    path('api/users', include('rebikeuser.urls')),
+    path('api/trash', include('rebiketrash.urls')),
+    path('api/search', include('elastic_search.urls')),
     path('', include('django_prometheus.urls')),
-
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view_v1.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view_v1.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
