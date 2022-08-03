@@ -72,17 +72,6 @@ services:
       # - grafana_data:/var/lib/grafana
     restart: always
 
-#  cadvisor:
-#    image: gcr.io/cadvisor/cadvisor:latest
-#    container_name: cadvisor
-#    ports:
-#      - 8090:8090
-#    volumes:
-#      - /:/rootfs:ro
-#      - /var/run:/var/run:rw
-#      - /sys:/sys:ro
-#      - /var/lib/docker/:/var/lib/docker:ro
-#    restart: always
 
   redis:
     container_name: redis
@@ -117,6 +106,23 @@ services:
     environment:
       - C_FORCE_ROOT=true
     command: sh -c "celery -A backend worker --loglevel=info"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8090:8090
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+    command:
+      - '-port=8090'
+
+
 
   #  nginx:
   #    build: ./nginx
