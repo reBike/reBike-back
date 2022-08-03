@@ -57,7 +57,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
     depends_on:
-      - cadvisor
+#      - cadvisor
 
   grafana:
     image: grafana/grafana
