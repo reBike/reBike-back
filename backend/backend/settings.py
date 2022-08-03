@@ -1,10 +1,10 @@
 from pathlib import Path
-from datetime import timedelta
 
-####환경변수 설정
+# environ settings
 import os
 import environ
-is_dev = False
+
+is_dev = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,12 +46,19 @@ INSTALLED_APPS = [
     'torch',
     'django_celery_beat',
     'django_celery_results',
+    'django_elasticsearch_dsl',
+    'django_prometheus',
     # local apps
+    'elastic_search',
     'rebikeuser',
     'rebiketrash',
-    'django_prometheus'
 ]
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch'
+    },
+}
 
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -93,15 +100,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': env.db(),
-#     'OPTIONS': {
-#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-#     }
-# }
 DATABASES = {
-    'default': env.db()
+    'default': env.db(),
+    'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+    }
 }
+
 
 def test():
     return env
@@ -150,9 +155,8 @@ AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
-
 CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
-CELERY_ACCEPT_CONTENT = ['pickle','json']
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'json'
