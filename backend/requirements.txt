@@ -12,6 +12,7 @@ django-storages==1.12.3
 mysqlclient==2.1.1
 
 django_elasticsearch_dsl
+django_prometheus
 gunicorn
 torch
 pandas
