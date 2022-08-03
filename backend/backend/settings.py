@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-    'django_elasticsearch_dsl',
     'corsheaders',
     'drf_yasg',
     'storages',
@@ -49,17 +48,11 @@ INSTALLED_APPS = [
     #'django_celery_beat',
     # 'django_celery_results',
     # local apps
-    'elastic_search',
     'rebikeuser',
     'rebiketrash',
     'django_prometheus'
 ]
 
-ELASTICSEARCH_DSL={
-    'default': {
-        'hosts': 'elasticsearch'
-    },
-}
 
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',

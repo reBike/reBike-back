@@ -2,7 +2,6 @@ version: "3"
 
 volumes:
   mysql_data:
-  elastic_search:
 
 services:
   mysqldb:
@@ -17,7 +16,6 @@ services:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
-               python setup_elastic_search.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -27,7 +25,6 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
-      - elasticsearch
 
 #  nginx:
 #    build: ./nginx

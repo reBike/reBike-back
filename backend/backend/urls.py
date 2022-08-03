@@ -21,7 +21,6 @@ urlpatterns = [
     path('API/admin/', admin.site.urls),
     path('API/users/', include('rebikeuser.urls')),
     path('API/trash/', include('rebiketrash.urls')),
-    path('API/search/', include('elastic_search.urls')),
     path('', include('django_prometheus.urls')),
 
 
