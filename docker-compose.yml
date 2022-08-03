@@ -26,23 +26,6 @@ services:
     depends_on:
       - mysqldb
 
-#  nginx:
-#    build: ./nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./nginx:/etc/nginx
-#    depends_on:
-#      - mysqldb
-#      - backend
-#  frontend:
-#    build: ./frontend
-#    command: ["npm", "start"]
-#    ports:
-#      - 3000:3000
-#    volumes:
-#    - ./frontend:/app
-#####################################################
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -118,19 +101,19 @@ services:
       - C_FORCE_ROOT=true
     command: sh -c "celery -A backend worker --loglevel=info"
 
-  #  nginx:
-  #    build: ./nginx
-  #    ports:
-  #      - 80:80
-  #    volumes:
-  #      - ./nginx:/etc/nginx
-  #    depends_on:
-  #      - mysqldb
-  #      - backend
-  #  frontend:
-  #    build: ./frontend
-  #    command: ["npm", "start"]
-  #    ports:
-  #      - 3000:3000
-  #    volumes:
-  #      - ./frontend:/app
+#  nginx:
+#    build: ./nginx
+#    ports:
+#      - 80:80
+#    volumes:
+#      - ./nginx:/etc/nginx
+#    depends_on:
+#      - mysqldb
+#      - backend
+#  frontend:
+#    build: ./frontend
+#    command: ["npm", "start"]
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ./frontend:/app

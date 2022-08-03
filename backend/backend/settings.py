@@ -102,9 +102,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': env.db(),
-    'OPTIONS': {
-        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-    }
 }
 
 
