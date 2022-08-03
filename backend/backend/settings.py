@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'rest_framework',
-    # 'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
     'storages',
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     'rebiketrash',
     'django_prometheus'
 ]
+
 
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -149,6 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
 
 CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
 CELERY_ACCEPT_CONTENT = ['pickle','json']

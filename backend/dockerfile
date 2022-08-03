@@ -6,8 +6,7 @@ COPY ./ ./
 
 EXPOSE 8080
 
-
-RUN pip install -r requirements.txt
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get -y install libgl1-mesa-glx
-
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    apt-get update && \
+    apt-get -y install libgl1-mesa-glx

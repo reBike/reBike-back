@@ -22,3 +22,4 @@ class ChallengeAdmin(admin.ModelAdmin):
 @admin.register(user_challenge)
 class UserChallengeAdmin(admin.ModelAdmin):
     list_display = ['user_id', 'challenge_id', 'created_at', 'updated_at']
+
