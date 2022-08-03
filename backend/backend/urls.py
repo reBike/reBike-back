@@ -16,10 +16,10 @@ schema_view_v1 = get_schema_view(
 )
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    path('api/users/', include('rebikeuser.urls')),
-    path('api/trash/', include('rebiketrash.urls')),
-    path('api/search/', include('elastic_search.urls')),
+    path('api/admin', admin.site.urls),
+    path('api/users', include('rebikeuser.urls')),
+    path('api/trash', include('rebiketrash.urls')),
+    path('api/search', include('elastic_search.urls')),
     path('', include('django_prometheus.urls')),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view_v1.without_ui(cache_timeout=0), name='schema-json'),
