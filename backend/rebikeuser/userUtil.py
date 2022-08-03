@@ -105,7 +105,7 @@ def user_create_client(name, email, password, alias):
     hash_password, salt = user_hash_password(password)
     return user.objects.create(name=name, alias=alias, password=hash_password, salt=salt, email=email)
 
-def user_comppassword(pw, user_data):
-    pw = str(pw).encode('utf-8')
-    hash_pw = bcrypt.hashpw(pw, user_data.salt)
-    return hash_pw == user_data.password
+def user_comppassword(password, user_data):
+    password = str(password).encode('utf-8')
+    hash_password = bcrypt.hashpw(password, user_data.salt)
+    return hash_password == user_data.password

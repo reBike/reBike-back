@@ -16,6 +16,7 @@ class trash_image(models.Model):
 
 
 class trash_kind(models.Model):
+    id = models.AutoField(primary_key=True)
     trash_image_id = models.ForeignKey(trash_image, on_delete=models.CASCADE, db_column='trash_image_id')
     user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
     kind = models.CharField(max_length=30)
@@ -37,8 +38,9 @@ class challenge(models.Model):
 
 
 class user_challenge(models.Model):
+    id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(user, on_delete=models.CASCADE, db_column='user_id')
-    challenge_id = models.ForeignKey(challenge, on_delete=models.CASCADE, db_column='challenge_number')
+    challenge_id = models.ForeignKey(challenge, on_delete=models.CASCADE, db_column='challenge_id')
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
