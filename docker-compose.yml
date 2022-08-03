@@ -2,6 +2,7 @@ version: "3"
 
 volumes:
   mysql_data:
+  elastic_search:
 
 services:
   mysqldb:
@@ -16,6 +17,7 @@ services:
     build: ./backend
     command: >
       bash -c "python wait_mysql.py &&
+               python setup_elastic_search.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -25,6 +27,7 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
+      - elasticsearch
 
   prometheus:
     image: prom/prometheus
@@ -100,6 +103,22 @@ services:
     environment:
       - C_FORCE_ROOT=true
     command: sh -c "celery -A backend worker --loglevel=info"
+
+  elasticsearch:
+    container_name: elastic_search
+    build:
+      context: ./elastic_search
+      args:
+        ELK_VERSION: 7.16.3
+    restart: always
+    volumes:
+      - ./elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - elastic_search:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
 
 #  nginx:
 #    build: ./nginx
