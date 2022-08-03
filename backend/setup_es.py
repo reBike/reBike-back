@@ -17,7 +17,7 @@ try:
     for item in json_data:
         body = body + json.dumps({"index": {"_index": "search_2"}}) + '\n'
         body = body + json.dumps(item, ensure_ascii=False) + '\n'
-        f = open(search_path + 'input3.json', 'w')
+        f = open(search_path + 'input.json', 'w')
         f.write(body)
         f.close()
         try:
