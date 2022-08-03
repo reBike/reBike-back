@@ -105,7 +105,6 @@ services:
     command: sh -c "celery -A backend worker --loglevel=info"
 
   elasticsearch:
-    container_name: elastic_search
     build:
       context: ./elastic_search
       args:
