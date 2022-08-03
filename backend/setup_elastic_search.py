@@ -1,6 +1,7 @@
 import os
 import json
 
+import elasticsearch.exceptions
 from elasticsearch_dsl import connections
 
 try:
@@ -18,7 +19,10 @@ try:
         f = open(search_path + 'input3.json', 'w')
         f.write(body)
         f.close()
+except elasticsearch.exceptions.ConnectionError:
+    print("fail1")
 
+try:
     conn.bulk(body)
-except ConnectionError:
-    print("fail")
+except elasticsearch.exceptions.ConnectionError:
+    print("fail2")

@@ -27,6 +27,7 @@ services:
       - ./backend:/app
     depends_on:
       - mysqldb
+      - elasticsearch
   elasticsearch:
     container_name: elastic_search
     build:
