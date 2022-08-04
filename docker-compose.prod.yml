@@ -81,16 +81,6 @@ services:
       timeout: 10s
       retries: 5
 
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx/nginx:/etc/nginx
-    depends_on:
-      - mysqldb
-      - backend
-      -
   frontend:
     build: ./frontend
     command: ["npm", "start"]

@@ -123,6 +123,7 @@ services:
     depends_on:
       - mysqldb
       - backend
+      - frontend
 
   frontend:
     build: ./frontend
