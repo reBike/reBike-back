@@ -21,7 +21,6 @@ def elastic_search_get_by_name(request):
         return_result = []
         for hit in s:
             return_result.append(hit.key)
-            print(hit.key)
     except ConnectionError:
         return JsonResponse({'result': "fail"}, status=400)
     return JsonResponse({'result': return_result}, status=200)
