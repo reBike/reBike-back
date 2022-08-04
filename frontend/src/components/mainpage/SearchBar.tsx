@@ -22,12 +22,6 @@ const SearchBar = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //const data = new FormData(e.currentTarget);
-    // console.log(input);
-    // if (input === "A") window.location.href = "../Howto";
-    // else alert("그런 검색어는 없어요ㅜ");
-    // setInput("");
-
     if (input === "paper") {
       searchHowTrash("cardboard");
     } else alert("그런 검색어는 없어요ㅜ");
@@ -43,10 +37,10 @@ const SearchBar = () => {
       sx={{
         backgroundColor: "white",
         borderColor: "#759F98",
-        border: 1,
-        borderRadius: 10,
+        borderRadius: 3,
+        boxShadow: "1px 3px 3px #B0B09A",
         margin: "auto",
-        mt: 25,
+        mt: 2,
         width: "58ch",
       }}
     >
@@ -87,7 +81,7 @@ const SearchBar = () => {
         />
 
         <IconButton type="submit" aria-label="search">
-          <SearchIcon sx={{ mt: 0.5 }} fontSize="large" />
+          <SearchIcon sx={{ mt: 0.5, color: "#B0B09A" }} fontSize="large" />
         </IconButton>
       </Box>
     </Box>

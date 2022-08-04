@@ -102,4 +102,4 @@ export default contents;
 
 export const DOMAIN = "localhost";
 
-export const API_BASE_URL = `http://${DOMAIN}:8080`;
+export const API_BASE_URL = `http://${DOMAIN}:8080/API`;

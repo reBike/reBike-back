@@ -24,8 +24,7 @@ const UploadResult = () => {
         <Box
           sx={{
             borderRadius: 3,
-            border: 1,
-            borderColor: "black",
+
             backgroundColor: "white",
             width: 600,
             height: 300,
@@ -33,6 +32,7 @@ const UploadResult = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            boxShadow: "1px 3px 3px #B0B09A",
             mt: 23,
           }}
         >

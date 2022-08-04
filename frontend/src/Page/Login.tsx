@@ -14,47 +14,16 @@ import {
   Typography,
   Container,
   Link,
-  styled,
 } from "@mui/material";
-import { checkAccessToken, checkRefreshToken } from "src/Auth/checkToken";
 import { decodeToken } from "src/Auth/tokenGetter";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#759F98",
+      main: "#B0B09A",
     },
   },
 });
-
-const UserInfoTf = styled(TextField)(({}) => ({
-  "&:hover": {
-    color: "#759F98",
-  },
-  "& .MuiOutlinedInput-root": {
-    "&:hover fieldset": {
-      borderColor: "#759F98",
-    },
-  },
-}));
-
-const KakaoLoginBtn = styled(Button)(({}) => ({
-  backgroundColor: "white",
-  "&:hover": {
-    color: "yellow",
-    backgroundColor: "#F1DC2C",
-    borderColor: "#F1DC2C",
-  },
-}));
-
-const NaverLoginBtn = styled(Button)(({}) => ({
-  backgroundColor: "white",
-  "&:hover": {
-    color: "#6AED64",
-    backgroundColor: "#54B94E",
-    borderColor: "#54B94E",
-  },
-}));
 
 function Login() {
   const userInfo = [] as unknown as rs.UserAuth;
@@ -72,22 +41,23 @@ function Login() {
     });
 
     const userLogin = async () => {
-      const result = await Api.get("http://localhost:8080/users/auth/", {
-        params: { name: data.get("name"), pw: data.get("password") },
+      const result = await Api.post(`/users/auth`, {
+        name: data.get("name"),
+        password: data.get("password"),
       }).then((res) => res.data as rs.UserAuth);
       setSaveInfo(result);
       console.log("받아온 결과1", result);
       console.log("받아온 결과2", result.refresh_token);
 
       if (result.access_token !== null) {
-        setAccessToken(result.access_token);
-        setRefreshToken(result.refresh_token);
+        setAccessToken(result.access_token,false);
+        setRefreshToken(result.refresh_token,false);
         alert("로그인 성공♻️");
 
         // checkAccessToken();
         // checkRefreshToken();
         decodeToken(result.access_token);
-        // window.location.replace("/mainpage");
+        window.location.replace("/login/welcome");
       } else {
         alert("아이디와 비밀번호를 다시 확인해주세요.");
         // Handle error.
@@ -99,15 +69,13 @@ function Login() {
   return (
     <Container
       style={{
-        backgroundColor: "#E7F5EF",
-        border: "solid",
-        borderColor: "#E7F5EF",
+        backgroundColor: "#F7F8E9",
         minWidth: "100%",
-        height: "100vh",
+        maxHeight: "100vh",
       }}
     >
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs" sx={{ mb: 2, mt: 20 }}>
+        <Container component="main" maxWidth="xs" sx={{ mb: 25, mt: 20 }}>
           <CssBaseline />
           <Box
             sx={{
@@ -118,12 +86,25 @@ function Login() {
           >
             <Typography
               component="h1"
-              color="primary"
+              color="#737458"
               fontWeight="bold"
               variant="h4"
+              fontFamily={"Itim"}
             >
-              로그인
+              Do you have any account?
             </Typography>
+            <Link
+              href="/register"
+              style={{
+                textDecoration: "none",
+                fontSize: 15,
+                color: "#B0B09A",
+                fontFamily: "Itim",
+                margin: 15,
+              }}
+            >
+              join us &gt;
+            </Link>
             <Box
               component="form"
               color="info.contrastText"
@@ -131,7 +112,7 @@ function Login() {
               noValidate
               sx={{ mt: 1 }}
             >
-              <UserInfoTf
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -140,8 +121,9 @@ function Login() {
                 name="name"
                 autoComplete="name"
                 autoFocus
+                sx={{ borderRadius: 5, textAlign: "center" }}
               />
-              <UserInfoTf
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -162,45 +144,13 @@ function Login() {
                   height: 50,
                   color: "white",
                   fontWeight: "bold",
+                  fontFamily: "Itim",
+                  borderRadius: 5,
+                  backgroundColor: "#B0B09A",
                 }}
               >
-                Login
+                Sign In
               </Button>
-              <Typography align="right">
-                <Link
-                  href="/register"
-                  style={{ textDecoration: "none", fontWeight: "bold" }}
-                >
-                  가입하기
-                </Link>
-              </Typography>
-              <Divider sx={{ color: "lightgrey" }}>또는</Divider>
-
-              <KakaoLoginBtn
-                variant="outlined"
-                sx={{
-                  borderColor: "#F1DC2C",
-                  color: "#F1DC2C",
-                  fontWeight: "bold",
-                  width: "46%",
-                  mt: 3,
-                }}
-              >
-                카카오로 로그인하기
-              </KakaoLoginBtn>
-              <NaverLoginBtn
-                variant="outlined"
-                sx={{
-                  borderColor: "#54B94E",
-                  color: "#54B94E",
-                  fontWeight: "bold",
-                  width: "46%",
-                  mt: 3,
-                  ml: 3.6,
-                }}
-              >
-                네이버로 로그인하기
-              </NaverLoginBtn>
             </Box>
           </Box>
         </Container>

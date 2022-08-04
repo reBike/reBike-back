@@ -56,8 +56,8 @@ services:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
-    depends_on:
-      - cadvisor
+#    depends_on:
+#      - cadvisor
 
   grafana:
     image: grafana/grafana

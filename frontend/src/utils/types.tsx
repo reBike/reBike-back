@@ -16,9 +16,8 @@ export namespace rs {
   }
 
   export interface Trash {
-    uploaded_trash_image_id: string;
-    img: string;
-    trash_kind: string;
+    id?: any;
+    image: string;
   }
 
   export interface TrashList {
@@ -35,7 +34,7 @@ export namespace rs {
   }
   //❌
   export interface Challenge {
-    challenge_number: number;
+    challenge_id: number;
     type: boolean;
   }
   export interface ChallengeInfo {
@@ -43,5 +42,9 @@ export namespace rs {
     imgT: string;
     imgF: string;
     test: string;
+  }
+
+  export interface AutoSave {
+    user_autosave: boolean;
   }
 }
