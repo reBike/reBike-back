@@ -98,3 +98,45 @@ services:
       - 3000:3000
     volumes:
       - ./frontend:/app
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "5672:5672" # Default Port
+      - "15672:15672" # For UI
+    expose:
+      - "15672"
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    volumes:
+      - ./backend:/backend
+    ports: []
+    depends_on:
+      - rabbitmq
+      - redis
+    environment:
+      - C_FORCE_ROOT=true
+    command: sh -c "celery -A backend worker --loglevel=info"
+
+  kibana:
+    container_name: kibana
+    image: kibana:7.16.3
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
