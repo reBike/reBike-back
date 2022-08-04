@@ -1,33 +1,35 @@
 import { useState, useEffect, useRef } from "react";
-import { alpha } from "@mui/material/styles";
 import {
   Box,
   Typography,
   Container,
+  Button,
+  Link,
   styled,
   Switch,
-  Button,
 } from "@mui/material";
 import MultiActionAreaCard from "./MultiActionAreaCard";
 import Api from "../../utils/customApi";
 import lottie from "lottie-web";
 import MoreIcon from "../../images/moreIcon";
 import { rs } from "src/utils/types";
-import { getToken, getAccess } from "src/Auth/tokenManager";
+import { getAccess } from "src/Auth/tokenManager";
+import { ReduxModule } from "../../modules/ReduxModule";
+import { alpha } from "@mui/material/styles";
+import { isAutoSave, changeAutoSave } from "../../utils/autoSaveToggle";
 
 interface Props {
   trashlist?: Array<rs.Trash>;
 }
-
 const GreenSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
-    color: "#76F2BE",
+    color: "#93C85B",
     "&:hover": {
-      backgroundColor: alpha("#76F2BE", theme.palette.action.hoverOpacity),
+      backgroundColor: alpha("#DAEEC5", theme.palette.action.hoverOpacity),
     },
   },
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "white",
+    backgroundColor: "#D9D9D9",
   },
 }));
 
@@ -48,19 +50,26 @@ const GetNoTrashLottie = () => {
 
 function MyTrashcan(props: Props) {
   const what: any = getAccess();
-  console.log(what);
-
-  // const trashList = [] as unknown as rs.TrashList;
+  const userIdtoRedux = ReduxModule().decodeInfo?.id;
+  //=============MyTrashCan API================
   const [trashes, setTrashes] = useState(props.trashlist);
   const [more, setMore] = useState(false);
   const [page, setPage] = useState(1);
+  const [last, setLast] = useState(false);
 
   const fetchMyTrash = async () => {
-    await Api.get(
-      `/trash/users/95fd1cd5-0461-4c27-aaea-9e0c838cae03/images`
-    ).then((res) => {
-      const newArray = trashes ? [...trashes, ...res.data] : res.data;
-      setTrashes(newArray);
+    await Api.get(`/trash/users/${userIdtoRedux}/pages/${page}`, {
+      headers: {
+        Authorization: `${what.value}`,
+      },
+    }).then((res) => {
+      if (res.data) {
+        const newArray = trashes ? [...trashes, ...res.data] : res.data;
+        setTrashes(newArray);
+        setLast(false);
+      } else {
+        setLast(true);
+      }
     });
   };
 
@@ -76,110 +85,146 @@ function MyTrashcan(props: Props) {
   }, [page]);
 
   useEffect(() => {
-    console.log("정보 저장2", trashes);
+    console.log(trashes);
   }, [trashes]);
+
+  //=============MyTrashCan API================
+  const isSaved = isAutoSave();
+  const [checked, setChecked] = useState(true);
+  isSaved.then((e) => {
+    setChecked(e.user_autosave);
+  });
+
+  const switchHandler = (event: any) => {
+    setChecked(event.target.checked);
+    changeAutoSave(checked);
+  };
 
   return (
     <Container
       style={{
         border: "solid",
-        borderRadius: 5,
+        borderRadius: 8,
         borderColor: "transparent",
         minWidth: "100%",
-        height: "100vh",
+        marginTop: 20,
       }}
     >
+      {" "}
       <Box
         sx={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
+
+          alignContent: "center",
         }}
       >
         <Typography
           color="black"
-          fontWeight="bold"
-          sx={{ mt: 1.2, mb: 1, fontSize: "medium" }}
+          sx={{ mt: 0.8, fontSize: 15, fontFamily: "Itim" }}
         >
-          내 분리수거함
+          auto save
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <Typography color="black" sx={{ mt: 2, fontSize: 2 }}>
-            사진 자동으로 추가
-          </Typography>
-          <GreenSwitch
-            defaultChecked
-            size="small"
-            style={{ color: "primary", backgroundColor: "#E7F5EF" }}
-            inputProps={{ "aria-label": "controlled" }}
-            sx={{ mt: 1.5 }}
-          />
-        </Box>
+        <GreenSwitch checked={checked} onChange={switchHandler} />
       </Box>
       <Container
         style={{
           borderRadius: 8,
           backgroundColor: "white",
-          height: "100vh",
+          boxShadow: "1px 3px 3px #B0B09A",
         }}
         sx={{
-          mt: 2,
+          mt: 10,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          margin: "auto",
         }}
       >
-        {trashes && Object.keys(trashes)?.length === 0 ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              marginTop: 10,
-            }}
-          >
-            <GetNoTrashLottie />
-            <Typography
-              justifyContent="center"
-              textAlign="center"
-              sx={{ marginTop: 5, fontSize: 12 }}
+        {" "}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "auto",
+          }}
+        >
+          {trashes && Object.keys(trashes)?.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                marginTop: 10,
+              }}
             >
-              쓰레기를 사진을 업로드 해보세요.
-            </Typography>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              paddingTop: 2,
-              // alignItems: "center",
-              // justifyContent: "flex-start",
-              // placeContent: "center",
-            }}
-          >
-            {trashes &&
-              Object.values(trashes)?.map((item: rs.Trash, index: any) => (
-                <MultiActionAreaCard
-                  image={item.img}
-                  kind={item.trash_kind}
-                  key={index}
-                />
-              ))}
-          </Box>
-        )}
-        <Box display="flex" alignItems="center" sx={{ margin: 5 }}>
-          <Button onClick={changePage} style={{ color: "#76F2BE" }}>
-            더보기
-            <MoreIcon />
-          </Button>
+              <GetNoTrashLottie />
+              <Typography
+                sx={{ margin: 5 }}
+                justifyContent="center"
+                textAlign="center"
+              >
+                <Link
+                  href="/mainpage"
+                  sx={{
+                    margin: 5,
+                    fontSize: 18,
+                    fontFamily: "Itim",
+                    color: "#737458",
+                    textDecoration: "none",
+                  }}
+                >
+                  fill your ReBIKE &gt;
+                </Link>
+              </Typography>
+            </Box>
+          ) : (
+            <div>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  paddingTop: 2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {trashes &&
+                  Object.values(trashes)?.map((item: rs.Trash, index: any) => (
+                    <MultiActionAreaCard
+                      image={item.image}
+                      id={item.id}
+                      key={index}
+                    />
+                  ))}
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{ margin: 5 }}
+              >
+                {last ? (
+                  <Box style={{ color: "#737458", fontFamily: "Itim" }}></Box>
+                ) : (
+                  <Button
+                    onClick={changePage}
+                    style={{ color: "#737458", fontFamily: "Itim" }}
+                  >
+                    more
+                    <MoreIcon />
+                  </Button>
+                )}
+              </Box>
+            </div>
+          )}
         </Box>
       </Container>
     </Container>

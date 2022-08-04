@@ -5,24 +5,62 @@ import {
   Box,
   Link,
   CssBaseline,
-  Hidden,
-  Typography,
+  List,
+  ListItem,
+  MenuItem,
+  Menu,
   styled,
 } from "@mui/material";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootReducerType } from "../../index";
 import { fetchDecodeData } from "src/actions/DecodeActions";
 import Logo from "../../images/header/headerLogo";
 
+const sidebarNavItems = [
+  {
+    display: "내 분리수거함",
+    to: "/mypage",
+  },
+  {
+    display: "내 쓰레기 통계",
+    to: "/mypage/myTrashChart",
+  },
+  {
+    display: "도전! 재활용",
+    to: "/mypage/myChallenge",
+  },
+  {
+    display: "내 정보 변경",
+    to: "/mypage/userInfo",
+  },
+  {
+    display: "로그아웃",
+    to: "/mypage/logout",
+  },
+];
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#737458",
+      main: "# v",
     },
   },
 });
+
+const MypageNavi = styled(MenuItem)(({}) => ({
+  border: 4,
+  borderColor: "#F7F8E9",
+  fontSize: "small",
+  color: "#F7F8E9",
+  backgroundColor: "#B0B09A",
+  "&:hover": {
+    color: "black",
+  },
+}));
 
 function Header() {
   const token = localStorage.getItem("access_token");
@@ -35,26 +73,35 @@ function Header() {
 
   useEffect(() => {
     if (token) {
-      console.log("header.js useEffect");
       dispatch(fetchDecodeData(token as string));
     } else {
       console.log("header.js not token");
     }
   }, []);
 
-  const [mouseOn, setMouseOn] = useState(false);
-
-  const handlePopoverOpen = () => {
-    setMouseOn(true);
-  };
-  const handlePopoverClose = () => {
-    setMouseOn(false);
-  };
-  console.log(token);
-
   function deleteToken() {
     localStorage.clear();
   }
+
+  //============Mypage List============
+  const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const open = Boolean(anchorEl);
+  const handleClickListItem = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event: any, index: any, option: any) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+    navigate(option.to);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -88,28 +135,80 @@ function Header() {
           {token ? (
             // if IsLogin is true
             <div>
-              {" "}
-              <Button>
-                <Link
-                  href="/mypage"
-                  sx={{
-                    textDecoration: "none",
-                    color: "#F7F8E9",
-                    fontFamily: "Itim",
-                    fontSize: 17,
-                    fontStyle: "bold",
-                    margin: 1,
+              <div
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                  borderCollapse: "collapse",
+                  borderSpacing: 0,
+                }}
+              >
+                <Button
+                  style={{
+                    borderCollapse: "collapse",
+                    borderSpacing: 0,
+                    border: 5,
+                    borderColor: "black",
                   }}
                 >
-                  mypage
-                </Link>
-              </Button>
+                  <List
+                    component="nav"
+                    style={{
+                      display: "inline-block",
+                      padding: 0,
+                    }}
+                  >
+                    <ListItem
+                      button
+                      id="lock-button"
+                      aria-haspopup="listbox"
+                      aria-controls="lock-menu"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClickListItem}
+                      style={{
+                        fontFamily: "Itim",
+                        color: "#F7F8E9",
+                        fontSize: 16,
+                      }}
+                    >
+                      mypage
+                    </ListItem>
+                  </List>
+                  <Menu
+                    id="lock-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "lock-button",
+                      role: "listbox",
+                      disablePadding: true,
+                    }}
+                  >
+                    {sidebarNavItems.map((option, index) => (
+                      <MypageNavi
+                        id="what is this"
+                        key={option.display}
+                        selected={index === selectedIndex}
+                        autoFocus={true}
+                        onClick={(event) =>
+                          handleMenuItemClick(event, index, option)
+                        }
+                        style={{
+                          borderCollapse: "collapse",
+                          borderSpacing: 0,
+                        }}
+                      >
+                        {option.display}
+                      </MypageNavi>
+                    ))}
+                  </Menu>
+                </Button>
+              </div>
               <Button>
                 <Link
                   href="/mainpage"
                   onClick={deleteToken}
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
                   sx={{
                     textDecoration: "none",
                     color: "#F7F8E9",
@@ -120,30 +219,6 @@ function Header() {
                 >
                   {reduxToken.decodeInfo?.alias}
                 </Link>
-                <>
-                  {mouseOn ? (
-                    <Container style={{ position: "absolute", top: 80 }}>
-                      <Box
-                        display="flex"
-                        justifyContent="center"
-                        sx={{
-                          background: "white",
-                          border: 1,
-                          borderRadius: 1,
-                          borderColor: "#F7F8E9",
-                          color: "#F7F8E9",
-                          fontSize: 3,
-                          padding: 1,
-                          width: 100,
-                        }}
-                      >
-                        클릭해서 로그아웃
-                      </Box>
-                    </Container>
-                  ) : (
-                    Hidden
-                  )}
-                </>
               </Button>
             </div>
           ) : (

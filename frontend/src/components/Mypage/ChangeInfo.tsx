@@ -2,128 +2,83 @@ import * as React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import {
+    Grid,
     Typography,
     Container,
-    styled,
-    TextField,
     Box,
-    Link,
-    Button
 } from "@mui/material";
+import ChangePassWord from "./Change_password";
+import ChangeNickName from "./Change_nickname";
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#759F98",
+            main: "#737458",
         },
     },
 });
 
-const UserInfoChange = styled(TextField)(({}) => ({
-    "&:hover": {
-        color: "#759F98",
-    },
-    "& .MuiOutlinedInput-root": {
-        "&:hover fieldset": {
-            borderColor: "#759F98",
-        },
-    },
-}));
-
 
 function ChangeInfo() {
 
-    return(
+    return (
         <Container
             style={{
                 border: "solid",
                 borderRadius: 5,
-                borderColor:"transparent",
+                borderColor: "transparent",
                 minWidth: "100%",
-                height: "100vh",
+                height: "90vh",
+                marginTop: 20,
             }}>
-                <ThemeProvider theme={theme}>
-                    <Typography
-                        color="black"
-                        fontWeight="bold"
-                        sx={{mt: 1.2,
-                            mb: 1,
-                            fontSize: "medium"}}>
-                        내 정보 변경
-                    </Typography>
-                   
-                <Container
+            <ThemeProvider theme={theme}>
+                <Typography
+                    color="black"
+                    fontWeight="bold"
+                    sx={{
+                        mt: 1.2,
+                        mb: 1,
+                        fontSize: "medium"
+                    }}>
+
+                </Typography>
+
+                <Grid container
                     style={{
                         backgroundColor: "white",
                         border: "solid",
                         borderRadius: 5,
                         borderColor: "white",
                         justifyContent: "center",
-                        height: "100vh",
-                        paddingTop: 50}}>
+                        height: "60vh",
+                        paddingTop:50,
+                        boxShadow: "1px 3px 3px #B0B09A",
+                    }} sx={{ mt: 5 }}>
+                    <Grid item xs={5}>
+                        <Box>
+                            <ChangeNickName />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={1}
+                    style={{justifyContent:"center"}}>
+                        <div style={{
+                            borderLeft: '3px',
+                            height: '90%',
+                            width: 1,
+                            backgroundColor: '#E4E4D9',
+                            margin: "auto"
+                        }}></div>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Box>
+                            <ChangePassWord />
+                        </Box>
+                    </Grid>
 
-                    <Box
-                            component="form"
-                            color="info.contrastText"
-                            noValidate
-                            sx={{ 
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                width: 300,
-                                margin: "auto"}}
-                            
-                        >
-                            <UserInfoChange
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <UserInfoChange
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
-                            <UserInfoChange
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="nickname"
-                                label="nickname"
-                                type="nickname"
-                                id="nickname"
-                                autoComplete="current-nickname"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    height: 50,
-                                    color: "white",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                변경하기
-                            </Button>
-                    </Box>                                              
-                </Container>
-            </ThemeProvider>
-        </Container>
-
+                </Grid>
+        </ThemeProvider>
+        </Container >
+        
     );
 }
 

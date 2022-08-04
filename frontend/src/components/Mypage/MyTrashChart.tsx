@@ -4,8 +4,6 @@ import { useState } from "react";
 import {
     Typography,
     Container,
-    Box
-
 } from "@mui/material";
 import Chart from "../chart/Chart";
 import Date from "../chart/Date";
@@ -17,23 +15,32 @@ function MyTrashchart() {
         <Container
             style={{
                 border: "solid",
-                borderRadius: 5,
+                borderRadius: 8,
                 borderColor: "transparent",
                 minWidth: "100%",
-                height: "80vh",
+                height: "100vh",
+                marginTop: 20,
             }}>
-            <Typography color="black" fontWeight="bold" sx={{ mt: 3, mb: 2, fontSize: "medium" }}>
-                내 쓰레기 통계
+            <Typography color="black" fontWeight="bold" sx={{
+                mt: 1.2, mb: 1, fontSize: "medium"
+            }}>
+
             </Typography>
             <Container
                 style={{
-                    borderRadius: 8,
+                    borderRadius: 5,
                     backgroundColor: "white",
-                    height: "50vh"
+                    height: "80vh",
+                    boxShadow: "1px 3px 3px #B0B09A",
                 }}
-                sx={{ mt: 3 }}>
-                <Date onClickRetrieve={setUserData} />
-                <Chart list={userData} />
+                sx={{ mt: 5 }}>
+                <Container>
+                    <Date onClickRetrieve={setUserData} />
+                </Container>
+                <Container
+                    sx={{ width: "100%", height: "80%" }}>
+                    <Chart list={userData} />
+                </Container>
             </Container>
         </Container>
     );

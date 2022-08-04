@@ -1,38 +1,20 @@
-import {Typography, Box} from "@mui/material";
-import FirstImg from '../../images/firstImg'
-import SecondImg from '../../images/secondImg';
-import ThirdImg from '../../images/thirdImg';
+import { Typography, Box } from "@mui/material";
 import TrashCardView from "./TrashCardView";
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import useScrollFadeIn from '../../actions/useScrollFadeIn';
 
 
-function PopularTrash(){
-    return(
+function PopularTrash() {
+    return (
         <Box textAlign={"center"} >
-            <Box sx={{mt:15,mb : 7}}>
-                <AutoGraphIcon fontSize="large" />
-                <Typography  
-                    fontWeight="bold"
-                    variant="h5" >
-                인기 쓰레기
+            <Box sx={{ mt: 15, mb: 7 }} {...useScrollFadeIn('down', 1)}>
+                <Typography
+                    sx={{ fontSize: 50, mt: 10, fontFamily: "Itim", color: "#737458" }}
+                >This Week's Ranking
                 </Typography>
             </Box>
 
-            <Box  sx={{display : "flex", flexWrap : "wrap", justifyContent : "space-evenly"}}>
-                <Box sx={{p:2}}>
-                    <FirstImg />
-                    <TrashCardView />
-                </Box>
-                <Box sx={{p:2}}>
-                    <SecondImg />
-                    <TrashCardView />
-                </Box>
-                <Box sx={{p:2}}>
-                    <ThirdImg />
-                    <TrashCardView /> 
-                </Box>    
-            </Box>
-     
+            <TrashCardView />
+
         </Box>
     );
 };

@@ -140,4 +140,18 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-      
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - 8090:8090
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+    command:
+      - '-port=8090'

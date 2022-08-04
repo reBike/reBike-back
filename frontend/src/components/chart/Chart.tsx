@@ -2,9 +2,10 @@ import { slideAnimationDuration } from '@mui/x-date-pickers/CalendarPicker/Picke
 import React, { PureComponent, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+
 interface Content {
-  trash_kind: string;
-  cnt: number;
+  kind: string;
+  count: number;
 }
 
 interface Contentlist {
@@ -15,57 +16,41 @@ const trashlist: Contentlist =
 {
   list: [
     {
-      trash_kind: "GLASS",
-      cnt: 0
+      kind: "GLASS",
+      count: 0
     },
     {
-      trash_kind: "BIODEGRADABLE",
-      cnt: 0
+      kind: "BIODEGRADABLE",
+      count: 0
     },
     {
-      trash_kind: "CARDBOARD",
-      cnt: 0
+      kind: "CARDBOARD",
+      count: 0
     },
     {
-      trash_kind: "PAPER",
-      cnt: 0
+      kind: "PAPER",
+      count: 0
     },
     {
-      trash_kind: "METAL",
-      cnt: 0
+      kind: "METAL",
+      count: 0
     },
     {
-      trash_kind: "PLASTIC",
-      cnt: 0
+      kind: "PLASTIC",
+      count: 0
     },
   ]
 }
 
 function TrashChart({ list }: Contentlist) {
   const [BasicList, setBasicList] = useState(trashlist.list);
-  /*
-    React.useEffect(() => {
-      console.log("list",list);
-      console.log("기본 데이터",trashlist.list);
-      for (let i = 0; i < trashlist.list.length; i++) {
-        for (let j = 0; j < list.length; j++) {
-          if (list[j].trash_kind === trashlist.list[i].trash_kind) {
-            trashlist.list[i].cnt = list[j].cnt;
-            console.log("같은 것을 발견");
-          }
-        }
-      }
-      setBasicList(trashlist.list);
-      console.log("데이터 변환",trashlist.list);
-    }
-      , [list]);
-*/
+
   React.useEffect(() => {
     console.log("list", list);
     if (list) {
       if (list.length === 0) { // 받아오는 데이터가 존재하지 않을 때
         const needList: Content[] = trashlist.list?.map((blanklist: any) => {
-          blanklist.cnt = 0;
+          blanklist.count = 0;
           return blanklist;
         })
         setBasicList(needList);
@@ -74,8 +59,8 @@ function TrashChart({ list }: Contentlist) {
       else { // 그 외 데이터가 존재할 때
         const tempList: Content[] = trashlist.list?.map((trashlist: any) => {
           list?.map((getlist: any) => {
-            if (getlist?.trash_kind === trashlist?.trash_kind) {
-              trashlist.cnt = getlist.cnt;
+            if (getlist?.kind === trashlist?.kind) {
+              trashlist.count = getlist.cnt;
               console.log("같은 것을 발견");
             }
             return getlist;
@@ -103,11 +88,11 @@ function TrashChart({ list }: Contentlist) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey='trash_kind' />
+        <XAxis dataKey='kind' />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey='cnt' fill="#759F98" barSize={40} />
+        <Bar dataKey='count' fill="#737458" barSize={40} />
       </BarChart>
     </ResponsiveContainer>
   );

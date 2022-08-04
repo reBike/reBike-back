@@ -10,13 +10,10 @@ const checkAccessToken = () => {
 
   if (access_token) {
     const token: rs.TokenInfo = JSON.parse(access_token);
-    console.log("확인 억셋으", token);
 
     const nowTime = new Date().getTime();
 
     const tokenExpire = token.expiry;
-    console.log("체크 토큰 어세스 만ㅇ료시간?", tokenExpire);
-    console.log("now시간?", nowTime);
 
     // 만료일이 지나면 refresh 토큰 확인
     if (tokenExpire - nowTime <= 0) {
@@ -35,12 +32,9 @@ const checkRefreshToken = () => {
 
   if (refresh_token) {
     const token: rs.TokenInfo = JSON.parse(refresh_token);
-    console.log("확인 맆레싀", token);
 
     const nowTime = new Date().getTime();
     const tokenExpire = token.expiry;
-    console.log("시간?2", tokenExpire);
-    console.log("now시간?2", nowTime);
 
     // refresh 토큰 만료일이 지나면 localStorage clear
     if (tokenExpire - nowTime <= 0) {
@@ -64,13 +58,8 @@ const getRefreshToken = async () => {
   const refresh_token = getToken().refresh;
   let accessToken = getToken().access;
 
-  if (refresh_token !== null) {
-    console.log("원래 맆레시", JSON.parse(refresh_token).value);
-  }
-
   if (refresh_token) {
     const newRe: rs.TokenInfo = JSON.parse(refresh_token);
-    console.log(newRe);
 
     //access token 요청하는 axios
     const data = await axios
@@ -90,11 +79,9 @@ const getRefreshToken = async () => {
 
     accessToken = data.access_token;
 
-    console.log("새로운 억셋으", accessToken);
-
     localStorage.removeItem("access_token");
     if (accessToken !== null) {
-      setAccessToken(accessToken);
+      setAccessToken(accessToken,false);
       window.location.reload();
     }
 

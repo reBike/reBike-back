@@ -31,3 +31,30 @@
   font-weight: 400;
   font-style: normal;
 }
+
+@font-face {
+  /* 사용할 폰트의 이름 */
+  font-family: "Nanum1";
+  font-display: fallback;
+
+  src: url("./gLight.ttf") format("truetype"),
+    url("./gLight.woff") format("woff"),
+    url("./gLight.eot?iefix") format("embedded-opentype");
+
+  /* 사용할 폰트의 기본 스타일 */
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  /* 사용할 폰트의 이름 */
+  font-family: "Yurim";
+  font-display: fallback;
+
+  src: url("./yurim.ttf") format("truetype"), url("./yurim.woff") format("woff"),
+    url("./yurim.eot?iefix") format("embedded-opentype");
+
+  /* 사용할 폰트의 기본 스타일 */
+  font-weight: 400;
+  font-style: normal;
+}

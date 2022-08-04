@@ -3,7 +3,8 @@ import { Typography, Container, Box, listClasses } from "@mui/material";
 import { rs } from "src/utils/types";
 import Api from "../../utils/customApi";
 import UserChallenge from "../Mypage/UserChallenge";
-import BadgeBack from "../../images/challenges/challengeBack";
+import { getAccess } from "src/Auth/tokenManager";
+import { ReduxModule } from "../../modules/ReduxModule";
 
 interface Contentlist {
   list: Array<rs.Challenge>;
@@ -12,39 +13,45 @@ interface Contentlist {
 const trashlist: Contentlist = {
   list: [
     {
-      challenge_number: 1,
+      challenge_id: 1,
       type: false,
     },
     {
-      challenge_number: 2,
+      challenge_id: 2,
       type: false,
     },
     {
-      challenge_number: 3,
+      challenge_id: 3,
       type: false,
     },
     {
-      challenge_number: 4,
+      challenge_id: 4,
       type: false,
     },
     {
-      challenge_number: 5,
+      challenge_id: 5,
       type: false,
     },
   ],
 };
 
 function MyBadge() {
-  const [myChallenge, setMyChallenge] = useState<rs.Challenge[]>();
-  const fetchMyChallenge = async () => {
-    const result = await Api.get(
-      "/trash/mypage/users/2c762f6e-b369-4985-96f9-29ccb4f9fc34/challenges"
-    ).then((res) => res.data as rs.Challenge[]);
-    const challengeList = result;
+  const what: any = getAccess();
+  const userIdtoRedux = ReduxModule().decodeInfo?.id;
 
+  const [myChallenge, setMyChallenge] = useState<rs.Challenge[]>();
+
+  const fetchMyChallenge = async () => {
+    const result = await Api.get(`/trash/users/${userIdtoRedux}/challenges`, {
+      headers: {
+        Authorization: `${what.value}`,
+      },
+    }).then((res) => res.data as rs.Challenge[]);
+    const challengeList = result;
+    console.log(result);
     const temptList: rs.Challenge[] = trashlist.list?.map((trashlist: any) => {
       challengeList?.map((getlist: any) => {
-        if (getlist?.challenge_number === trashlist.challenge_number) {
+        if (getlist?.challenge_id === trashlist.challenge_id) {
           trashlist.type = true;
         }
         return getlist;
@@ -52,12 +59,13 @@ function MyBadge() {
       return trashlist;
     });
     setMyChallenge(temptList);
+    console.log(temptList);
     return temptList;
   };
+
   useEffect(() => {
     fetchMyChallenge();
-  }, [myChallenge]);
-  console.log("여기선 뭐가", trashlist.list);
+  }, []);
 
   return (
     <Container
@@ -66,7 +74,7 @@ function MyBadge() {
         borderRadius: 5,
         borderColor: "transparent",
         minWidth: "100%",
-        height: "100vh",
+        marginTop: 20,
       }}
     >
       <Typography
@@ -74,15 +82,15 @@ function MyBadge() {
         fontWeight="bold"
         sx={{ mt: 1.2, mb: 1, fontSize: "medium" }}
       >
-        내 도전! 재활용
+
       </Typography>
       <Container
         style={{
           borderRadius: 8,
           backgroundColor: "white",
-          height: "100vh",
+          boxShadow: "1px 3px 3px #B0B09A",
         }}
-        sx={{ mt: 3 }}
+        sx={{ mt: 5, mb: 3, pb: 5 }}
       >
         <Box
           sx={{
@@ -90,12 +98,13 @@ function MyBadge() {
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "space-evenly",
+            pb: 10,
           }}
         >
           {trashlist &&
             trashlist?.list?.map((list: rs.Challenge, index: any) => (
               <UserChallenge
-                num={list.challenge_number}
+                num={list.challenge_id}
                 type={list.type}
                 key={index}
               />
