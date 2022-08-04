@@ -1,55 +1,43 @@
-import { useState, useEffect, useRef } from "react";
 import { Box, Button, Link } from "@mui/material";
-import lottie from "lottie-web";
-import Main from "../images/mainBacl";
-
-const MainPageLottie = () => {
-  //lottie
-  const element = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    lottie.loadAnimation({
-      container: element.current as HTMLDivElement,
-      renderer: "svg",
-      loop: false,
-      autoplay: true,
-      animationData: require("../images/mainLottie.json"),
-    });
-  }, []);
-  return <Box ref={element} style={{ height: 300 }}></Box>;
-};
+import StartLogo from "../images/startLogo";
+import Animation from "src/modules/Animation";
+import useMoveScroll from "src/modules/UseMoveScroll";
 
 const StartPage = () => {
+  const { element, onMoveToElement } = useMoveScroll();
+
   return (
     <Box
-      display="flex"
       textAlign={"center"}
       style={{
-        position: "absolute",
-        backgroundColor: "white",
-        zIndex: 100,
-        width: "100vw",
+        backgroundImage: "url(ggu.jpg)",
+        backgroundPosition: "center",
+        width: "100wh",
         height: "100vh",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        justifyContent: "space-evenly",
       }}
     >
-      <Main />
       <Box
-        position={"absolute"}
         display={"flex"}
+        textAlign={"center"}
+        style={{ height: "30vh" }}
         flexDirection="column"
-        justifyContent={"center"}
-        alignSelf="center"
-        zIndex={90}
+        margin={"auto"}
       >
-        <MainPageLottie />
+        <StartLogo />
+
         <Link
-          href="/mainpage"
-          display={"flex"}
-          flexDirection="column"
-          justifyContent={"center"}
-          alignSelf="center"
-          style={{ margin: "auto", textDecoration: "none", fontWeight: "bold" }}
+          onClick={onMoveToElement}
+          style={{
+            textDecoration: "none",
+            fontWeight: "bold",
+            fontFamily: "IrishGrover",
+            color: "white",
+          }}
         >
-          <Button>메인 페이지로 간드앙</Button>
+          <Animation />
         </Link>
       </Box>
     </Box>

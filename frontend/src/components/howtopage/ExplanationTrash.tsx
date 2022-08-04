@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, autocompleteClasses } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import * as React from "react";
 import constants from "../../utils/constants";
 import { useState, useEffect } from "react";
@@ -42,37 +42,29 @@ const HowtoResult = (props: any) => {
 
   return (
     <Grid
-      container
-      alignItems="center"
-      justifyContent="center"
-      direction="row"
+      width={810}
       sx={{
         backgroundColor: "white",
-        borderRadius: 10,
-        margin: "auto",
-        border: 1.5,
-        borderColor: "black",
+        borderRadius: 3,
+        boxShadow: "1px 3px 4px #B0B09A",
         mt: 10,
-        height: "auto",
-        width: "auto",
-        marginX: 20,
       }}
     >
-      <Box sx={{ width: "auto", height: "auto", margin: 2 }}>
+      <Box sx={{ margin: 2 }}>
         <Typography
           component="h1"
           fontWeight="bold"
           variant="h4"
-          align="left"
-          sx={{ mt: 5, marginLeft: 1 }}
+          align="center"
+          sx={{ mt: 5, fontFamily: "Nanum1" }}
         >
           {resTrash?.kind}
           <br />
         </Typography>
 
         <Typography
-          align="left"
-          sx={{ mt: 3, marginLeft: 1 }}
+          align="center"
+          sx={{ mt: 3, fontFamily: "Nanum1" }}
           fontSize="16px"
           fontWeight="bold"
         >
@@ -82,16 +74,21 @@ const HowtoResult = (props: any) => {
         </Typography>
 
         <Typography
-          align="left"
-          sx={{ mt: 3, marginLeft: 1 }}
+          align="center"
+          sx={{ mt: 3, fontFamily: "Nanum1" }}
           fontSize="16px"
         ></Typography>
 
-        <Typography align="left" sx={{ mt: 5, marginLeft: 1 }} variant="h6">
+        <Typography
+          align="center"
+          sx={{ mt: 5, fontFamily: "Nanum1" }}
+          variant="h6"
+          fontWeight="bold"
+        >
           버리는 방법
         </Typography>
 
-        <Typography align="left" sx={{ margin: 1 }}>
+        <Typography align="center" sx={{ margin: 1, fontFamily: "Nanum1" }}>
           {resTrash?.method1}
           <br />
           <br />
@@ -104,15 +101,18 @@ const HowtoResult = (props: any) => {
         </Typography>
 
         <Typography
-          align="left"
-          sx={{ mt: 5, marginLeft: 1 }}
+          align="center"
+          sx={{ mt: 5, fontFamily: "Nanum1" }}
           variant="h6"
           fontWeight="bold"
         >
           알아두면 좋은 점
         </Typography>
 
-        <Typography align="left" sx={{ margin: 1, marginBottom: 5 }}>
+        <Typography
+          align="center"
+          sx={{ margin: 1, marginBottom: 5, fontFamily: "Nanum1" }}
+        >
           {resTrash?.warning}
         </Typography>
       </Box>

@@ -5,64 +5,62 @@ import {
   CardActions,
   Card,
   CardMedia,
-  Typography,
   styled,
-  Link,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { save_ID } from "../../actions/ImgIDActions";
+
+import { useNavigate } from "react-router-dom";
 
 const MyTrashcanBtn = styled(Button)(({}) => ({
-  backgroundColor: "#76F2BE",
-  borderColor: "#76F2BE",
+  backgroundColor: "#B0B09A",
+  borderColor: "#B0B09A",
   "&:hover": {
     color: "black",
     backgroundColor: "white",
-    borderColor: "#76F2BE",
+    borderColor: "#B0B09A",
   },
 }));
 
-export default function MultiActionAreaCard({ image = "", kind = "" }) {
-  // export default function MultiActionAreaCard() {
+export default function MultiActionAreaCard({ image = "", id = "" }) {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  //const itemID = useSelector((state: RootReducerType) => state.ImgIDReducer);
+  const onDispatch = () => {
+    // console.log(id);
+    dispatch(save_ID(id));
+    navigate(`/howtopage`);
+  };
 
   return (
-    <Card sx={{ maxWidth: 170, border: 1, margin: 1.4 }}>
+    <Card
+      sx={{ maxWidth: 170, border: 1, margin: 1.4, borderColor: "#B0B09A" }}
+    >
       <CardActionArea>
         <CardMedia
           component="img"
           height="170"
           width="170"
-          // image='https://picsum.photos/400/300'
           image={image}
           style={{ padding: 3, borderRadius: 8 }}
         />
-        <Typography
-          fontWeight={"bold"}
-          fontSize={20}
-          component="div"
-          marginTop={1}
-          align="center"
-        >
-          {/* 물병 */}
-          {kind}
-        </Typography>
       </CardActionArea>
       <CardActions>
         <MyTrashcanBtn
           variant="outlined"
+          onClick={onDispatch}
           sx={{
             margin: "auto",
             width: 70,
             height: 20,
-            bgcolor: "#76F2BE",
-            borderColor: "#76F2BE",
+            bgcolor: "#B0B09A",
+            borderColor: "#B0B09A",
             color: "black",
+            fontSize: 2,
           }}
         >
-          <Link
-            href={`/mypage/trashNum/:${kind}/howTo`}
-            sx={{ fontSize: 2, color: "black", textDecoration: "none" }}
-          >
-            상세보기
-          </Link>
+          더보기
         </MyTrashcanBtn>
       </CardActions>
     </Card>

@@ -6,11 +6,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { API_BASE_URL } from "src/utils/constants";
+import { getAccess } from "../../Auth/tokenManager";
+import { ReduxModule } from "../../modules/ReduxModule";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#759F98",
+      main: "#737458",
     },
   },
 });
@@ -25,6 +28,7 @@ function formatDate(date: Date) {
 
 function Dates({ onClickRetrieve }: { onClickRetrieve: any }) {
   // 함수의 반환 : onClickRetrieve
+  const userIdtoRedux = ReduxModule().decodeInfo?.id;
 
   const [StartDate, setStartDate] = React.useState<string | null>(null);
   const [StartLock, setStartLock] = React.useState<Date | null>(null);
@@ -61,22 +65,33 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) {
       }
     }
 
-    axios
-      .get(
-        `http://localhost:8080/trash/mypage/users/2c762f6e-b369-4985-96f9-29ccb4f9fc34/statistics${periodStr}${startDateStr}${endDateStr}`
-      )
-      .then((response) => {
-        // Handle success.
-        const responseUserData = response.data;
-        console.log("data saved!");
-        console.log(response.data);
-        onClickRetrieve(responseUserData);
-      })
-      .catch((error) => {
-        // Handle error.
-        console.log("An error occurred:", error.response);
-      });
-  };
+    const getDate = async () => {
+      const stringAccess: any = getAccess();
+      console.log("잘 온거?", stringAccess);
+      if (stringAccess !== null) { // stringAccess if문 안써주면 코드 오류 발생
+        /* const access: rs.TokenInfo = JSON.parse(stringAccess); // string형태로 받는 토큰 JSON으로 만들어줌*/
+        await axios
+          .get(
+            `${API_BASE_URL}/trash/users/${userIdtoRedux}/statistics${periodStr}${startDateStr}${endDateStr}`, { //patch : 바디 -> 변경할 alias & 헤더 -> 확인해야되는 토큰 
+            headers: {
+              Authorization: `${stringAccess.value}`
+            }
+          })
+          .then((response) => {
+            // Handle success.
+            const responseUserData = response.data;
+            console.log("data saved!");
+            console.log(response.data);
+            onClickRetrieve(responseUserData);
+          })
+          .catch((error) => {
+            // Handle error.
+            console.log("An error occurred:", error.response);
+          });
+      };
+    }
+    getDate();
+  }
 
   React.useEffect(() => {
     fetchUserData();
@@ -90,7 +105,7 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        sx={{ paddingTop: 2 }}
+        sx={{ paddingTop: 5 }}
         onSubmit={HandleSubmit}
         noValidate
       >
@@ -138,15 +153,19 @@ function Dates({ onClickRetrieve }: { onClickRetrieve: any }) {
                 type="submit"
                 variant="contained"
                 sx={{
+                  "&:hover": {
+                    backgroundColor: "#737458"
+                  },
+                  margin: 2,
+                  width: 80,
                   height: 40,
-                  color: "white",
                   fontWeight: "bold",
-                  fontSize: 18,
-                  marginLeft: 3,
-                  backgroundColor: "#759F98",
+                  fontSize: 12,
+                  color: "white",
+                  backgroundColor: "#B0B09A",
                 }}
               >
-                조회
+                Submit
               </Button>
             </Box>
           </Grid>
