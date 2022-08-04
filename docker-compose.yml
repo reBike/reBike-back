@@ -140,6 +140,7 @@ services:
     depends_on:
       - mysqldb
       - backend
+      
   frontend:
     build: ./frontend
     command: ["npm", "start"]
