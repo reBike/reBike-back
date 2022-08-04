@@ -15,4 +15,4 @@ class user(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'rebike_user'
+        db_table = 'member'
