@@ -105,7 +105,6 @@ services:
       - ./nginx/nginx:/etc/nginx
     depends_on:
       - backend
-      - frontend
 
   kibana:
     container_name: kibana
