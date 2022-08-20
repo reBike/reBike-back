@@ -197,6 +197,9 @@ backend/db/db.env
 
 db.env
 backend/dev.env
+
 #jupyter
 *.ipynb
 .ipynb_checkpoints/
+
+0001_initial.py
