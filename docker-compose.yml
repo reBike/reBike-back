@@ -1,13 +1,28 @@
 version: "3.8"
 
 volumes:
+  mysql_data:
   elasticsearch_volume:
 
 services:
+  mysqldb:
+    build: ./db
+    env_file:
+      - "./db/db.env"
+    ports:
+      - "8989:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
   backend:
     build: ./backend
     command: >
-      bash -c "python setup_es.py &&
+      bash -c "python wait_mysql.py &&
+               python setup_es.py &&
                python manage.py makemigrations &&
                python manage.py migrate &&
                python manage.py runserver 0.0.0.0:8080"
@@ -16,6 +31,8 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
+      mysqldb:
+        condition: service_healthy
       elasticsearch:
         condition: service_healthy
 
@@ -24,6 +41,8 @@ services:
     container_name: prometheus
     volumes:
       - ./prometheus/config/:/etc/prometheus/
+      - ./prometheus/prometheus-volume:/prometheus # volumes 설정한다면 이부분 주석처리
+      # - prometheus_data:/prometheus
     ports:
       - 9090:9090
     command:
@@ -41,41 +60,6 @@ services:
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     restart: always
-
-  redis:
-    container_name: redis
-    image: redis:latest
-    hostname: redis
-    ports:
-      - "6379:6379"
-
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3-management-alpine
-    environment:
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASSWORD=guest
-    ports:
-      - "5672:5672" # Default Port
-      - "15672:15672" # For UI
-    expose:
-      - "15672"
-    
-  celery_worker:
-    container_name: celery_worker
-    build:
-      context: ./backend
-      dockerfile: dockerfile
-    volumes:
-      - ./backend:/backend
-    ports: []
-    depends_on:
-      - rabbitmq
-      - redis
-      - backend
-    environment:
-      - C_FORCE_ROOT=true
-    command: sh -c "celery -A backend worker --loglevel=info"
 
   elasticsearch:
     build:
@@ -97,14 +81,49 @@ services:
       timeout: 10s
       retries: 5
 
-  nginx:
-    build: ./nginx
+  frontend:
+    build: ./frontend
+    command: ["npm", "start"]
     ports:
-      - 80:80
+      - 3000:3000
     volumes:
-      - ./nginx/nginx:/etc/nginx
+      - ./frontend:/app
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "5672:5672" # Default Port
+      - "15672:15672" # For UI
+    expose:
+      - "15672"
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    volumes:
+      - ./backend:/backend
+    ports: []
     depends_on:
+      - rabbitmq
+      - redis
       - backend
+    environment:
+      - C_FORCE_ROOT=true
+    command: sh -c "python wait_mysql.py &&
+                    celery -A backend worker --loglevel=info"
 
   kibana:
     container_name: kibana
@@ -128,3 +147,12 @@ services:
       - redis
     command:
       - '-port=8090'
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx:/etc/nginx
+    depends_on:
+      - backend
