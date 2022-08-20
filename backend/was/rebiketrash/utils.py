@@ -2,7 +2,7 @@ from .models import trash_image, challenge, user_challenge
 from rebikeuser.models import user
 
 import boto3
-from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from was.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 import torch, cv2
 import os

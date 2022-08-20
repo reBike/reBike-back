@@ -1,5 +1,5 @@
 from __future__ import absolute_import, unicode_literals
-from backend.celery import app
+from was.celery import app
 from .utils import get_ai_result
 from django.http import JsonResponse
 

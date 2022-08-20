@@ -193,7 +193,7 @@ yarn.lock
 
 #DB
 data/
-db/db.env
+backend/db/db.env
 
 db.env
 backend/dev.env

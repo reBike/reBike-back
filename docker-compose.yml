@@ -6,9 +6,9 @@ volumes:
 
 services:
   mysqldb:
-    build: ./db
+    build: backend/db
     env_file:
-      - "./db/db.env"
+      - "backend/db/db.env"
     ports:
       - "8989:3306"
     volumes:
@@ -19,7 +19,7 @@ services:
       retries: 10
 
   backend:
-    build: ./backend
+    build: ./backend/was
     command: >
       bash -c "python wait_mysql.py &&
                python setup_es.py &&
@@ -29,7 +29,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./backend:/app
+      - ./backend/was:/app
     depends_on:
       mysqldb:
         condition: service_healthy
@@ -40,9 +40,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./prometheus/config/:/etc/prometheus/
-      - ./prometheus/prometheus-volume:/prometheus # volumes 설정한다면 이부분 주석처리
-      # - prometheus_data:/prometheus
+      - ./observe/prometheus/config/:/etc/prometheus/
     ports:
       - 9090:9090
     command:
@@ -58,17 +56,17 @@ services:
     ports:
       - 3100:3100
     volumes:
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./observe/grafana/grafana.ini:/etc/grafana/grafana.ini
     restart: always
 
   elasticsearch:
     build:
-      context: elastic_search/
+      context: backend/elastic_search/
       args:
         ELK_VERSION: 7.16.3
     restart: always
     volumes:
-      - ./elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./backend/elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - elasticsearch_volume:/usr/share/elasticsearch/data:z
     ports:
       - "9200:9200"
@@ -111,10 +109,10 @@ services:
   celery_worker:
     container_name: celery_worker
     build:
-      context: ./backend
+      context: ./backend/was
       dockerfile: dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend/was:/backend
     ports: []
     depends_on:
       - rabbitmq
@@ -123,7 +121,7 @@ services:
     environment:
       - C_FORCE_ROOT=true
     command: sh -c "python wait_mysql.py &&
-                    celery -A backend worker --loglevel=info"
+                    celery -A was worker --loglevel=info"
 
   kibana:
     container_name: kibana
@@ -133,26 +131,26 @@ services:
     depends_on:
       - elasticsearch
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    ports:
-      - 8090:8090
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    depends_on:
-      - redis
-    command:
-      - '-port=8090'
-
   nginx:
-    build: ./nginx
+    build: backend/nginx
     ports:
       - 80:80
     volumes:
-      - ./nginx/nginx:/etc/nginx
+      - ./backend/nginx/nginx:/etc/nginx
     depends_on:
       - backend
+
+#  cadvisor:
+#    image: gcr.io/cadvisor/cadvisor:latest
+#    container_name: cadvisor
+#    ports:
+#      - 8090:8090
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:rw
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#    depends_on:
+#      - redis
+#    command:
+#      - '-port=8090'
