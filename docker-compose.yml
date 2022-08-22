@@ -71,6 +71,7 @@ services:
     ports:
       - "9200:9200"
     environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       discovery.type: single-node
     healthcheck:
       test: curl -u elastic:elastic -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
