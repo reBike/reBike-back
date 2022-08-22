@@ -61,12 +61,12 @@ services:
 
   elasticsearch:
     build:
-      context: backend/elastic_search/
+      context: backend/master_node/
       args:
         ELK_VERSION: 7.16.3
     restart: always
     volumes:
-      - ./backend/elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./backend/master_node/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - elasticsearch_volume:/usr/share/elasticsearch/data:z
     ports:
       - "9200:9200"
