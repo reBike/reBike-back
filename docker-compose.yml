@@ -64,20 +64,41 @@ services:
       context: backend/master_node/
       args:
         ELK_VERSION: 7.16.3
-    restart: always
     volumes:
       - ./backend/master_node/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./logs/master_node:/usr/share/elasticsearch/logs/
       - elasticsearch_volume:/usr/share/elasticsearch/data:z
     ports:
       - "9200:9200"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      discovery.type: single-node
     healthcheck:
       test: curl -u elastic:elastic -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
+
+
+  node_1:
+    build:
+      context: backend/node_1/
+      args:
+        ELK_VERSION: 7.16.3
+    volumes:
+      - ./logs/node_1:/usr/share/elasticsearch/logs/
+      - ./backend/node_1/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+    ports:
+      - "9201:9201"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    healthcheck:
+      test: curl -u elastic:elastic -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
 
   frontend:
     build: ./frontend

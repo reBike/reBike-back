@@ -1,24 +1,18 @@
----
-## Default Elasticsearch configuration from Elasticsearch base image.
-## https://github.com/elastic/elasticsearch/blob/master/distribution/docker/src/docker/config/elasticsearch.yml
-#
 cluster:
   name: "docker-cluster"
+  initial_master_nodes: ["master_node"]
 
 node:
-  name: "node_1"
+  name: "master_node"
 
 network:
-  host: _site_
+  host: "_site_"
 
 http:
   port: 9200
 
 discovery:
-  seed_hosts: ["localhost:9200","localhost:9201"]
-
-## X-Pack settings
-## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
+  seed_hosts: ["elasticsearch","node_1"]
 
 xpack:
   license.self_generated.type: trial

@@ -4,18 +4,19 @@
 #
 cluster:
   name: "docker-cluster"
+  initial_master_nodes: ["master_node"]
 
 node:
   name: "node_1"
 
 network:
-  host: _site_
+  host: "_site_"
 
 http:
   port: 9201
 
 discovery:
-  seed_hosts: ["localhost:9200","localhost:9201"]
+  seed_hosts: ["elasticsearch","node_1"]
 
 ## X-Pack settings
 ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
