@@ -66,7 +66,6 @@ services:
         ELK_VERSION: 7.16.3
     volumes:
       - ./backend/master_node/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
-      - ./logs/master_node:/usr/share/elasticsearch/logs/
       - elasticsearch_volume:/usr/share/elasticsearch/data:z
     ports:
       - "9200:9200"
@@ -85,7 +84,6 @@ services:
       args:
         ELK_VERSION: 7.16.3
     volumes:
-      - ./logs/node_1:/usr/share/elasticsearch/logs/
       - ./backend/node_1/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
     ports:
       - "9201:9201"
